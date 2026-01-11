@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Query } from "react-apollo";
 import { GET_CATALOGO, GET_CATALOGO_FILTRADO } from "../graphql";
 import JuegoCard from "../components/JuegoCard";
+import "../App.css";
 
 export default function Catalogo() {
     const [page, setPage] = useState(1);
@@ -28,7 +29,6 @@ export default function Catalogo() {
             ? GET_CATALOGO_FILTRADO
             : GET_CATALOGO;
 
-    // 🔹 Conversión de tipos antes de mandar a GraphQL
     const variables = {
         page,
         limit,
@@ -41,7 +41,6 @@ export default function Catalogo() {
         precioMax: filtros.precioMax !== "" ? parseInt(filtros.precioMax) : undefined,
     };
 
-    // 🔹 Función para reiniciar filtros y catálogo
     const reiniciarCatalogo = () => {
         setFiltros({
             nombre: "",
@@ -57,10 +56,12 @@ export default function Catalogo() {
 
     return (
         <div style={{ backgroundColor: "#1e1e1e", minHeight: "100vh", padding: "20px" }}>
-            <h2 style={{ color: "#f0f0f0", marginBottom: "20px" }}>Catálogo de Juegos PixelPlay Habana</h2>
+            <h2 style={{ color: "#f0f0f0", marginBottom: "20px" }}>
+                Catálogo de Juegos PixelPlay Habana
+            </h2>
 
-            {/* 🔹 Bloque de filtros */}
-            <div style={{ marginBottom: "20px", display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "12px" }}>
+            {/* 🔹 Bloque de filtros con clase para responsividad */}
+            <div className="filtros-grid">
                 <div>
                     <label style={{ color: "#f0f0f0" }}>Nombre</label>
                     <input

@@ -34,25 +34,15 @@ export default function JuegoDetalles() {
                     : j.AnnoAct || "No disponible";
 
                 return (
-                    <div
-                        style={{
-                            backgroundColor: "#1e1e1e",
-                            color: "#f0f0f0",
-                            minHeight: "100vh",
-                            padding: "20px",
-                            display: "flex",
-                            gap: "20px",
-                            alignItems: "flex-start", // 🔹 portada y título alineados arriba
-                        }}
-                    >
-                        <div style={{ width: "300px" }}>
+                    <div className="detalle-container">
+                        <div className="detalle-portada">
                             <img
                                 src={portadaUrl}
                                 alt={j.Nombre}
                                 style={{ width: "100%", height: "auto", borderRadius: 8 }}
                             />
                         </div>
-                        <div style={{ flex: 1 }}>
+                        <div className="detalle-info">
                             <h2 style={{ marginTop: 0 }}>{j.Nombre}</h2>
                             <p><strong>Tamaño:</strong> {tamanoFormateado}</p>
                             <p><strong>Precio:</strong> {j.Precio ? `${j.Precio} MN` : "No disponible"}</p>

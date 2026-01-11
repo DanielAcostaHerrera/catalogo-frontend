@@ -11,9 +11,11 @@
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
@@ -22,6 +24,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -30,6 +33,57 @@
 @media (prefers-reduced-motion: no-preference) {
   a:nth-of-type(2) .logo {
     animation: logo-spin infinite 20s linear;
+  }
+}
+
+.filtros-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.detalle-container {
+  background-color: #1e1e1e;
+  color: #f0f0f0;
+  min-height: 100vh;
+  padding: 20px;
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.detalle-portada {
+  width: 300px;
+}
+
+.detalle-info {
+  flex: 1;
+}
+
+@media (max-width: 768px) {
+  .detalle-container {
+    flex-direction: column;
+    /* 🔹 en móvil, portada arriba y detalles debajo */
+    align-items: center;
+    text-align: center;
+  }
+
+  .detalle-portada {
+    width: 100%;
+    /* portada ocupa todo el ancho en móvil */
+    max-width: 400px;
+  }
+
+  .detalle-info {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .filtros-grid {
+    grid-template-columns: 1fr;
+    /* en móvil, una sola columna */
   }
 }
 
