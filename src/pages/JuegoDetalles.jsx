@@ -1,11 +1,18 @@
 import { useParams } from "react-router-dom";
 import { Query } from "react-apollo";
 import { GET_JUEGO } from "../graphql";
-import "../App.css"; // 🔹 estilos globales
-import { limpiarNombreParaBusqueda } from "../utils/FormatoJuego"; // 🔹 IMPORTANTE
+import "../App.css"; // estilos globales
+import { limpiarNombreParaBusqueda } from "../utils/FormatoJuego";
+import { useRef } from "react";
+import AddToCartButton from "../components/AddToCartButton";
+import Toast from "../components/Toast";
 
 export default function JuegoDetalles() {
     const { id } = useParams();
+    const toastRef = useRef();
+    const showToast = (msg) => {
+        if (toastRef.current) toastRef.current.showToast(msg);
+    };
 
     return (
         <Query query={GET_JUEGO} variables={{ id: Number(id) }}>
@@ -16,13 +23,14 @@ export default function JuegoDetalles() {
                 const j = data?.juego;
                 if (!j) return <p>No se encontró el juego.</p>;
 
-                const portadaUrl = `https://catalogo-backend-f4sk.onrender.com/portadas/${encodeURIComponent(j.Portada)}`;
+                const portadaUrl = `https://catalogo-backend-f4sk.onrender.com/portadas/${encodeURIComponent(
+                    j.Portada
+                )}`;
 
-                // 🔹 Normalizar texto: convertir secuencias "\n" en saltos reales
-                const normalizarTexto = (txt) =>
-                    txt ? txt.replace(/\\n/g, "\n") : "";
+                // Normalizar texto: convertir secuencias "\n" en saltos reales
+                const normalizarTexto = (txt) => (txt ? txt.replace(/\\n/g, "\n") : "");
 
-                // 🔹 Procesar requisitos para insertar renglón vacío antes de "Recomendados"
+                // Procesar requisitos para insertar renglón vacío antes de "Recomendados"
                 const procesarRequisitos = (txt) => {
                     if (!txt) return "";
                     const lineas = normalizarTexto(txt).split("\n");
@@ -44,21 +52,42 @@ export default function JuegoDetalles() {
 
                 return (
                     <div className="detalle-container">
-                        <div className="detalle-portada">
+                        <Toast ref={toastRef} />
+
+                        {/* 🔹 Columna izquierda: portada + botón añadir */}
+                        <div
+                            className="detalle-portada"
+                            style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                gap: "12px",
+                            }}
+                        >
                             <img
                                 src={portadaUrl}
                                 alt={j.Nombre}
                                 style={{ width: "100%", height: "auto", borderRadius: 8 }}
                             />
+                            <AddToCartButton game={j} showToast={showToast} />
                         </div>
 
+                        {/* 🔹 Columna derecha: información */}
                         <div className="detalle-info">
                             <h2 style={{ marginTop: 0 }}>{j.Nombre}</h2>
-                            <p><strong>Tamaño:</strong> {j.TamanoFormateado}</p>
-                            <p><strong>Precio:</strong> {j.Precio ? `${j.Precio} CUP` : "No disponible"}</p>
-                            <p><strong>Año de actualización:</strong> {j.AnnoAct || "No disponible"}</p>
+                            <p>
+                                <strong>Tamaño:</strong> {j.TamanoFormateado}
+                            </p>
+                            <p>
+                                <strong>Precio:</strong>{" "}
+                                {j.Precio ? `${j.Precio} CUP` : "No disponible"}
+                            </p>
+                            <p>
+                                <strong>Año de actualización:</strong>{" "}
+                                {j.AnnoAct || "No disponible"}
+                            </p>
 
-                            {/* 🔹 Sinopsis */}
+                            {/* Sinopsis */}
                             <div style={{ marginTop: 20 }}>
                                 <strong>Sinopsis:</strong>
                                 <p style={{ whiteSpace: "pre-line", marginLeft: 10 }}>
@@ -66,21 +95,25 @@ export default function JuegoDetalles() {
                                 </p>
                             </div>
 
-                            {/* 🔹 Requisitos */}
+                            {/* Requisitos */}
                             <div style={{ marginTop: 20 }}>
                                 <strong>Requisitos de Sistema:</strong>
                                 <p style={{ whiteSpace: "pre-line", marginLeft: 10 }}>
                                     {procesarRequisitos(j.Requisitos) || "No disponibles."}
                                 </p>
 
-                                {/* 🔹 Botón para buscar requisitos en Google */}
                                 {j.Requisitos === "No disponible" && (
                                     <button
                                         className="btn-buscar"
                                         onClick={() => {
                                             const nombreLimpio = limpiarNombreParaBusqueda(j.Nombre);
-                                            const query = encodeURIComponent(`Requisitos ${nombreLimpio}`);
-                                            window.open(`https://www.google.com/search?q=${query}`, "_blank");
+                                            const query = encodeURIComponent(
+                                                `Requisitos ${nombreLimpio}`
+                                            );
+                                            window.open(
+                                                `https://www.google.com/search?q=${query}`,
+                                                "_blank"
+                                            );
                                         }}
                                         style={{
                                             marginTop: 10,
@@ -90,7 +123,7 @@ export default function JuegoDetalles() {
                                             border: "none",
                                             borderRadius: 4,
                                             cursor: "pointer",
-                                            fontWeight: 600
+                                            fontWeight: 600,
                                         }}
                                     >
                                         Buscar requisitos en Google

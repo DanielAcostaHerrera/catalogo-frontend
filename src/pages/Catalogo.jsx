@@ -4,12 +4,20 @@ import { GET_CATALOGO, GET_CATALOGO_FILTRADO } from "../graphql";
 import JuegoCard from "../components/JuegoCard";
 import Paginacion from "../components/Paginacion";
 import "../App.css";
+import { useRef } from "react";
+import Toast from "../components/Toast";
+
 
 export default function Catalogo() {
     const [page, setPage] = useState(1);
     const [limit] = useState(100);
     const [annoMinTemp, setAnnoMinTemp] = useState("");
     const [annoMaxTemp, setAnnoMaxTemp] = useState("");
+
+    const toastRef = useRef();
+    const showToast = (msg) => {
+        if (toastRef.current) toastRef.current.showToast(msg);
+    };
 
     const [filtros, setFiltros] = useState({
         nombre: "",
@@ -165,6 +173,8 @@ export default function Catalogo() {
 
     return (
         <div className="catalogo-container">
+            <Toast ref={toastRef} />
+
             <h2 style={{ color: "#f0f0f0", marginBottom: "20px" }}>
                 Catálogo de Juegos PixelPlay Habana
             </h2>
@@ -373,8 +383,9 @@ export default function Catalogo() {
                                 }}
                             >
                                 {juegos.map((j) => (
-                                    <JuegoCard key={j.Id} juego={j} />
+                                    <JuegoCard key={j.Id} juego={j} showToast={showToast} />
                                 ))}
+
                             </div>
 
                             <Paginacion
