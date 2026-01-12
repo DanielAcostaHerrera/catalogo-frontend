@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { Query } from "react-apollo";
 import { GET_JUEGO } from "../graphql";
-import "../App.css"; // 🔹 asegúrate de tener aquí los estilos globales
+import "../App.css"; // 🔹 estilos globales
 
 export default function JuegoDetalles() {
     const { id } = useParams();
@@ -17,6 +17,31 @@ export default function JuegoDetalles() {
 
                 const portadaUrl = `https://catalogo-backend-f4sk.onrender.com/portadas/${encodeURIComponent(j.Portada)}`;
 
+                // 🔹 Normalizar texto: convertir secuencias "\n" en saltos reales
+                const normalizarTexto = (txt) =>
+                    txt ? txt.replace(/\\n/g, "\n") : "";
+
+                // 🔹 Procesar requisitos para insertar renglón vacío antes de "Recomendados"
+                const procesarRequisitos = (txt) => {
+                    if (!txt) return "";
+                    const lineas = normalizarTexto(txt).split("\n");
+                    const resultado = [];
+                    const patronesRec = /(recomendado[s]?|requisito[s]?\s+recomendado[s]?)/i;
+
+                    lineas.forEach((linea) => {
+                        const l = linea.trim();
+                        if (patronesRec.test(l)) {
+                            // 🔑 salto de línea vacío antes de recomendados
+                            resultado.push("");
+                            resultado.push(l);
+                        } else {
+                            resultado.push(l);
+                        }
+                    });
+
+                    return resultado.join("\n");
+                };
+
                 return (
                     <div className="detalle-container">
                         <div className="detalle-portada">
@@ -31,9 +56,22 @@ export default function JuegoDetalles() {
                             <p><strong>Tamaño:</strong> {j.TamanoFormateado}</p>
                             <p><strong>Precio:</strong> {j.Precio ? `${j.Precio} CUP` : "No disponible"}</p>
                             <p><strong>Año de actualización:</strong> {j.AnnoAct || "No disponible"}</p>
-                            <p style={{ marginTop: 20 }}>
-                                <strong>Sinopsis:</strong> {j.Sinopsis || "Sin sinopsis disponible."}
-                            </p>
+
+                            {/* 🔹 Sinopsis con saltos de línea */}
+                            <div style={{ marginTop: 20 }}>
+                                <strong>Sinopsis:</strong>
+                                <p style={{ whiteSpace: "pre-line", marginLeft: 10 }}>
+                                    {normalizarTexto(j.Sinopsis) || "Sin sinopsis disponible."}
+                                </p>
+                            </div>
+
+                            {/* 🔹 Requisitos con salto de línea entre bloques */}
+                            <div style={{ marginTop: 20 }}>
+                                <strong>Requisitos de Sistema:</strong>
+                                <p style={{ whiteSpace: "pre-line", marginLeft: 10 }}>
+                                    {procesarRequisitos(j.Requisitos) || "No disponibles."}
+                                </p>
+                            </div>
                         </div>
                     </div>
                 );

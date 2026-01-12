@@ -13,6 +13,7 @@ export const GET_CATALOGO = gql`
         TamanoFormateado
         Precio
         AnnoAct
+        Requisitos   # 🔹 añadido
       }
       total
     }
@@ -52,6 +53,7 @@ export const GET_CATALOGO_FILTRADO = gql`
         TamanoFormateado
         Precio
         AnnoAct
+        Requisitos
       }
       total
     }
@@ -71,6 +73,7 @@ export const GET_JUEGO = gql`
       Precio
       AnnoAct
       Sinopsis
+      Requisitos
     }
   }
 `;
