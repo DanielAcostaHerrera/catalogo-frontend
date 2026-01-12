@@ -1,4 +1,3 @@
-// src/components/Header.jsx
 import { NavLink } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 
@@ -31,6 +30,7 @@ export default function Header() {
             }}
         >
             <div
+                className="header-container"
                 style={{
                     width: "100%",
                     padding: "12px 20px",
@@ -54,6 +54,7 @@ export default function Header() {
                 </div>
 
                 <nav
+                    className="header-nav"
                     style={{
                         display: "flex",
                         gap: 8,
@@ -70,6 +71,7 @@ export default function Header() {
                     >
                         Catálogo
                     </NavLink>
+
                     <NavLink
                         to="/info"
                         style={({ isActive }) =>
@@ -78,6 +80,7 @@ export default function Header() {
                     >
                         Información del negocio
                     </NavLink>
+
                     <NavLink
                         to="/carrito"
                         style={({ isActive }) =>
