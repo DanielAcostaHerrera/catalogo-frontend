@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import { Query } from "react-apollo";
 import { GET_JUEGO } from "../graphql";
 import "../App.css"; // 🔹 estilos globales
+import { limpiarNombreParaBusqueda } from "../utils/FormatoJuego"; // 🔹 IMPORTANTE
 
 export default function JuegoDetalles() {
     const { id } = useParams();
@@ -31,8 +32,7 @@ export default function JuegoDetalles() {
                     lineas.forEach((linea) => {
                         const l = linea.trim();
                         if (patronesRec.test(l)) {
-                            // 🔑 salto de línea vacío antes de recomendados
-                            resultado.push("");
+                            resultado.push(""); // salto de línea antes de recomendados
                             resultado.push(l);
                         } else {
                             resultado.push(l);
@@ -51,13 +51,14 @@ export default function JuegoDetalles() {
                                 style={{ width: "100%", height: "auto", borderRadius: 8 }}
                             />
                         </div>
+
                         <div className="detalle-info">
                             <h2 style={{ marginTop: 0 }}>{j.Nombre}</h2>
                             <p><strong>Tamaño:</strong> {j.TamanoFormateado}</p>
                             <p><strong>Precio:</strong> {j.Precio ? `${j.Precio} CUP` : "No disponible"}</p>
                             <p><strong>Año de actualización:</strong> {j.AnnoAct || "No disponible"}</p>
 
-                            {/* 🔹 Sinopsis con saltos de línea */}
+                            {/* 🔹 Sinopsis */}
                             <div style={{ marginTop: 20 }}>
                                 <strong>Sinopsis:</strong>
                                 <p style={{ whiteSpace: "pre-line", marginLeft: 10 }}>
@@ -65,12 +66,36 @@ export default function JuegoDetalles() {
                                 </p>
                             </div>
 
-                            {/* 🔹 Requisitos con salto de línea entre bloques */}
+                            {/* 🔹 Requisitos */}
                             <div style={{ marginTop: 20 }}>
                                 <strong>Requisitos de Sistema:</strong>
                                 <p style={{ whiteSpace: "pre-line", marginLeft: 10 }}>
                                     {procesarRequisitos(j.Requisitos) || "No disponibles."}
                                 </p>
+
+                                {/* 🔹 Botón para buscar requisitos en Google */}
+                                {j.Requisitos === "No disponible" && (
+                                    <button
+                                        className="btn-buscar"
+                                        onClick={() => {
+                                            const nombreLimpio = limpiarNombreParaBusqueda(j.Nombre);
+                                            const query = encodeURIComponent(`Requisitos ${nombreLimpio}`);
+                                            window.open(`https://www.google.com/search?q=${query}`, "_blank");
+                                        }}
+                                        style={{
+                                            marginTop: 10,
+                                            padding: "8px 12px",
+                                            background: "#4285f4",
+                                            color: "white",
+                                            border: "none",
+                                            borderRadius: 4,
+                                            cursor: "pointer",
+                                            fontWeight: 600
+                                        }}
+                                    >
+                                        Buscar requisitos en Google
+                                    </button>
+                                )}
                             </div>
                         </div>
                     </div>

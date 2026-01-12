@@ -1,5 +1,3 @@
-import { datetime } from "luxon"; // o usa Date nativo
-
 export function formatoTamano(tamano, nombre = "") {
     const mb = Number(tamano);
 
@@ -23,4 +21,30 @@ export function formatoAnno(nombre = "", annoAct) {
         return "No disponible";
     }
     return annoAct;
+}
+
+// ---------------------------------------------------------
+// 🔵 Limpieza de nombre para búsquedas externas (Google)
+// ---------------------------------------------------------
+export function limpiarNombreParaBusqueda(nombre) {
+    let limpio = nombre;
+
+    // Quitar "(build ...)"
+    limpio = limpio.replace(/\(build.*?\)/gi, "");
+
+    // Quitar versiones tipo v1, v1.2, v 1.2.3, vFinal, vBeta, vv, etc.
+    limpio = limpio.replace(/\bv+\s*\d+(\.\d+)*\b/gi, "");   // v1.2.3
+    limpio = limpio.replace(/\bv+\s*[a-z]+/gi, "");          // vFinal, vBeta
+    limpio = limpio.replace(/\bvv+\b/gi, "");                // vv
+
+    // Quitar corchetes de año [2017]
+    limpio = limpio.replace(/\[\d{4}\]/g, "");
+
+    // Quitar sufijos comunes de releases
+    limpio = limpio.replace(/[-_](gog|fitgirl|elamigos|repack|steam|pc)/gi, "");
+
+    // Quitar dobles espacios
+    limpio = limpio.replace(/\s{2,}/g, " ");
+
+    return limpio.trim();
 }
