@@ -38,99 +38,123 @@ export default function Paginacion({ page, totalPages, onPageChange }) {
 
     const pages = getPages();
 
+    const handleGo = () => {
+        const trimmed = String(inputPage).trim();
+        if (!trimmed) return;
+
+        const num = parseInt(trimmed, 10);
+        if (!Number.isNaN(num) && num >= 1 && num <= totalPages) {
+            onPageChange(num);
+            setInputPage("");
+        }
+    };
+
     return (
         <div style={{ textAlign: "center", marginTop: 20, width: "100%" }}>
-            {/* Flecha izquierda */}
-            {page > 1 && (
-                <button
-                    onClick={() => onPageChange(page - 1)}
-                    style={{
-                        borderRadius: 6,
-                        border: "1px solid #444",
-                        padding: "8px 16px",
-                        backgroundColor: "#2b2b2b",
-                        color: "#f0f0f0",
-                        cursor: "pointer",
-                        marginRight: 8,
-                    }}
-                >
-                    «
-                </button>
-            )}
+            {/* Contenedor de botones con flex-wrap y gap */}
+            <div
+                style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    justifyContent: "center",
+                    gap: "8px", // espacio horizontal y vertical uniforme
+                }}
+            >
+                {/* Flecha izquierda */}
+                {page > 1 && (
+                    <button
+                        onClick={() => onPageChange(page - 1)}
+                        style={{
+                            borderRadius: 6,
+                            border: "1px solid #444",
+                            padding: "8px 16px",
+                            backgroundColor: "#2b2b2b",
+                            color: "#f0f0f0",
+                            cursor: "pointer",
+                        }}
+                        aria-label="Página anterior"
+                    >
+                        «
+                    </button>
+                )}
 
-            {/* Páginas con puntos suspensivos */}
-            {pages.map((p, idx) => {
-                const prev = pages[idx - 1];
-                const showEllipsis = prev && p - prev > 1;
-                return (
-                    <React.Fragment key={p}>
-                        {showEllipsis && (
-                            <span style={{ color: "#f0f0f0", margin: "0 4px" }}>…</span>
-                        )}
-                        <button
-                            onClick={() => onPageChange(p)}
-                            style={{
-                                borderRadius: 6,
-                                border: "1px solid #444",
-                                padding: "8px 16px",
-                                backgroundColor: p === page ? "#444" : "#2b2b2b",
-                                color: "#f0f0f0",
-                                fontWeight: p === page ? "bold" : "normal",
-                                cursor: "pointer",
-                                margin: "0 4px",
-                            }}
-                        >
-                            {p}
-                        </button>
-                    </React.Fragment>
-                );
-            })}
+                {/* Páginas con puntos suspensivos */}
+                {pages.map((p, idx) => {
+                    const prev = pages[idx - 1];
+                    const showEllipsis = prev && p - prev > 1;
+                    return (
+                        <React.Fragment key={p}>
+                            {showEllipsis && (
+                                <span style={{ color: "#f0f0f0", margin: "0 4px" }}>…</span>
+                            )}
+                            <button
+                                onClick={() => onPageChange(p)}
+                                style={{
+                                    borderRadius: 6,
+                                    border: "1px solid #444",
+                                    padding: "8px 16px",
+                                    backgroundColor: p === page ? "#444" : "#2b2b2b",
+                                    color: "#f0f0f0",
+                                    fontWeight: p === page ? "bold" : "normal",
+                                    cursor: "pointer",
+                                }}
+                                aria-current={p === page ? "page" : undefined}
+                            >
+                                {p}
+                            </button>
+                        </React.Fragment>
+                    );
+                })}
 
-            {/* Flecha derecha */}
-            {page < totalPages && (
-                <button
-                    onClick={() => onPageChange(page + 1)}
-                    style={{
-                        borderRadius: 6,
-                        border: "1px solid #444",
-                        padding: "8px 16px",
-                        backgroundColor: "#2b2b2b",
-                        color: "#f0f0f0",
-                        cursor: "pointer",
-                        marginLeft: 8,
-                    }}
-                >
-                    »
-                </button>
-            )}
+                {/* Flecha derecha */}
+                {page < totalPages && (
+                    <button
+                        onClick={() => onPageChange(page + 1)}
+                        style={{
+                            borderRadius: 6,
+                            border: "1px solid #444",
+                            padding: "8px 16px",
+                            backgroundColor: "#2b2b2b",
+                            color: "#f0f0f0",
+                            cursor: "pointer",
+                        }}
+                        aria-label="Página siguiente"
+                    >
+                        »
+                    </button>
+                )}
+            </div>
 
             {/* Info y salto directo */}
             <div style={{ marginTop: 12, color: "#f0f0f0" }}>
                 Página {page} de {totalPages}
             </div>
+
             <div style={{ marginTop: 8 }}>
                 <input
-                    type="number"
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     value={inputPage}
                     onChange={(e) => setInputPage(e.target.value)}
                     placeholder="Ir a página..."
                     style={{
                         padding: "6px",
                         borderRadius: "4px",
-                        width: "80px",
+                        width: "90px",
                         border: "1px solid #444",
                         backgroundColor: "#1c1c1c",
                         color: "#f0f0f0",
                     }}
-                />
-                <button
-                    onClick={() => {
-                        const num = parseInt(inputPage);
-                        if (num >= 1 && num <= totalPages) {
-                            onPageChange(num);
-                            setInputPage("");
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            handleGo();
                         }
                     }}
+                    aria-label="Ingresar número de página"
+                />
+                <button
+                    onClick={handleGo}
                     style={{
                         marginLeft: "8px",
                         padding: "6px 12px",

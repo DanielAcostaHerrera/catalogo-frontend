@@ -39,20 +39,34 @@ export default function Header() {
                     alignItems: "center",
                     gap: 12,
                     boxSizing: "border-box",
+                    position: "relative",
                 }}
             >
-                {/* 🔹 Logo + texto PixelPlay Habana */}
-                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                {/* 🔹 Logo en su propio div */}
+                <div className="logo-box">
                     <img
                         src="/logo.png"
                         alt="PixelPlay Habana"
+                        className="logo-img"
                         style={{ height: "60px" }}
                     />
-                    <span style={{ fontWeight: 600, color: "#f0f0f0" }}>
+                </div>
+
+                {/* 🔹 Texto en su propio div */}
+                <div className="title-box">
+                    <span
+                        className="header-title"
+                        style={{
+                            fontWeight: 600,
+                            color: "#f0f0f0",
+                            whiteSpace: "nowrap",
+                        }}
+                    >
                         PixelPlay Habana
                     </span>
                 </div>
 
+                {/* 🔹 Navegación */}
                 <nav
                     className="header-nav"
                     style={{

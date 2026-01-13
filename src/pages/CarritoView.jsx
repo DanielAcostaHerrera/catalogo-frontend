@@ -43,7 +43,7 @@ function CarritoView({ showToast }) {
                 (g) =>
                     `${g.nombre} (${(g.precio ?? 0).toFixed(2)} CUP) (${g.tamanoFormateado ?? "?"})`
             )
-            .join("\n"); // cada juego en su propia línea
+            .join("\n");
 
         content += `\n\nTotal: ${(totals.price ?? 0).toFixed(2)} CUP\nEspacio: ${(totals.size ?? 0).toFixed(1)} GB`;
 
@@ -58,6 +58,49 @@ function CarritoView({ showToast }) {
     return (
         <div>
             <h2>Mi pedido</h2>
+
+            {/* Totales y botones arriba */}
+            <div style={{ marginBottom: "16px" }}>
+                <p>Total precio: {(totals.price ?? 0).toFixed(2)} CUP</p>
+                <p>Total tamaño: {(totals.size ?? 0).toFixed(1)} GB</p>
+
+                {cartItems.some((g) => g.nombre.includes("[online]")) && (
+                    <p style={{ color: "red" }}>
+                        ⚠ Algunos juegos online tienen tamaño variable
+                    </p>
+                )}
+
+                <div className="btns-carrito">
+                    <button
+                        className="btn-carrito"
+                        onClick={exportTxt}
+                        disabled={cartItems.length === 0}
+                    >
+                        Exportar pedido
+                    </button>
+
+                    <button
+                        className="btn-carrito"
+                        onClick={enviarWhatsApp}
+                        disabled={cartItems.length === 0}
+                    >
+                        📲 Enviar pedido por WhatsApp
+                    </button>
+
+                    <button
+                        className="btn-carrito"
+                        onClick={() => {
+                            clearCart();
+                            if (showToast) showToast("Carrito vaciado");
+                        }}
+                        disabled={cartItems.length === 0}
+                    >
+                        Vaciar carrito
+                    </button>
+                </div>
+            </div>
+
+            {/* Listado de juegos */}
             <ul className="carrito-lista">
                 {juegosPagina.map((g) => {
                     const portadaUrl = g.portada
@@ -86,34 +129,6 @@ function CarritoView({ showToast }) {
             {totalPages > 1 && (
                 <Paginacion page={page} totalPages={totalPages} onPageChange={setPage} />
             )}
-
-            <p>Total precio: {(totals.price ?? 0).toFixed(2)} CUP</p>
-            <p>Total tamaño: {(totals.size ?? 0).toFixed(1)} GB</p>
-
-            {cartItems.some((g) => g.nombre.includes("[online]")) && (
-                <p style={{ color: "red" }}>
-                    ⚠ Algunos juegos online tienen tamaño variable
-                </p>
-            )}
-
-            {/* Botones de acción */}
-            <button className="btn-carrito" onClick={exportTxt}>
-                Exportar pedido
-            </button>
-
-            <button className="btn-carrito" onClick={enviarWhatsApp}>
-                📲 Enviar pedido por WhatsApp
-            </button>
-
-            <button
-                className="btn-carrito"
-                onClick={() => {
-                    clearCart();
-                    if (showToast) showToast("Carrito vaciado");
-                }}
-            >
-                Vaciar carrito
-            </button>
         </div>
     );
 }

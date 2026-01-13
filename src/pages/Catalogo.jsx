@@ -186,7 +186,6 @@ export default function Catalogo() {
                     <label style={{ color: "#f0f0f0" }}>Nombre</label>
                     <input
                         type="text"
-                        placeholder="Buscar por nombre…"
                         value={filtros.nombre}
                         onChange={(e) => actualizarFiltro("nombre", e.target.value)}
                         className="filtro-input"
