@@ -18,17 +18,7 @@ export default function Header() {
     };
 
     return (
-        <header
-            style={{
-                width: "100%",
-                backgroundColor: "#121212",
-                borderBottom: "1px solid #2a2a2a",
-                boxShadow: "0 2px 8px rgba(0,0,0,0.35)",
-                position: "sticky",
-                top: 0,
-                zIndex: 100,
-            }}
-        >
+        <header className="site-header">
             <div
                 className="header-container"
                 style={{

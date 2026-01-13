@@ -263,6 +263,31 @@ body {
   }
 }
 
+/* Estilos comunes del header */
+.site-header {
+  width: 100%;
+  background-color: #121212;
+  border-bottom: 1px solid #2a2a2a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+/* Desktop: header fijo */
+@media (min-width: 769px) {
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+}
+
+/* Móvil: header normal */
+@media (max-width: 768px) {
+  .site-header {
+    position: static;
+  }
+}
+
+
 @media (max-width: 768px) {
   .header-container {
     flex-direction: column;
