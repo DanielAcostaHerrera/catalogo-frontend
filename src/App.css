@@ -107,7 +107,8 @@ body {
   flex: 1;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 768px),
+(orientation: portrait) {
   .detalle-container {
     flex-direction: column;
     /* 🔹 en móvil, portada arriba y detalles debajo */
@@ -126,7 +127,8 @@ body {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 768px),
+(orientation: portrait) {
   .filtros-grid {
     grid-template-columns: 1fr;
     /* en móvil, una sola columna */
@@ -256,7 +258,8 @@ body {
   margin-top: 8px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 768px),
+(orientation: portrait) {
   .btns-carrito {
     flex-direction: column;
     align-items: stretch;
@@ -281,14 +284,16 @@ body {
 }
 
 /* Móvil: header normal */
-@media (max-width: 768px) {
+@media (max-width: 768px),
+(orientation: portrait) {
   .site-header {
     position: static;
   }
 }
 
 
-@media (max-width: 768px) {
+@media (max-width: 768px),
+(orientation: portrait) {
   .header-container {
     flex-direction: column;
     align-items: center;
