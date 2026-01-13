@@ -107,8 +107,7 @@ body {
   flex: 1;
 }
 
-@media (max-width: 768px),
-(orientation: portrait) {
+@media (max-width: 768px) {
   .detalle-container {
     flex-direction: column;
     /* 🔹 en móvil, portada arriba y detalles debajo */
@@ -127,8 +126,7 @@ body {
   }
 }
 
-@media (max-width: 768px),
-(orientation: portrait) {
+@media (max-width: 768px) {
   .filtros-grid {
     grid-template-columns: 1fr;
     /* en móvil, una sola columna */
@@ -258,8 +256,7 @@ body {
   margin-top: 8px;
 }
 
-@media (max-width: 768px),
-(orientation: portrait) {
+@media (max-width: 768px) {
   .btns-carrito {
     flex-direction: column;
     align-items: stretch;
