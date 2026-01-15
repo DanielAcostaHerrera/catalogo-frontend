@@ -84,9 +84,10 @@ export default function JuegoDetalles() {
                             </p>
                             <p>
                                 <strong>Año de actualización:</strong>{" "}
-                                {j.AnnoAct || "No disponible"}
+                                {j.Nombre?.toLowerCase().includes("[online]")
+                                    ? new Date().getFullYear()
+                                    : j.AnnoAct || "No disponible"}
                             </p>
-
                             {/* Sinopsis */}
                             <div style={{ marginTop: 20 }}>
                                 <strong>Sinopsis:</strong>
