@@ -115,7 +115,7 @@ export default function JuegoDetalles() {
                             {/* SINOPSIS */}
                             <div className="detalle-card">
                                 <strong>Sinopsis:</strong>
-                                <p style={{ whiteSpace: "pre-line", marginLeft: 10 }}>
+                                <p style={{ whiteSpace: "pre-line", marginLeft: 10, textAlign: "justify" }}>
                                     {normalizarTexto(j.Sinopsis) || "Sin sinopsis disponible."}
                                 </p>
                             </div>
@@ -123,7 +123,7 @@ export default function JuegoDetalles() {
                             {/* REQUISITOS */}
                             <div className="detalle-card">
                                 <strong>Requisitos de Sistema:</strong>
-                                <p style={{ whiteSpace: "pre-line", marginLeft: 10 }}>
+                                <p style={{ whiteSpace: "pre-line", marginLeft: 10, textAlign: "justify" }}>
                                     {procesarRequisitos(j.Requisitos) || "No disponibles."}
                                 </p>
 
@@ -132,9 +132,7 @@ export default function JuegoDetalles() {
                                         className="btn-add"
                                         onClick={() => {
                                             const nombreLimpio = limpiarNombreParaBusqueda(j.Nombre);
-                                            const query = encodeURIComponent(
-                                                `Requisitos ${nombreLimpio}`
-                                            );
+                                            const query = encodeURIComponent(`Requisitos ${nombreLimpio}`);
                                             window.open(
                                                 `https://www.google.com/search?q=${query}`,
                                                 "_blank"
