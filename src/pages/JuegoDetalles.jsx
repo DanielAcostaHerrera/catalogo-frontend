@@ -34,16 +34,19 @@ export default function JuegoDetalles() {
 
                 const procesarRequisitos = (txt) => {
                     if (!txt) return "";
-                    const lineas = normalizarTexto(txt).split("\n");
+                    const lineas = normalizarTexto(txt).split(/\r?\n/);
                     const resultado = [];
-                    const patronesRec = /(recomendado[s]?|requisito[s]?\s+recomendado[s]?)/i;
 
                     lineas.forEach((linea) => {
                         const l = linea.trim();
-                        if (patronesRec.test(l)) {
-                            resultado.push("");
+
+                        if (/^recomendado/i.test(l)) {
+                            // 🔹 siempre insertar salto antes de Recomendados si no lo hay
+                            if (resultado.length > 0 && resultado[resultado.length - 1] !== "") {
+                                resultado.push("");
+                            }
                             resultado.push(l);
-                        } else {
+                        } else if (l !== "") {
                             resultado.push(l);
                         }
                     });
