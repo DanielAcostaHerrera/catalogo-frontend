@@ -1,9 +1,11 @@
+/* --------------------------------------------------
+   GLOBAL
+-------------------------------------------------- */
 html,
 body {
   margin: 0;
   padding: 0;
   background-color: #1e1e1e;
-  /* negro global */
   min-height: 100vh;
   width: 100%;
 }
@@ -13,13 +15,14 @@ body {
   margin: 0;
   padding: 0;
   background-color: transparent;
-  /* deja ver el negro del body */
 }
 
+/* --------------------------------------------------
+   INPUTS Y FILTROS
+-------------------------------------------------- */
 .filtro-input {
   width: 100%;
   height: 32px;
-  /* altura fija */
   padding: 6px;
   border-radius: 4px;
   border: 1px solid #444;
@@ -28,52 +31,12 @@ body {
   box-sizing: border-box;
   font-size: 14px;
   line-height: 20px;
-  /* asegura texto centrado */
 }
 
 .filtro-sufijo {
   margin-left: 6px;
   color: #ccc;
   line-height: 32px;
-  /* 🔹 mismo alto que el input */
-}
-
-
-.catalogo-container {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
 }
 
 .filtros-grid {
@@ -87,10 +50,18 @@ body {
   grid-column: span 2;
 }
 
+/* --------------------------------------------------
+   DETALLE DE JUEGO (PC)
+-------------------------------------------------- */
+.detalle-wrapper {
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
 .detalle-container {
   background-color: #1e1e1e;
   color: #f0f0f0;
-  min-height: 100vh;
   padding: 20px;
   display: flex;
   gap: 20px;
@@ -99,35 +70,62 @@ body {
 
 .detalle-portada {
   width: 300px;
+  margin-bottom: 12px;
 }
 
 .detalle-info {
   flex: 1;
 }
 
+.detalle-container button {
+  align-self: center;
+}
+
+/* Sección inferior (sinopsis + requisitos) */
+.detalle-extra {
+  width: 100%;
+  margin-top: 20px;
+}
+
+/* --------------------------------------------------
+   DETALLE DE JUEGO (MÓVIL)
+-------------------------------------------------- */
 @media (max-width: 768px) {
   .detalle-container {
     flex-direction: column;
-    /* 🔹 en móvil, portada arriba y detalles debajo */
     align-items: center;
     text-align: center;
   }
 
   .detalle-portada {
     width: 100%;
-    /* portada ocupa todo el ancho en móvil */
     max-width: 400px;
   }
 
   .detalle-info {
     width: 100%;
   }
+
+  .detalle-extra {
+    text-align: center;
+    margin-top: 10px !important;
+  }
+
+  .detalle-extra p {
+    margin-left: 0 !important;
+  }
+
+  .detalle-extra>div {
+    margin-top: 10px !important;
+  }
 }
 
+/* --------------------------------------------------
+   FILTROS (MÓVIL)
+-------------------------------------------------- */
 @media (max-width: 768px) {
   .filtros-grid {
     grid-template-columns: 1fr;
-    /* en móvil, una sola columna */
   }
 
   .texto-multilinea {
@@ -136,18 +134,12 @@ body {
 
   .filtro-nombre {
     grid-column: span 1;
-    /* vuelve a ocupar solo una columna */
   }
 }
 
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
-
+/* --------------------------------------------------
+   CARRITO
+-------------------------------------------------- */
 .carrito-lista {
   list-style: none;
   padding: 0;
@@ -178,75 +170,6 @@ body {
   background-color: #666;
 }
 
-.btn-exportar {
-  margin-top: 20px;
-  padding: 10px 16px;
-  background-color: #4285f4;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.btn-exportar:hover {
-  background-color: #3367d6;
-}
-
-.detalle-portada {
-  width: 300px;
-  margin-bottom: 12px;
-  /* espacio entre portada y botón */
-}
-
-.detalle-container button {
-  align-self: center;
-  /* centra el botón debajo de la portada */
-}
-
-.btn-add {
-  padding: 8px 12px;
-  background-color: #333;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
-}
-
-.btn-add:hover {
-  background-color: #555;
-  transform: scale(1.05);
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
-}
-
-.btn-carrito {
-  display: block;
-  padding: 8px 12px;
-  background-color: #333;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-  margin-top: 12px;
-  transition: background-color 0.2s, transform 0.2s;
-}
-
-.btn-carrito:hover:not(:disabled) {
-  background-color: #555;
-  transform: scale(1.03);
-}
-
-.btn-carrito:disabled {
-  background-color: #1a1a1a;
-  color: #777;
-  cursor: not-allowed;
-  opacity: 0.7;
-  transform: none;
-}
-
 .btns-carrito {
   display: flex;
   gap: 8px;
@@ -261,7 +184,50 @@ body {
   }
 }
 
-/* Estilos comunes del header */
+/* --------------------------------------------------
+   BOTONES GENERALES
+-------------------------------------------------- */
+.btn-add,
+.btn-carrito,
+.btn-exportar {
+  padding: 8px 12px;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.btn-add:hover,
+.btn-carrito:hover:not(:disabled),
+.btn-exportar:hover {
+  background-color: #555;
+  transform: scale(1.05);
+}
+
+.btn-carrito:disabled {
+  background-color: #1a1a1a;
+  color: #777;
+  cursor: not-allowed;
+  opacity: 0.7;
+  transform: none;
+}
+
+.btn-exportar {
+  margin-top: 20px;
+  padding: 10px 16px;
+  background-color: #4285f4;
+}
+
+.btn-exportar:hover {
+  background-color: #3367d6;
+}
+
+/* --------------------------------------------------
+   HEADER
+-------------------------------------------------- */
 .site-header {
   width: 100%;
   background-color: #121212;
@@ -269,7 +235,7 @@ body {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
 }
 
-/* Desktop: header fijo */
+/* PC: header sticky */
 @media (min-width: 769px) {
   .site-header {
     position: sticky;
@@ -278,15 +244,63 @@ body {
   }
 }
 
-/* Móvil: header normal */
+/* Botón sándwich oculto por defecto */
+.hamburger-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: #f0f0f0;
+  font-size: 32px;
+  cursor: pointer;
+}
+
+/* Menú móvil oculto por defecto */
+.mobile-menu {
+  display: none;
+}
+
+/* --------------------------------------------------
+   HEADER
+-------------------------------------------------- */
+.site-header {
+  width: 100%;
+  background-color: #121212;
+  border-bottom: 1px solid #2a2a2a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+/* PC: header sticky */
+@media (min-width: 769px) {
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+}
+
+/* Botón sándwich oculto por defecto */
+.hamburger-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: #f0f0f0;
+  font-size: 32px;
+  cursor: pointer;
+}
+
+/* Menú móvil oculto por defecto */
+.mobile-menu {
+  display: none;
+}
+
+/* --------------------------------------------------
+   HEADER (MÓVIL)
+-------------------------------------------------- */
 @media (max-width: 768px) {
   .site-header {
     position: static;
   }
-}
 
-
-@media (max-width: 768px) {
   .header-container {
     flex-direction: column;
     align-items: center;
@@ -294,6 +308,7 @@ body {
     position: relative;
   }
 
+  /* 🔹 Recuperamos tu comportamiento original del logo */
   .logo-box {
     position: absolute;
     transform: translateX(-100%);
@@ -304,7 +319,6 @@ body {
   .title-box {
     width: 100%;
     text-align: center;
-    top: 0;
     margin-bottom: 10px;
   }
 
@@ -314,28 +328,30 @@ body {
     white-space: nowrap;
   }
 
-  .header-nav {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
+  /* 🔹 Botón ☰ alineado con el logo */
+  .hamburger-btn {
+    display: block;
+    position: absolute;
+    right: -20px;
+    top: -18px;
   }
 
-  .header-nav a {
+  /* Ocultar menú de PC en móvil */
+  .desktop-nav {
+    display: none !important;
+  }
+
+  /* Menú móvil desplegable */
+  .mobile-menu {
+    display: flex;
+    flex-direction: column;
     width: 100%;
+    margin-top: 12px;
+    gap: 10px;
     text-align: center;
   }
 
-  .map-pin {
-    display: inline-block;
-    cursor: pointer;
-  }
-
-  .whatsapp-icon {
-    display: inline-block;
-    margin-left: 8px;
-    cursor: pointer;
-    transition: transform 0.2s ease;
+  .mobile-menu a {
+    width: 100%;
   }
 }

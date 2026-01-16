@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { Query } from "react-apollo";
 import { GET_JUEGO } from "../graphql";
-import "../App.css"; // estilos globales
+import "../App.css";
 import { limpiarNombreParaBusqueda } from "../utils/FormatoJuego";
 import { useRef } from "react";
 import AddToCartButton from "../components/AddToCartButton";
@@ -27,10 +27,8 @@ export default function JuegoDetalles() {
                     j.Portada
                 )}`;
 
-                // Normalizar texto: convertir secuencias "\n" en saltos reales
                 const normalizarTexto = (txt) => (txt ? txt.replace(/\\n/g, "\n") : "");
 
-                // Procesar requisitos para insertar renglón vacío antes de "Recomendados"
                 const procesarRequisitos = (txt) => {
                     if (!txt) return "";
                     const lineas = normalizarTexto(txt).split("\n");
@@ -40,7 +38,7 @@ export default function JuegoDetalles() {
                     lineas.forEach((linea) => {
                         const l = linea.trim();
                         if (patronesRec.test(l)) {
-                            resultado.push(""); // salto de línea antes de recomendados
+                            resultado.push("");
                             resultado.push(l);
                         } else {
                             resultado.push(l);
@@ -51,45 +49,54 @@ export default function JuegoDetalles() {
                 };
 
                 return (
-                    <div className="detalle-container">
-                        <Toast ref={toastRef} />
+                    <div className="detalle-wrapper">
+                        <div className="detalle-container">
+                            <Toast ref={toastRef} />
 
-                        {/* 🔹 Columna izquierda: portada + botón añadir */}
-                        <div
-                            className="detalle-portada"
-                            style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                alignItems: "center",
-                                gap: "12px",
-                            }}
-                        >
-                            <img
-                                src={portadaUrl}
-                                alt={j.Nombre}
-                                style={{ width: "100%", height: "auto", borderRadius: 8 }}
-                            />
-                            <AddToCartButton game={j} showToast={showToast} />
+                            {/* IZQUIERDA: portada + botón */}
+                            <div
+                                className="detalle-portada"
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    alignItems: "center",
+                                    gap: "12px",
+                                }}
+                            >
+                                <img
+                                    src={portadaUrl}
+                                    alt={j.Nombre}
+                                    style={{ width: "100%", height: "auto", borderRadius: 8 }}
+                                />
+                                <AddToCartButton game={j} showToast={showToast} />
+                            </div>
+
+                            {/* DERECHA: detalles básicos */}
+                            <div className="detalle-info">
+                                <h2 style={{ marginTop: 0 }}>{j.Nombre}</h2>
+
+                                <p>
+                                    <strong>Tamaño:</strong> {j.TamanoFormateado}
+                                </p>
+
+                                <p>
+                                    <strong>Precio:</strong>{" "}
+                                    {j.Precio ? `${j.Precio} CUP` : "No disponible"}
+                                </p>
+
+                                <p>
+                                    <strong>Año de actualización:</strong>{" "}
+                                    {j.Nombre?.toLowerCase().includes("[online]")
+                                        ? new Date().getFullYear()
+                                        : j.AnnoAct || "No disponible"}
+                                </p>
+                            </div>
                         </div>
 
-                        {/* 🔹 Columna derecha: información */}
-                        <div className="detalle-info">
-                            <h2 style={{ marginTop: 0 }}>{j.Nombre}</h2>
-                            <p>
-                                <strong>Tamaño:</strong> {j.TamanoFormateado}
-                            </p>
-                            <p>
-                                <strong>Precio:</strong>{" "}
-                                {j.Precio ? `${j.Precio} CUP` : "No disponible"}
-                            </p>
-                            <p>
-                                <strong>Año de actualización:</strong>{" "}
-                                {j.Nombre?.toLowerCase().includes("[online]")
-                                    ? new Date().getFullYear()
-                                    : j.AnnoAct || "No disponible"}
-                            </p>
+                        {/* 🔹 ABAJO: Sinopsis + Requisitos ocupando todo el ancho */}
+                        <div className="detalle-extra">
                             {/* Sinopsis */}
-                            <div style={{ marginTop: 20 }}>
+                            <div>
                                 <strong>Sinopsis:</strong>
                                 <p style={{ whiteSpace: "pre-line", marginLeft: 10 }}>
                                     {normalizarTexto(j.Sinopsis) || "Sin sinopsis disponible."}
@@ -97,7 +104,7 @@ export default function JuegoDetalles() {
                             </div>
 
                             {/* Requisitos */}
-                            <div style={{ marginTop: 20 }}>
+                            <div>
                                 <strong>Requisitos de Sistema:</strong>
                                 <p style={{ whiteSpace: "pre-line", marginLeft: 10 }}>
                                     {procesarRequisitos(j.Requisitos) || "No disponibles."}

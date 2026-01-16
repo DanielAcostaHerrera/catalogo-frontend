@@ -1,8 +1,10 @@
 import { NavLink } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { useState } from "react";
 
 export default function Header() {
     const { cartItems } = useCart();
+    const [menuOpen, setMenuOpen] = useState(false);
 
     const linkStyle = {
         color: "#e6e6e6",
@@ -25,14 +27,13 @@ export default function Header() {
                     width: "100%",
                     padding: "12px 20px",
                     display: "flex",
-                    flexWrap: "wrap",
                     alignItems: "center",
                     gap: 12,
                     boxSizing: "border-box",
                     position: "relative",
                 }}
             >
-                {/* 🔹 Logo en su propio div */}
+                {/* Logo */}
                 <div className="logo-box">
                     <img
                         src="/logo.png"
@@ -42,7 +43,15 @@ export default function Header() {
                     />
                 </div>
 
-                {/* 🔹 Texto en su propio div */}
+                {/* Botón sándwich (solo móvil) */}
+                <button
+                    className="hamburger-btn"
+                    onClick={() => setMenuOpen(!menuOpen)}
+                >
+                    ☰
+                </button>
+
+                {/* Título */}
                 <div className="title-box">
                     <span
                         className="header-title"
@@ -56,14 +65,14 @@ export default function Header() {
                     </span>
                 </div>
 
-                {/* 🔹 Navegación */}
+                {/* Navegación PC */}
                 <nav
-                    className="header-nav"
+                    className="header-nav desktop-nav"
                     style={{
                         display: "flex",
                         gap: 8,
-                        marginLeft: "auto",
                         flexWrap: "wrap",
+                        marginLeft: "auto", // 🔹 Alinea a la derecha en PC
                     }}
                 >
                     <NavLink
@@ -94,6 +103,39 @@ export default function Header() {
                         🛒 Carrito ({cartItems.length})
                     </NavLink>
                 </nav>
+
+                {/* Navegación móvil desplegable */}
+                {menuOpen && (
+                    <nav className="mobile-menu">
+                        <NavLink
+                            to="/"
+                            end
+                            style={({ isActive }) =>
+                                isActive ? { ...linkStyle, ...activeStyle } : linkStyle
+                            }
+                        >
+                            Catálogo
+                        </NavLink>
+
+                        <NavLink
+                            to="/info"
+                            style={({ isActive }) =>
+                                isActive ? { ...linkStyle, ...activeStyle } : linkStyle
+                            }
+                        >
+                            Información del negocio
+                        </NavLink>
+
+                        <NavLink
+                            to="/carrito"
+                            style={({ isActive }) =>
+                                isActive ? { ...linkStyle, ...activeStyle } : linkStyle
+                            }
+                        >
+                            🛒 Carrito ({cartItems.length})
+                        </NavLink>
+                    </nav>
+                )}
             </div>
         </header>
     );
