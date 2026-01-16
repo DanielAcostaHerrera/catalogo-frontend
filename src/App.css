@@ -53,48 +53,112 @@ body {
 /* --------------------------------------------------
    DETALLE DE JUEGO (PC)
 -------------------------------------------------- */
+
 .detalle-wrapper {
   width: 100%;
   padding: 20px;
   box-sizing: border-box;
 }
 
+/* 🔹 Título centrado arriba */
+.detalle-titulo {
+  text-align: center;
+  color: #f0f0f0;
+  font-size: 28px;
+  margin-bottom: 20px;
+  margin-top: 10px;
+  font-weight: 700;
+}
+
 .detalle-container {
   background-color: #1e1e1e;
   color: #f0f0f0;
-  padding: 20px;
+  padding: 0;
   display: flex;
   gap: 20px;
   align-items: flex-start;
 }
 
+/* 🔹 Portada + botón */
 .detalle-portada {
   width: 300px;
-  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
 }
 
+/* Portada con estilo moderno */
+.detalle-portada-img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  border: 1px solid #333;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* 🔹 Info a la derecha */
 .detalle-info {
   flex: 1;
+  min-width: 0;
+  background: #1a1a1a;
+  padding: 16px;
+  border-radius: 10px;
+  border: 1px solid #2a2a2a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 }
 
-.detalle-container button {
-  align-self: center;
-}
-
-/* Sección inferior (sinopsis + requisitos) */
+/* 🔹 Sección inferior (sinopsis + requisitos) */
 .detalle-extra {
   width: 100%;
   margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Tarjetas modernas */
+.detalle-card {
+  background: #1a1a1a;
+  padding: 16px;
+  border-radius: 10px;
+  border: 1px solid #2a2a2a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+/* Botón Volver */
+.btn-volver {
+  background: #2a2a2a;
+  color: #f0f0f0;
+  border: 1px solid #444;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-bottom: 15px;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.btn-volver:hover {
+  background: #3a3a3a;
+  transform: scale(1.05);
 }
 
 /* --------------------------------------------------
    DETALLE DE JUEGO (MÓVIL)
 -------------------------------------------------- */
 @media (max-width: 768px) {
+
+  .detalle-titulo {
+    font-size: 24px;
+    margin-bottom: 16px;
+  }
+
   .detalle-container {
     flex-direction: column;
     align-items: center;
     text-align: center;
+    padding: 0;
   }
 
   .detalle-portada {
@@ -104,6 +168,8 @@ body {
 
   .detalle-info {
     width: 100%;
+    margin-top: 10px;
+    text-align: left;
   }
 
   .detalle-extra {
@@ -308,7 +374,6 @@ body {
     position: relative;
   }
 
-  /* 🔹 Recuperamos tu comportamiento original del logo */
   .logo-box {
     position: absolute;
     transform: translateX(-100%);
@@ -328,7 +393,6 @@ body {
     white-space: nowrap;
   }
 
-  /* 🔹 Botón ☰ alineado con el logo */
   .hamburger-btn {
     display: block;
     position: absolute;
@@ -336,12 +400,10 @@ body {
     top: -18px;
   }
 
-  /* Ocultar menú de PC en móvil */
   .desktop-nav {
     display: none !important;
   }
 
-  /* Menú móvil desplegable */
   .mobile-menu {
     display: flex;
     flex-direction: column;

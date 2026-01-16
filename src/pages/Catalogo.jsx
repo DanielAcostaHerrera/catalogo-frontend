@@ -6,32 +6,84 @@ import Paginacion from "../components/Paginacion";
 import "../App.css";
 import { useRef } from "react";
 import Toast from "../components/Toast";
-
+import { useLocation } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
+import { useEffect } from "react";
 
 export default function Catalogo() {
-    const [page, setPage] = useState(1);
-    const [limit] = useState(100);
-    const [annoMinTemp, setAnnoMinTemp] = useState("");
-    const [annoMaxTemp, setAnnoMaxTemp] = useState("");
+    const location = useLocation();
+    const [searchParams, setSearchParams] = useSearchParams();
 
+    // 🔹 Página desde la URL (o 1 si no existe)
+    const [page, setPage] = useState(Number(searchParams.get("page")) || 1);
+
+    const [limit] = useState(100);
+
+    // 🔹 Estados temporales de año (también desde URL)
+    const [annoMinTemp, setAnnoMinTemp] = useState(searchParams.get("annoMin") || "");
+    const [annoMaxTemp, setAnnoMaxTemp] = useState(searchParams.get("annoMax") || "");
+
+    // 🔹 Filtros iniciales desde la URL
+    const [filtros, setFiltros] = useState({
+        nombre: searchParams.get("nombre") || "",
+        tamanoMin: searchParams.get("tamanoMin") || "",
+        tamanoMax: searchParams.get("tamanoMax") || "",
+        annoMin: searchParams.get("annoMin") || "",
+        annoMax: searchParams.get("annoMax") || "",
+        precioMin: searchParams.get("precioMin") || "",
+        precioMax: searchParams.get("precioMax") || "",
+    });
+
+    // 🔹 Toast (queda igual que antes)
     const toastRef = useRef();
     const showToast = (msg) => {
         if (toastRef.current) toastRef.current.showToast(msg);
     };
 
-    const [filtros, setFiltros] = useState({
-        nombre: "",
-        tamanoMin: "",
-        tamanoMax: "",
-        annoMin: "",
-        annoMax: "",
-        precioMin: "",
-        precioMax: "",
-    });
+    useEffect(() => {
+        const newPage = Number(searchParams.get("page")) || 1;
+        if (newPage !== page) setPage(newPage);
+
+        const newAnnoMin = searchParams.get("annoMin") || "";
+        if (newAnnoMin !== annoMinTemp) setAnnoMinTemp(newAnnoMin);
+
+        const newAnnoMax = searchParams.get("annoMax") || "";
+        if (newAnnoMax !== annoMaxTemp) setAnnoMaxTemp(newAnnoMax);
+
+        const newFiltros = {
+            nombre: searchParams.get("nombre") || "",
+            tamanoMin: searchParams.get("tamanoMin") || "",
+            tamanoMax: searchParams.get("tamanoMax") || "",
+            annoMin: searchParams.get("annoMin") || "",
+            annoMax: searchParams.get("annoMax") || "",
+            precioMin: searchParams.get("precioMin") || "",
+            precioMax: searchParams.get("precioMax") || "",
+        };
+
+        if (JSON.stringify(newFiltros) !== JSON.stringify(filtros)) {
+            setFiltros(newFiltros);
+        }
+    }, [searchParams]);
+
 
     const actualizarFiltro = (campo, valor) => {
-        setFiltros({ ...filtros, [campo]: valor });
-        setPage(1);
+        const newFiltros = { ...filtros, [campo]: valor };
+        setFiltros(newFiltros);
+
+        const newParams = new URLSearchParams(searchParams);
+        if (valor) {
+            newParams.set(campo, valor);
+        } else {
+            newParams.delete(campo);
+        }
+
+        // 🔹 Si el campo estaba vacío y ahora empieza a tener valor → crear entrada nueva
+        const estabaVacio = !searchParams.get(campo);
+        if (estabaVacio && valor) {
+            setSearchParams(newParams); // crea entrada en historial
+        } else {
+            setSearchParams(newParams, { replace: true }); // reemplaza mientras escribes
+        }
     };
 
     const validarRango = (campoMin, campoMax, tipo) => {
@@ -152,7 +204,6 @@ export default function Catalogo() {
     };
 
     const reiniciarCatalogo = () => {
-        // Resetear filtros reales
         setFiltros({
             nombre: "",
             tamanoMin: "",
@@ -163,12 +214,11 @@ export default function Catalogo() {
             precioMax: "",
         });
 
-        // Resetear estados temporales de año
         setAnnoMinTemp("");
         setAnnoMaxTemp("");
-
-        // Resetear paginación
         setPage(1);
+
+        setSearchParams({});
     };
 
     return (
@@ -382,7 +432,12 @@ export default function Catalogo() {
                                 }}
                             >
                                 {juegos.map((j) => (
-                                    <JuegoCard key={j.Id} juego={j} showToast={showToast} />
+                                    <JuegoCard
+                                        key={j.Id}
+                                        juego={j}
+                                        showToast={showToast}
+                                        from={location.pathname + location.search}
+                                    />
                                 ))}
 
                             </div>
@@ -390,7 +445,15 @@ export default function Catalogo() {
                             <Paginacion
                                 page={page}
                                 totalPages={totalPages}
-                                onPageChange={(p) => setPage(p)}
+                                onPageChange={(p) => {
+                                    setPage(p);
+                                    const params = {
+                                        ...Object.fromEntries(searchParams.entries()),
+                                        page: p
+                                    };
+                                    setSearchParams(params);
+                                }}
+
                             />
                         </>
                     );

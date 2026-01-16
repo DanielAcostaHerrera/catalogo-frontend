@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { Query } from "react-apollo";
 import { GET_JUEGO } from "../graphql";
 import "../App.css";
@@ -9,6 +9,9 @@ import Toast from "../components/Toast";
 
 export default function JuegoDetalles() {
     const { id } = useParams();
+    const location = useLocation();     // 🔹 Para saber desde dónde venimos
+    const navigate = useNavigate();     // 🔹 Para volver exactamente a esa vista
+
     const toastRef = useRef();
     const showToast = (msg) => {
         if (toastRef.current) toastRef.current.showToast(msg);
@@ -50,31 +53,41 @@ export default function JuegoDetalles() {
 
                 return (
                     <div className="detalle-wrapper">
+
+                        {/* 🔹 BOTÓN VOLVER (inteligente) */}
+                        <button
+                            className="btn-volver"
+                            onClick={() => {
+                                if (location.state?.from) {
+                                    navigate(location.state.from);
+                                } else {
+                                    navigate("/catalogo");
+                                }
+                            }}
+                        >
+                            ← Volver
+                        </button>
+
+                        {/* 🔹 TÍTULO ARRIBA Y CENTRADO */}
+                        <h2 className="detalle-titulo">{j.Nombre}</h2>
+
                         <div className="detalle-container">
                             <Toast ref={toastRef} />
 
-                            {/* IZQUIERDA: portada + botón */}
-                            <div
-                                className="detalle-portada"
-                                style={{
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    alignItems: "center",
-                                    gap: "12px",
-                                }}
-                            >
+                            {/* 🔹 IZQUIERDA: Portada + Botón Añadir */}
+                            <div className="detalle-portada">
                                 <img
                                     src={portadaUrl}
                                     alt={j.Nombre}
-                                    style={{ width: "100%", height: "auto", borderRadius: 8 }}
+                                    className="detalle-portada-img"
                                 />
+
+                                {/* Botón Añadir */}
                                 <AddToCartButton game={j} showToast={showToast} />
                             </div>
 
-                            {/* DERECHA: detalles básicos */}
+                            {/* 🔹 DERECHA: Tamaño / Precio / Año */}
                             <div className="detalle-info">
-                                <h2 style={{ marginTop: 0 }}>{j.Nombre}</h2>
-
                                 <p>
                                     <strong>Tamaño:</strong> {j.TamanoFormateado}
                                 </p>
@@ -93,18 +106,19 @@ export default function JuegoDetalles() {
                             </div>
                         </div>
 
-                        {/* 🔹 ABAJO: Sinopsis + Requisitos ocupando todo el ancho */}
+                        {/* 🔹 ABAJO: Sinopsis + Requisitos */}
                         <div className="detalle-extra">
-                            {/* Sinopsis */}
-                            <div>
+
+                            {/* SINOPSIS */}
+                            <div className="detalle-card">
                                 <strong>Sinopsis:</strong>
                                 <p style={{ whiteSpace: "pre-line", marginLeft: 10 }}>
                                     {normalizarTexto(j.Sinopsis) || "Sin sinopsis disponible."}
                                 </p>
                             </div>
 
-                            {/* Requisitos */}
-                            <div>
+                            {/* REQUISITOS */}
+                            <div className="detalle-card">
                                 <strong>Requisitos de Sistema:</strong>
                                 <p style={{ whiteSpace: "pre-line", marginLeft: 10 }}>
                                     {procesarRequisitos(j.Requisitos) || "No disponibles."}
@@ -112,7 +126,7 @@ export default function JuegoDetalles() {
 
                                 {j.Requisitos === "No disponible" && (
                                     <button
-                                        className="btn-buscar"
+                                        className="btn-add"
                                         onClick={() => {
                                             const nombreLimpio = limpiarNombreParaBusqueda(j.Nombre);
                                             const query = encodeURIComponent(
@@ -123,18 +137,8 @@ export default function JuegoDetalles() {
                                                 "_blank"
                                             );
                                         }}
-                                        style={{
-                                            marginTop: 10,
-                                            padding: "8px 12px",
-                                            background: "#4285f4",
-                                            color: "white",
-                                            border: "none",
-                                            borderRadius: 4,
-                                            cursor: "pointer",
-                                            fontWeight: 600,
-                                        }}
                                     >
-                                        Buscar requisitos en Google
+                                        Buscar en Google
                                     </button>
                                 )}
                             </div>

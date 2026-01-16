@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import AddToCartButton from "../components/AddToCartButton";
 
-export default function JuegoCard({ juego, showToast }) {
+export default function JuegoCard({ juego, showToast, from }) {
     const portadaUrl = `https://catalogo-backend-f4sk.onrender.com/portadas/${encodeURIComponent(
         juego.Portada
     )}`;
@@ -15,8 +15,10 @@ export default function JuegoCard({ juego, showToast }) {
                 backgroundColor: "#1e1e1e",
             }}
         >
+            {/* Enviamos la ruta exacta desde donde venimos */}
             <Link
                 to={`/juego/${juego.Id}`}
+                state={{ from }}
                 style={{ textDecoration: "none", color: "inherit" }}
             >
                 <img
@@ -40,6 +42,7 @@ export default function JuegoCard({ juego, showToast }) {
                         e.currentTarget.style.boxShadow = "none";
                     }}
                 />
+
                 <h3
                     style={{
                         margin: 8,
