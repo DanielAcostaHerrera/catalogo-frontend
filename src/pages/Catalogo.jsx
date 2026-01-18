@@ -54,8 +54,8 @@ export default function Catalogo() {
             nombre: searchParams.get("nombre") || "",
             tamanoMin: searchParams.get("tamanoMin") || "",
             tamanoMax: searchParams.get("tamanoMax") || "",
-            annoMin: searchParams.get("annoMin") || "",
-            annoMax: searchParams.get("annoMax") || "",
+            annoMin: newAnnoMin,
+            annoMax: newAnnoMax,
             precioMin: searchParams.get("precioMin") || "",
             precioMax: searchParams.get("precioMax") || "",
         };
@@ -64,7 +64,6 @@ export default function Catalogo() {
             setFiltros(newFiltros);
         }
     }, [searchParams]);
-
 
     const actualizarFiltro = (campo, valor) => {
         const newFiltros = { ...filtros, [campo]: valor };
@@ -121,6 +120,7 @@ export default function Catalogo() {
         }
     };
 
+    // 🔹 Solo permitir números en inputs de año
     const soloAnios = (e) => {
         const allowed = ["Backspace", "Tab", "ArrowLeft", "ArrowRight", "Delete"];
         if (!/[0-9]/.test(e.key) && !allowed.includes(e.key)) {
@@ -130,48 +130,55 @@ export default function Catalogo() {
 
     const manejarAnno = (campo, valor, setTemp) => {
         if (valor.length > 4) return;
-        setTemp(valor); // siempre actualiza el input visible
+        setTemp(valor);
 
-        // 🔹 si aún no hay 4 dígitos, no aplicar filtro ni validar
-        if (valor.length < 4) {
-            setFiltros((prev) => ({ ...prev, [campo]: "" }));
-            return;
-        }
+        if (valor.length < 4) return;
 
-        // 🔹 al llegar a 4 dígitos, validar rango permitido
         const year = parseInt(valor);
         const currentYear = new Date().getFullYear();
         if (isNaN(year) || year < 1970 || year > currentYear) {
             alert(`Debe ingresar un año válido entre 1970 y ${currentYear}`);
-            setTemp("");
-            setFiltros((prev) => ({ ...prev, [campo]: "" }));
+            setTemp(""); // limpia el input visible
+            setFiltros((prev) => ({ ...prev, [campo]: "" })); // limpia el filtro real
+            const newParams = new URLSearchParams(searchParams);
+            newParams.delete(campo); // limpia la URL
+            setSearchParams(newParams, { replace: true });
             return;
         }
 
-        // 🔹 aplicar filtro real
-        setFiltros((prev) => ({ ...prev, [campo]: year.toString() }));
+        const yearStr = year.toString();
+        setFiltros((prev) => ({ ...prev, [campo]: yearStr }));
         setPage(1);
 
-        // 🔹 validación cruzada SOLO después de aplicar filtro real
+        const newParams = new URLSearchParams(searchParams);
+        newParams.set(campo, yearStr);
+        setSearchParams(newParams, { replace: true });
+
+        // 🔹 validación cruzada inmediata
         const otroCampo = campo === "annoMin" ? "annoMax" : "annoMin";
         const otroTemp = otroCampo === "annoMin" ? annoMinTemp : annoMaxTemp;
-
         if (otroTemp && otroTemp.length === 4) {
             const otroYear = parseInt(otroTemp);
             if (campo === "annoMin" && year > otroYear) {
                 alert("El año mínimo debe ser menor o igual al año máximo");
-                setAnnoMinTemp("");
-                setFiltros((prev) => ({ ...prev, annoMin: "" }));
+                setAnnoMinTemp(""); // limpia input visible
+                setFiltros((prev) => ({ ...prev, annoMin: "" })); // limpia filtro real
+                const p = new URLSearchParams(searchParams);
+                p.delete("annoMin");
+                setSearchParams(p, { replace: true });
             }
             if (campo === "annoMax" && year < otroYear) {
                 alert("El año máximo debe ser mayor o igual al año mínimo");
-                setAnnoMaxTemp("");
-                setFiltros((prev) => ({ ...prev, annoMax: "" }));
+                setAnnoMaxTemp(""); // limpia input visible
+                setFiltros((prev) => ({ ...prev, annoMax: "" })); // limpia filtro real
+                const p = new URLSearchParams(searchParams);
+                p.delete("annoMax");
+                setSearchParams(p, { replace: true });
             }
         }
     };
 
-    // 🔹 Bloquear letras en inputs numéricos
+    // 🔹 Bloquear letras en inputs numéricos (tamaño/precio)
     const soloNumeros = (e, permitirDecimal = false) => {
         const allowed = ["Backspace", "Tab", "ArrowLeft", "ArrowRight", "Delete"];
         if (permitirDecimal) allowed.push(".");
@@ -180,6 +187,7 @@ export default function Catalogo() {
         }
     };
 
+    // 🔹 Query según filtros
     const query =
         filtros.nombre ||
             filtros.tamanoMin ||
@@ -191,6 +199,7 @@ export default function Catalogo() {
             ? GET_CATALOGO_FILTRADO
             : GET_CATALOGO;
 
+    // 🔹 Variables para GraphQL
     const variables = {
         page,
         limit,
@@ -203,6 +212,7 @@ export default function Catalogo() {
         precioMax: filtros.precioMax !== "" ? parseInt(filtros.precioMax) : undefined,
     };
 
+    // 🔹 Reiniciar filtros
     const reiniciarCatalogo = () => {
         setFiltros({
             nombre: "",
@@ -249,17 +259,6 @@ export default function Catalogo() {
                         type="text"
                         value={annoMinTemp}
                         onChange={(e) => manejarAnno("annoMin", e.target.value, setAnnoMinTemp)}
-                        onBlur={() => {
-                            if (annoMinTemp.length === 4 && annoMaxTemp.length === 4) {
-                                const minVal = parseInt(annoMinTemp);
-                                const maxVal = parseInt(annoMaxTemp);
-                                if (minVal > maxVal) {
-                                    alert("El año mínimo debe ser menor o igual al año máximo");
-                                    setAnnoMinTemp("");
-                                    setFiltros((prev) => ({ ...prev, annoMin: "" }));
-                                }
-                            }
-                        }}
                         onKeyDown={soloAnios}
                         className="filtro-input"
                     />
@@ -272,17 +271,6 @@ export default function Catalogo() {
                         type="text"
                         value={annoMaxTemp}
                         onChange={(e) => manejarAnno("annoMax", e.target.value, setAnnoMaxTemp)}
-                        onBlur={() => {
-                            if (annoMinTemp.length === 4 && annoMaxTemp.length === 4) {
-                                const minVal = parseInt(annoMinTemp);
-                                const maxVal = parseInt(annoMaxTemp);
-                                if (maxVal < minVal) {
-                                    alert("El año máximo debe ser mayor o igual al año mínimo");
-                                    setAnnoMaxTemp("");
-                                    setFiltros((prev) => ({ ...prev, annoMax: "" }));
-                                }
-                            }
-                        }}
                         onKeyDown={soloAnios}
                         className="filtro-input"
                     />
