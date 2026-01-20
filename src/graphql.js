@@ -77,3 +77,23 @@ export const GET_JUEGO = gql`
     }
   }
 `;
+
+// ============================================================
+//  ÚLTIMOS ESTRENOS (AÑO ACTUAL, SIN ONLINE)
+// ============================================================
+export const GET_ULTIMOS_ESTRENOS = gql`
+  query UltimosEstrenos($limit: Int!) {
+    ultimosEstrenos(limit: $limit) {
+      juegos {
+        Id
+        Nombre
+        Portada
+        TamanoFormateado
+        Precio
+        AnnoAct
+        Requisitos
+      }
+      total
+    }
+  }
+`;

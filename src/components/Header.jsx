@@ -86,6 +86,15 @@ export default function Header() {
                     </NavLink>
 
                     <NavLink
+                        to="/ultimos-estrenos"
+                        style={({ isActive }) =>
+                            isActive ? { ...linkStyle, ...activeStyle } : linkStyle
+                        }
+                    >
+                        Últimos Estrenos
+                    </NavLink>
+
+                    <NavLink
                         to="/info"
                         style={({ isActive }) =>
                             isActive ? { ...linkStyle, ...activeStyle } : linkStyle
@@ -115,6 +124,15 @@ export default function Header() {
                             }
                         >
                             Catálogo
+                        </NavLink>
+
+                        <NavLink
+                            to="/ultimos-estrenos"
+                            style={({ isActive }) =>
+                                isActive ? { ...linkStyle, ...activeStyle } : linkStyle
+                            }
+                        >
+                            Últimos Estrenos
                         </NavLink>
 
                         <NavLink

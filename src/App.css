@@ -53,14 +53,12 @@ body {
 /* --------------------------------------------------
    DETALLE DE JUEGO (PC)
 -------------------------------------------------- */
-
 .detalle-wrapper {
   width: 100%;
   padding: 20px;
   box-sizing: border-box;
 }
 
-/* 🔹 Título centrado arriba */
 .detalle-titulo {
   text-align: center;
   color: #f0f0f0;
@@ -79,7 +77,6 @@ body {
   align-items: flex-start;
 }
 
-/* 🔹 Portada + botón */
 .detalle-portada {
   width: 300px;
   display: flex;
@@ -88,7 +85,6 @@ body {
   gap: 12px;
 }
 
-/* Portada con estilo moderno */
 .detalle-portada-img {
   width: 100%;
   height: auto;
@@ -97,7 +93,6 @@ body {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
-/* 🔹 Info a la derecha */
 .detalle-info {
   flex: 1;
   min-width: 0;
@@ -108,7 +103,6 @@ body {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 }
 
-/* 🔹 Sección inferior (sinopsis + requisitos) */
 .detalle-extra {
   width: 100%;
   margin-top: 20px;
@@ -117,7 +111,6 @@ body {
   gap: 20px;
 }
 
-/* Tarjetas modernas */
 .detalle-card {
   background: #1a1a1a;
   padding: 16px;
@@ -126,7 +119,6 @@ body {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 }
 
-/* Botón Volver */
 .btn-volver {
   background: #2a2a2a;
   color: #f0f0f0;
@@ -147,8 +139,7 @@ body {
 /* --------------------------------------------------
    DETALLE DE JUEGO (MÓVIL)
 -------------------------------------------------- */
-@media (max-width: 768px) {
-
+@media (max-width: 850px) {
   .detalle-titulo {
     font-size: 24px;
     margin-bottom: 16px;
@@ -189,7 +180,7 @@ body {
 /* --------------------------------------------------
    FILTROS (MÓVIL)
 -------------------------------------------------- */
-@media (max-width: 768px) {
+@media (max-width: 850px) {
   .filtros-grid {
     grid-template-columns: 1fr;
   }
@@ -243,7 +234,7 @@ body {
   margin-top: 8px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 850px) {
   .btns-carrito {
     flex-direction: column;
     align-items: stretch;
@@ -302,41 +293,7 @@ body {
 }
 
 /* PC: header sticky */
-@media (min-width: 769px) {
-  .site-header {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-}
-
-/* Botón sándwich oculto por defecto */
-.hamburger-btn {
-  display: none;
-  background: none;
-  border: none;
-  color: #f0f0f0;
-  font-size: 32px;
-  cursor: pointer;
-}
-
-/* Menú móvil oculto por defecto */
-.mobile-menu {
-  display: none;
-}
-
-/* --------------------------------------------------
-   HEADER
--------------------------------------------------- */
-.site-header {
-  width: 100%;
-  background-color: #121212;
-  border-bottom: 1px solid #2a2a2a;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
-}
-
-/* PC: header sticky */
-@media (min-width: 769px) {
+@media (min-width: 851px) {
   .site-header {
     position: sticky;
     top: 0;
@@ -362,7 +319,7 @@ body {
 /* --------------------------------------------------
    HEADER (MÓVIL)
 -------------------------------------------------- */
-@media (max-width: 768px) {
+@media (max-width: 850px) {
   .site-header {
     position: static;
   }
@@ -416,4 +373,36 @@ body {
   .mobile-menu a {
     width: 100%;
   }
+}
+
+/* --------------------------------------------------
+   SELECTOR DE LÍMITE (ÚLTIMOS ESTRENOS)
+-------------------------------------------------- */
+.selector-limit {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.selector-limit label {
+  color: #f0f0f0;
+  font-size: 14px;
+}
+
+.selector-limit input {
+  padding: 6px 10px;
+  border-radius: 4px;
+  border: 1px solid #555;
+  background-color: #222;
+  color: #f0f0f0;
+  font-size: 14px;
+  text-align: center;
+  width: 80px;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.selector-limit input:focus {
+  outline: none;
+  background-color: #333;
 }

@@ -4,6 +4,7 @@ import Catalogo from "./pages/Catalogo";
 import JuegoDetalles from "./pages/JuegoDetalles";
 import InfoNegocio from "./pages/InfoNegocio";
 import CarritoView from "./pages/CarritoView";
+import UltimosEstrenos from "./pages/UltimosEstrenos";   // 🔹 import nuevo
 import { CartProvider } from "./context/CartContext";
 
 export default function App() {
@@ -28,9 +29,19 @@ export default function App() {
             }}
           >
             <Routes>
+              {/* Catálogo principal */}
               <Route path="/" element={<Catalogo />} />
+
+              {/* Últimos Estrenos */}
+              <Route path="/ultimos-estrenos" element={<UltimosEstrenos />} />
+
+              {/* Detalles de juego */}
               <Route path="/juego/:id" element={<JuegoDetalles />} />
+
+              {/* Información del negocio */}
               <Route path="/info" element={<InfoNegocio />} />
+
+              {/* Carrito de compras */}
               <Route path="/carrito" element={<CarritoView />} />
             </Routes>
           </main>
