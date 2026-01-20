@@ -236,7 +236,7 @@ export default function Catalogo() {
             <Toast ref={toastRef} />
 
             <h2 style={{ color: "#f0f0f0", marginBottom: "20px" }}>
-                Catálogo de Juegos PixelPlay Habana
+                Catálogo de Juegos
             </h2>
 
             {/* 🔹 Bloque de filtros */}

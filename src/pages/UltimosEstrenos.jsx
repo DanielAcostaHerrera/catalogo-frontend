@@ -61,7 +61,7 @@ export default function UltimosEstrenos() {
             <Toast ref={toastRef} />
 
             <h2 style={{ color: "#f0f0f0", marginBottom: "20px" }}>
-                Últimos Estrenos PixelPlay Habana
+                Últimos Estrenos
             </h2>
 
             {/* Input para cantidad */}
