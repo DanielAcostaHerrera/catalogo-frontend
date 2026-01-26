@@ -103,23 +103,30 @@ function CarritoView({ showToast }) {
             {/* Listado de juegos */}
             <ul className="carrito-lista">
                 {juegosPagina.map((g) => {
-                    const portadaUrl = g.portada
-                        ? `https://catalogo-backend-f4sk.onrender.com/portadas/${encodeURIComponent(g.portada)}`
-                        : null;
+                    const portadaUrl = `https://catalogo-backend-f4sk.onrender.com/portadas/${g.portada}`;
+
                     return (
-                        <li key={g.id} style={{ display: "flex", gap: "12px", alignItems: "center" }}>
-                            {portadaUrl && (
-                                <img
-                                    src={portadaUrl}
-                                    alt={g.nombre}
-                                    style={{ width: "80px", height: "100px", objectFit: "contain", borderRadius: 4 }}
-                                />
-                            )}
+                        <li
+                            key={g.id}
+                            style={{ display: "flex", gap: "12px", alignItems: "center" }}
+                        >
+                            <img
+                                src={portadaUrl}
+                                alt={g.nombre}
+                                style={{
+                                    width: "80px",
+                                    height: "100px",
+                                    objectFit: "contain",
+                                    borderRadius: 4,
+                                }}
+                            />
+
                             <div style={{ flex: 1 }}>
                                 <strong>{g.nombre}</strong>
                                 <div>{(g.precio ?? 0).toFixed(2)} CUP</div>
                                 <div>{g.tamanoFormateado || "Tamaño desconocido"}</div>
                             </div>
+
                             <button onClick={() => removeFromCart(g.id)}>Quitar</button>
                         </li>
                     );

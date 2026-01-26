@@ -9,12 +9,33 @@ import Toast from "../components/Toast";
 
 export default function JuegoDetalles() {
     const { id } = useParams();
-    const location = useLocation();     // 🔹 Para saber desde dónde venimos
-    const navigate = useNavigate();     // 🔹 Para volver exactamente a esa vista
+    const location = useLocation();
+    const navigate = useNavigate();
 
     const toastRef = useRef();
-    const showToast = (msg) => {
-        if (toastRef.current) toastRef.current.showToast(msg);
+    const showToast = (msg) => toastRef.current?.showToast(msg);
+
+    const normalizarTexto = (txt) => (txt ? txt.replace(/\\n/g, "\n") : "");
+
+    const procesarRequisitos = (txt) => {
+        if (!txt) return "";
+        const lineas = normalizarTexto(txt).split(/\r?\n/);
+        const resultado = [];
+
+        lineas.forEach((linea) => {
+            const l = linea.trim();
+
+            if (/^recomendado/i.test(l)) {
+                if (resultado.length > 0 && resultado[resultado.length - 1] !== "") {
+                    resultado.push("");
+                }
+                resultado.push(l);
+            } else if (l !== "") {
+                resultado.push(l);
+            }
+        });
+
+        return resultado.join("\n");
     };
 
     return (
@@ -26,38 +47,13 @@ export default function JuegoDetalles() {
                 const j = data?.juego;
                 if (!j) return <p>No se encontró el juego.</p>;
 
-                const portadaUrl = `https://catalogo-backend-f4sk.onrender.com/portadas/${encodeURIComponent(
-                    j.Portada
-                )}`;
-
-                const normalizarTexto = (txt) => (txt ? txt.replace(/\\n/g, "\n") : "");
-
-                const procesarRequisitos = (txt) => {
-                    if (!txt) return "";
-                    const lineas = normalizarTexto(txt).split(/\r?\n/);
-                    const resultado = [];
-
-                    lineas.forEach((linea) => {
-                        const l = linea.trim();
-
-                        if (/^recomendado/i.test(l)) {
-                            // 🔹 siempre insertar salto antes de Recomendados si no lo hay
-                            if (resultado.length > 0 && resultado[resultado.length - 1] !== "") {
-                                resultado.push("");
-                            }
-                            resultado.push(l);
-                        } else if (l !== "") {
-                            resultado.push(l);
-                        }
-                    });
-
-                    return resultado.join("\n");
-                };
+                // 🔹 Portada directa desde Render (sin encode)
+                const portadaUrl = `https://catalogo-backend-f4sk.onrender.com/portadas/${j.Portada}`;
 
                 return (
                     <div className="detalle-wrapper">
 
-                        {/* 🔹 BOTÓN VOLVER (inteligente) */}
+                        {/* 🔹 BOTÓN VOLVER */}
                         <button
                             className="btn-volver"
                             onClick={() => {
@@ -71,13 +67,13 @@ export default function JuegoDetalles() {
                             ← Volver
                         </button>
 
-                        {/* 🔹 TÍTULO ARRIBA Y CENTRADO */}
+                        {/* 🔹 TÍTULO */}
                         <h2 className="detalle-titulo">{j.Nombre}</h2>
 
                         <div className="detalle-container">
                             <Toast ref={toastRef} />
 
-                            {/* 🔹 IZQUIERDA: Portada + Botón Añadir */}
+                            {/* 🔹 IZQUIERDA: Portada + Añadir */}
                             <div className="detalle-portada">
                                 <img
                                     src={portadaUrl}
@@ -85,15 +81,12 @@ export default function JuegoDetalles() {
                                     className="detalle-portada-img"
                                 />
 
-                                {/* Botón Añadir */}
                                 <AddToCartButton game={j} showToast={showToast} />
                             </div>
 
-                            {/* 🔹 DERECHA: Tamaño / Precio / Año */}
+                            {/* 🔹 DERECHA: Info */}
                             <div className="detalle-info">
-                                <p>
-                                    <strong>Tamaño:</strong> {j.TamanoFormateado}
-                                </p>
+                                <p><strong>Tamaño:</strong> {j.TamanoFormateado}</p>
 
                                 <p>
                                     <strong>Precio:</strong>{" "}
@@ -109,10 +102,9 @@ export default function JuegoDetalles() {
                             </div>
                         </div>
 
-                        {/* 🔹 ABAJO: Sinopsis + Requisitos */}
+                        {/* 🔹 SINOPSIS + REQUISITOS */}
                         <div className="detalle-extra">
 
-                            {/* SINOPSIS */}
                             <div className="detalle-card">
                                 <strong>Sinopsis:</strong>
                                 <p style={{ whiteSpace: "pre-line", marginLeft: 10, textAlign: "justify" }}>
@@ -120,7 +112,6 @@ export default function JuegoDetalles() {
                                 </p>
                             </div>
 
-                            {/* REQUISITOS */}
                             <div className="detalle-card">
                                 <strong>Requisitos de Sistema:</strong>
                                 <p style={{ whiteSpace: "pre-line", marginLeft: 10, textAlign: "justify" }}>

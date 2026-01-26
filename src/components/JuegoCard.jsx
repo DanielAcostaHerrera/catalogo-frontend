@@ -2,9 +2,8 @@ import { Link } from "react-router-dom";
 import AddToCartButton from "../components/AddToCartButton";
 
 export default function JuegoCard({ juego, showToast, from }) {
-    const portadaUrl = `https://catalogo-backend-f4sk.onrender.com/portadas/${encodeURIComponent(
-        juego.Portada
-    )}`;
+    // URL fija del backend en Render (sin encode)
+    const portadaUrl = `https://catalogo-backend-f4sk.onrender.com/portadas/${juego.Portada}`;
 
     return (
         <div
@@ -15,7 +14,6 @@ export default function JuegoCard({ juego, showToast, from }) {
                 backgroundColor: "#1e1e1e",
             }}
         >
-            {/* Enviamos la ruta exacta desde donde venimos */}
             <Link
                 to={`/juego/${juego.Id}`}
                 state={{ from }}
@@ -35,7 +33,8 @@ export default function JuegoCard({ juego, showToast, from }) {
                     loading="lazy"
                     onMouseOver={(e) => {
                         e.currentTarget.style.transform = "scale(1.05)";
-                        e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.4)";
+                        e.currentTarget.style.boxShadow =
+                            "0 4px 12px rgba(0,0,0,0.4)";
                     }}
                     onMouseOut={(e) => {
                         e.currentTarget.style.transform = "scale(1)";
@@ -55,7 +54,6 @@ export default function JuegoCard({ juego, showToast, from }) {
                 </h3>
             </Link>
 
-            {/* 🔹 Botón de carrito */}
             <div style={{ textAlign: "center", marginBottom: 8 }}>
                 <AddToCartButton game={juego} showToast={showToast} />
             </div>
