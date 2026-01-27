@@ -5,17 +5,46 @@ import "../App.css";
 import { useState, useEffect } from "react";
 import { ACTUALIZAR_JUEGO } from "../mutations";
 import { GET_JUEGO } from "../graphql";
+import { useLocation } from "react-router-dom";
 
 
 export default function EditarJuego() {
     const { id } = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
 
     const [Nombre, setNombre] = useState("");
     const [Tamano, setTamano] = useState("");
     const [AnnoAct, setAnnoAct] = useState("");
     const [Sinopsis, setSinopsis] = useState("");
     const [Requisitos, setRequisitos] = useState("");
+
+    //Validaciones para el campo año
+    const soloCuatroDigitos = (e, valorActual) => {
+        const allowed = ["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Tab"];
+
+        // Bloquear letras y símbolos
+        if (!/[0-9]/.test(e.key) && !allowed.includes(e.key)) {
+            e.preventDefault();
+            return;
+        }
+
+        // Si no es número, dejamos pasar (teclas de control)
+        if (!/[0-9]/.test(e.key)) return;
+
+        const input = e.target;
+        const start = input.selectionStart ?? 0;
+        const end = input.selectionEnd ?? 0;
+        const seleccion = end - start;
+
+        // Longitud resultante si se escribe este dígito
+        const longitudActual = valorActual.length;
+        const longitudResultante = longitudActual - seleccion + 1;
+
+        if (longitudResultante > 4) {
+            e.preventDefault();
+        }
+    };
 
     // Convierte \n de BD → saltos reales
     const normalizarTexto = (txt) => (txt ? txt.replace(/\\n/g, "\n") : "");
@@ -125,7 +154,13 @@ export default function EditarJuego() {
             {/* VOLVER */}
             <button
                 className="btn-volver"
-                onClick={() => navigate(`/juego/${id}`)}
+                onClick={() => {
+                    if (location.state?.from) {
+                        navigate(location.state.from);
+                    } else {
+                        navigate("/catalogo");
+                    }
+                }}
             >
                 ← Volver
             </button>
@@ -157,7 +192,6 @@ export default function EditarJuego() {
                     <label>Tamaño</label>
                     <input
                         className="input-dark"
-                        placeholder="ej: 500 Mb o 2 Gb"
                         value={Tamano}
                         onChange={(e) => setTamano(e.target.value)}
                     />
@@ -165,9 +199,9 @@ export default function EditarJuego() {
                     <label>Año de actualización</label>
                     <input
                         className="input-dark"
-                        placeholder="ej: 2020 o vacío"
                         value={AnnoAct}
                         onChange={(e) => setAnnoAct(e.target.value)}
+                        onKeyDown={(e) => soloCuatroDigitos(e, AnnoAct)}
                     />
                 </div>
             </div>

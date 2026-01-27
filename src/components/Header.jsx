@@ -76,7 +76,7 @@ export default function Header() {
                         display: "flex",
                         gap: 8,
                         flexWrap: "wrap",
-                        marginLeft: "auto", // 🔹 Alinea a la derecha en PC
+                        marginLeft: "auto",
                     }}
                 >
                     <NavLink
@@ -115,27 +115,28 @@ export default function Header() {
                     >
                         🛒 Carrito ({cartItems.length})
                     </NavLink>
-
-                    <button
-                        onClick={() => {
-                            if (auth.isLogged) auth.logout();
-                            else setShowLogin(true);
-                        }}
-                        style={{
-                            marginLeft: 10,
-                            background: "transparent",
-                            border: "none",
-                            color: "#e6e6e6",
-                            fontSize: "20px",
-                            cursor: "pointer"
-                        }}
-                    >
-                        {auth.isLogged ? "🔓" : "🔐"}
-                    </button>
-
                 </nav>
 
-                {/* Navegación móvil desplegable */}
+                {/* Candado PC (fuera del menú para que no desaparezca en móvil) */}
+                <button
+                    onClick={() => {
+                        if (auth.isLogged) auth.logout();
+                        else setShowLogin(true);
+                    }}
+                    className="admin-lock-desktop"
+                    style={{
+                        marginLeft: 10,
+                        background: "transparent",
+                        border: "none",
+                        color: "#e6e6e6",
+                        fontSize: "20px",
+                        cursor: "pointer",
+                    }}
+                >
+                    {auth.isLogged ? "🔓" : "🔐"}
+                </button>
+
+                {/* Navegación móvil */}
                 {menuOpen && (
                     <nav className="mobile-menu">
                         <NavLink
@@ -174,9 +175,31 @@ export default function Header() {
                         >
                             🛒 Carrito ({cartItems.length})
                         </NavLink>
+
+                        {/* Candado móvil (debajo del carrito) */}
+                        <button
+                            onClick={() => {
+                                if (auth.isLogged) auth.logout();
+                                else setShowLogin(true);
+                            }}
+                            className="admin-lock-mobile"
+                            style={{
+                                background: "transparent",
+                                border: "none",
+                                color: "#e6e6e6",
+                                fontSize: "20px",
+                                padding: "10px 14px",
+                                textAlign: "left",
+                                width: "100%",
+                                cursor: "pointer",
+                            }}
+                        >
+                            {auth.isLogged ? "🔓" : "🔐"}
+                        </button>
                     </nav>
                 )}
             </div>
+
             {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
         </header>
     );

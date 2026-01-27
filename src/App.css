@@ -155,7 +155,7 @@ body {
 /* --------------------------------------------------
    DETALLE DE JUEGO (MÓVIL)
 -------------------------------------------------- */
-@media (max-width: 850px) {
+@media (max-width: 950px) {
   .detalle-titulo {
     font-size: 24px;
     margin-bottom: 16px;
@@ -191,12 +191,17 @@ body {
   .detalle-extra>div {
     margin-top: 10px !important;
   }
+
+  .insertar-portada {
+    width: 100% !important;
+    max-width: none !important;
+  }
 }
 
 /* --------------------------------------------------
    FILTROS (MÓVIL)
 -------------------------------------------------- */
-@media (max-width: 850px) {
+@media (max-width: 950px) {
   .filtros-grid {
     grid-template-columns: 1fr;
   }
@@ -250,7 +255,7 @@ body {
   margin-top: 8px;
 }
 
-@media (max-width: 850px) {
+@media (max-width: 950px) {
   .btns-carrito {
     flex-direction: column;
     align-items: stretch;
@@ -309,7 +314,7 @@ body {
 }
 
 /* PC: header sticky */
-@media (min-width: 851px) {
+@media (min-width: 951px) {
   .site-header {
     position: sticky;
     top: 0;
@@ -335,7 +340,7 @@ body {
 /* --------------------------------------------------
    HEADER (MÓVIL)
 -------------------------------------------------- */
-@media (max-width: 850px) {
+@media (max-width: 950px) {
   .site-header {
     position: static;
   }
@@ -389,6 +394,43 @@ body {
   .mobile-menu a {
     width: 100%;
   }
+
+  .mobile-menu button {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* Candado visible en PC */
+.admin-lock-desktop {
+  margin-left: 10px;
+  background: transparent;
+  border: none;
+  color: #e6e6e6;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* Ocultar candado de PC en móvil */
+@media (max-width: 950px) {
+  .admin-lock-desktop {
+    display: none;
+  }
+}
+
+/* Candado dentro del menú móvil */
+.admin-lock-mobile {
+  background: transparent;
+  border: none;
+  color: #e6e6e6;
+  font-size: 20px;
+  padding: 10px 14px;
+  text-align: center;
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* --------------------------------------------------

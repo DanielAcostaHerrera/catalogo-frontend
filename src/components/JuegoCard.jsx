@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import AddToCartButton from "../components/AddToCartButton";
 import { useAuth } from "../AuthContext";
 import { Mutation } from "react-apollo";
@@ -7,11 +7,14 @@ import { ELIMINAR_JUEGO } from "../mutations";
 export default function JuegoCard({ juego, showToast, from }) {
     const auth = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
 
     const portadaUrl = `https://catalogo-backend-f4sk.onrender.com/portadas/${juego.Portada}`;
 
     function handleEdit() {
-        navigate(`/editar/${juego.Id}`);
+        navigate(`/editar/${juego.Id}`, {
+            state: { from: location.pathname }
+        });
     }
 
     return (

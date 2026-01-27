@@ -3,9 +3,11 @@ import { Mutation } from "react-apollo";
 import "../App.css";
 import { useState } from "react";
 import { CREAR_JUEGO } from "../mutations";
+import { useLocation } from "react-router-dom";
 
 export default function InsertarJuego() {
     const navigate = useNavigate();
+    const location = useLocation();
 
     const [Nombre, setNombre] = useState("");
     const [Tamano, setTamano] = useState("");
@@ -13,6 +15,33 @@ export default function InsertarJuego() {
     const [Portada, setPortada] = useState("");
     const [Sinopsis, setSinopsis] = useState("");
     const [Requisitos, setRequisitos] = useState("");
+
+    //Validaciones para el campo año
+    const soloCuatroDigitos = (e, valorActual) => {
+        const allowed = ["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Tab"];
+
+        // Bloquear letras y símbolos
+        if (!/[0-9]/.test(e.key) && !allowed.includes(e.key)) {
+            e.preventDefault();
+            return;
+        }
+
+        // Si no es número, dejamos pasar (teclas de control)
+        if (!/[0-9]/.test(e.key)) return;
+
+        const input = e.target;
+        const start = input.selectionStart ?? 0;
+        const end = input.selectionEnd ?? 0;
+        const seleccion = end - start;
+
+        // Longitud resultante si se escribe este dígito
+        const longitudActual = valorActual.length;
+        const longitudResultante = longitudActual - seleccion + 1;
+
+        if (longitudResultante > 4) {
+            e.preventDefault();
+        }
+    };
 
     // Convierte saltos reales → \n y \n\n para BD
     const prepararRequisitos = (txt) => {
@@ -78,8 +107,24 @@ export default function InsertarJuego() {
             payload.AnnoAct = 0; // 🔹 backend recibe 0, frontend lo muestra como "No disponible"
         }
 
-        // Portada opcional
-        if (Portada.trim() !== "") payload.Portada = Portada.trim();
+        // Portada opcional con validación y autocompletado .png
+        if (Portada.trim() !== "") {
+            let portada = Portada.trim();
+
+            // Si tiene extensión pero NO es .png → error
+            if (portada.includes(".")) {
+                if (!portada.toLowerCase().endsWith(".png")) {
+                    alert("La portada debe terminar en .png");
+                    return null;
+                }
+            } else {
+                // Si no tiene extensión → añadir .png
+                portada = portada + ".png";
+            }
+
+            payload.Portada = portada;
+        }
+
 
         // Sinopsis opcional
         if (Sinopsis.trim() !== "")
@@ -99,7 +144,13 @@ export default function InsertarJuego() {
             {/* VOLVER */}
             <button
                 className="btn-volver"
-                onClick={() => navigate("/catalogo")}
+                onClick={() => {
+                    if (location.state?.from) {
+                        navigate(location.state.from);
+                    } else {
+                        navigate("/catalogo");
+                    }
+                }}
             >
                 ← Volver
             </button>
@@ -110,7 +161,7 @@ export default function InsertarJuego() {
             <div className="detalle-container">
 
                 {/* IZQUIERDA: Campo portada */}
-                <div className="detalle-portada">
+                <div className="detalle-portada insertar-portada">
                     <label>Nombre de la portada (archivo):</label>
                     <input
                         className="input-dark"
@@ -141,6 +192,7 @@ export default function InsertarJuego() {
                         className="input-dark"
                         value={AnnoAct}
                         onChange={(e) => setAnnoAct(e.target.value)}
+                        onKeyDown={(e) => soloCuatroDigitos(e, AnnoAct)}
                     />
                 </div>
             </div>
