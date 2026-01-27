@@ -39,7 +39,7 @@ export default function JuegoDetalles() {
     };
 
     return (
-        <Query query={GET_JUEGO} variables={{ id: Number(id) }}>
+        <Query query={GET_JUEGO} variables={{ id: Number(id) }} fetchPolicy="network-only">
             {({ loading, error, data }) => {
                 if (loading) return <p style={{ color: "#ccc" }}>Cargando…</p>;
                 if (error) return <p style={{ color: "red" }}>Error: {error.message}</p>;

@@ -1,9 +1,18 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AddToCartButton from "../components/AddToCartButton";
+import { useAuth } from "../AuthContext";
+import { Mutation } from "react-apollo";
+import { ELIMINAR_JUEGO } from "../mutations";
 
 export default function JuegoCard({ juego, showToast, from }) {
-    // URL fija del backend en Render (sin encode)
+    const auth = useAuth();
+    const navigate = useNavigate();
+
     const portadaUrl = `https://catalogo-backend-f4sk.onrender.com/portadas/${juego.Portada}`;
+
+    function handleEdit() {
+        navigate(`/editar/${juego.Id}`);
+    }
 
     return (
         <div
@@ -54,8 +63,56 @@ export default function JuegoCard({ juego, showToast, from }) {
                 </h3>
             </Link>
 
-            <div style={{ textAlign: "center", marginBottom: 8 }}>
+            <div
+                style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: 8,
+                    marginBottom: 8,
+                }}
+            >
                 <AddToCartButton game={juego} showToast={showToast} />
+
+                {auth.isLogged && (
+                    <Mutation mutation={ELIMINAR_JUEGO}>
+                        {(eliminarJuego) => (
+                            <>
+                                <button
+                                    onClick={handleEdit}
+                                    className="admin-edit-btn"
+                                >
+                                    ✏️
+                                </button>
+
+                                <button
+                                    onClick={async () => {
+                                        if (!window.confirm(`¿Eliminar "${juego.Nombre}" del catálogo?`)) return;
+
+                                        try {
+                                            const res = await eliminarJuego({
+                                                variables: { id: juego.Id },
+                                            });
+
+                                            if (res.data.eliminarJuego) {
+                                                alert("Juego eliminado correctamente");
+                                                window.location.reload();
+                                            } else {
+                                                alert("No se pudo eliminar el juego");
+                                            }
+                                        } catch (err) {
+                                            console.error(err);
+                                            alert("Error eliminando el juego");
+                                        }
+                                    }}
+                                    className="admin-delete-btn"
+                                >
+                                    🗑️
+                                </button>
+                            </>
+                        )}
+                    </Mutation>
+                )}
             </div>
         </div>
     );

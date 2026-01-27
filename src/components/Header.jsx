@@ -1,10 +1,14 @@
 import { NavLink } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useState } from "react";
+import { useAuth } from "../AuthContext";
+import LoginModal from "../components/LoginModal";
 
 export default function Header() {
     const { cartItems } = useCart();
     const [menuOpen, setMenuOpen] = useState(false);
+    const [showLogin, setShowLogin] = useState(false);
+    const auth = useAuth();
 
     const linkStyle = {
         color: "#e6e6e6",
@@ -111,6 +115,24 @@ export default function Header() {
                     >
                         🛒 Carrito ({cartItems.length})
                     </NavLink>
+
+                    <button
+                        onClick={() => {
+                            if (auth.isLogged) auth.logout();
+                            else setShowLogin(true);
+                        }}
+                        style={{
+                            marginLeft: 10,
+                            background: "transparent",
+                            border: "none",
+                            color: "#e6e6e6",
+                            fontSize: "20px",
+                            cursor: "pointer"
+                        }}
+                    >
+                        {auth.isLogged ? "🔓" : "🔐"}
+                    </button>
+
                 </nav>
 
                 {/* Navegación móvil desplegable */}
@@ -155,6 +177,7 @@ export default function Header() {
                     </nav>
                 )}
             </div>
+            {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
         </header>
     );
 }

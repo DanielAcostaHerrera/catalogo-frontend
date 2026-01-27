@@ -9,10 +9,14 @@ import Toast from "../components/Toast";
 import { useLocation } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
+import { useAuth } from "../AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Catalogo() {
     const location = useLocation();
     const [searchParams, setSearchParams] = useSearchParams();
+    const auth = useAuth();
+    const navigate = useNavigate();
 
     // 🔹 Página desde la URL (o 1 si no existe)
     const [page, setPage] = useState(Number(searchParams.get("page")) || 1);
@@ -239,6 +243,17 @@ export default function Catalogo() {
                 Catálogo de Juegos
             </h2>
 
+            {auth.isLogged && (
+                <button
+                    className="btn-dark"
+                    style={{ marginBottom: 15 }}
+                    onClick={() => navigate("/insertar")}
+                >
+                    Añadir Juego
+                </button>
+            )}
+
+
             {/* 🔹 Bloque de filtros */}
             <div className="filtros-grid">
                 {/* Nombre */}
@@ -386,15 +401,8 @@ export default function Catalogo() {
             {/* Botón de reinicio */}
             <div style={{ marginBottom: "20px" }}>
                 <button
+                    className="btn-dark"
                     onClick={reiniciarCatalogo}
-                    style={{
-                        padding: "8px 12px",
-                        backgroundColor: "#444",
-                        color: "#f0f0f0",
-                        border: "none",
-                        borderRadius: "4px",
-                        cursor: "pointer",
-                    }}
                 >
                     Limpiar Filtros
                 </button>

@@ -50,6 +50,22 @@ body {
   grid-column: span 2;
 }
 
+.btn-dark {
+  background: #2a2a2a;
+  padding: 8px 14px;
+  color: #f0f0f0;
+  border: 1px solid #444;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.btn-dark:hover {
+  background-color: #555;
+  transform: scale(1.05);
+}
+
 /* --------------------------------------------------
    DETALLE DE JUEGO (PC)
 -------------------------------------------------- */
@@ -405,4 +421,208 @@ body {
 .selector-limit input:focus {
   outline: none;
   background-color: #333;
+}
+
+/* --------------------------------------------------
+   Modal de Autenticación
+-------------------------------------------------- */
+
+.auth-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.auth-modal {
+  background: #2b2b2b;
+  padding: 25px 30px;
+  border-radius: 10px;
+  width: 320px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+  animation: authFadeIn 0.25s ease-out;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+@keyframes authFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.auth-title {
+  margin: 0;
+  margin-bottom: 10px;
+  text-align: center;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.auth-input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid #444;
+  background: #1e1e1e;
+  color: #fff;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.auth-input:focus {
+  border-color: #3a7afe;
+}
+
+.auth-error {
+  color: #ff6b6b;
+  font-size: 13px;
+  margin: 0;
+  margin-bottom: 5px;
+  text-align: center;
+}
+
+.auth-btn-login {
+  width: 100%;
+  padding: 10px;
+  background: #3a7afe;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.auth-btn-login:hover {
+  background: #2f63d6;
+}
+
+.auth-btn-cancel {
+  width: 100%;
+  padding: 10px;
+  background: #555;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.auth-btn-cancel:hover {
+  background: #666;
+}
+
+.admin-edit-btn,
+.admin-delete-btn {
+  padding: 6px 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.admin-edit-btn {
+  background: #3a3a3a;
+  color: white;
+}
+
+.admin-edit-btn:hover {
+  background: #4a4a4a;
+  transform: scale(1.05);
+}
+
+.admin-delete-btn {
+  background: #7a1f1f;
+  color: white;
+}
+
+.admin-delete-btn:hover {
+  background: #9a2a2a;
+  transform: scale(1.05);
+}
+
+/* --------------------------------------------------
+   Inputs oscuros para formularios
+-------------------------------------------------- */
+
+.input-dark {
+  width: 100%;
+  padding: 8px 10px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  border: 1px solid #444;
+  background-color: #111;
+  color: #f0f0f0;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.input-dark:focus {
+  outline: none;
+  border-color: #888;
+}
+
+/* Para textareas también */
+textarea.input-dark {
+  resize: vertical;
+}
+
+/* ====== Botón oscuro genérico (Guardar Cambios, etc.) ====== */
+
+.btn-volver {
+  background: #2a2a2a;
+  color: #f0f0f0;
+  border: 1px solid #444;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-bottom: 15px;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.btn-volver:hover {
+  background: #3a3a3a;
+  transform: scale(1.05);
+}
+
+.btn-guardar {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #1e1e1e;
+  color: #f0f0f0;
+  border: 1px solid #444;
+  border-radius: 4px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-guardar:hover {
+  background-color: #2a2a2a;
+  transform: translateY(-1px);
+}
+
+.btn-guardar:active {
+  transform: translateY(0);
 }
