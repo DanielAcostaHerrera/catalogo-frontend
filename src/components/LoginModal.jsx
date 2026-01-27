@@ -63,7 +63,7 @@ export default function LoginModal({ onClose }) {
                             userSelect: "none"
                         }}
                     >
-                        {showPass ? "🚫" : "👁️"}
+                        {showPass ? "👁️" : "🚫"}
                     </span>
                 </div>
 
