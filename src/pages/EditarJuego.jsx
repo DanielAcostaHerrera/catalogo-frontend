@@ -1,11 +1,10 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useQuery, Mutation } from "react-apollo";
 import gql from "graphql-tag";
 import "../App.css";
 import { useState, useEffect } from "react";
 import { ACTUALIZAR_JUEGO } from "../mutations";
 import { GET_JUEGO } from "../graphql";
-import { useLocation } from "react-router-dom";
 
 
 export default function EditarJuego() {
@@ -74,7 +73,7 @@ export default function EditarJuego() {
 
     // Validar año
     const validarAnno = (valor) => {
-        if (valor.trim() === "") return "No Disponible";
+        if (valor.trim() === "" || valor.trim() === "0") return "No Disponible";
         if (!/^\d{4}$/.test(valor)) return null;
         const year = Number(valor);
         const currentYear = new Date().getFullYear();
@@ -125,15 +124,15 @@ export default function EditarJuego() {
         payload.Tamano = Math.round(tamanoParseado); // 🔹 siempre entero
 
         // Año opcional
-        if (AnnoAct.trim() !== "") {
+        if (AnnoAct.trim() === "" || AnnoAct.trim() === "0") {
+            payload.AnnoAct = 0;
+        } else {
             const annoValido = validarAnno(AnnoAct);
             if (annoValido === null) {
                 alert("El año debe ser un número válido entre 1970 y el actual o estar vacío");
                 return null;
             }
             payload.AnnoAct = annoValido;
-        } else {
-            payload.AnnoAct = 0; // 🔹 backend recibe 0, frontend lo muestra como "No disponible"
         }
 
         // Sinopsis opcional
@@ -252,7 +251,9 @@ export default function EditarJuego() {
 
                                 if (res.data.actualizarJuego) {
                                     alert("Juego actualizado correctamente");
-                                    navigate(`/juego/${id}`);
+                                    navigate(`/juego/${id}`, {
+                                        state: { from: location.state?.from || "/catalogo" }
+                                    });
                                 } else {
                                     alert("No se pudo actualizar el juego");
                                 }
