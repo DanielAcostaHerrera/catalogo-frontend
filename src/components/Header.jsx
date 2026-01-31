@@ -79,6 +79,7 @@ export default function Header() {
                         marginLeft: "auto",
                     }}
                 >
+                    {/* 🔹 JUEGOS */}
                     <NavLink
                         to="/"
                         end
@@ -86,7 +87,17 @@ export default function Header() {
                             isActive ? { ...linkStyle, ...activeStyle } : linkStyle
                         }
                     >
-                        Catálogo
+                        Juegos
+                    </NavLink>
+
+                    {/* 🔹 SERIES */}
+                    <NavLink
+                        to="/catalogoSeries"
+                        style={({ isActive }) =>
+                            isActive ? { ...linkStyle, ...activeStyle } : linkStyle
+                        }
+                    >
+                        Series
                     </NavLink>
 
                     <NavLink
@@ -117,7 +128,7 @@ export default function Header() {
                     </NavLink>
                 </nav>
 
-                {/* Candado PC (fuera del menú para que no desaparezca en móvil) */}
+                {/* Candado PC */}
                 <button
                     onClick={() => {
                         if (auth.isLogged) auth.logout();
@@ -139,6 +150,8 @@ export default function Header() {
                 {/* Navegación móvil */}
                 {menuOpen && (
                     <nav className="mobile-menu">
+
+                        {/* 🔹 JUEGOS */}
                         <NavLink
                             to="/"
                             end
@@ -146,7 +159,17 @@ export default function Header() {
                                 isActive ? { ...linkStyle, ...activeStyle } : linkStyle
                             }
                         >
-                            Catálogo
+                            Juegos
+                        </NavLink>
+
+                        {/* 🔹 SERIES */}
+                        <NavLink
+                            to="/catalogoSeries"
+                            style={({ isActive }) =>
+                                isActive ? { ...linkStyle, ...activeStyle } : linkStyle
+                            }
+                        >
+                            Series
                         </NavLink>
 
                         <NavLink
@@ -176,7 +199,7 @@ export default function Header() {
                             🛒 Carrito ({cartItems.length})
                         </NavLink>
 
-                        {/* Candado móvil (debajo del carrito) */}
+                        {/* Candado móvil */}
                         <button
                             onClick={() => {
                                 if (auth.isLogged) auth.logout();

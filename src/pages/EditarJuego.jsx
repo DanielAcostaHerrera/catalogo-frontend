@@ -102,7 +102,7 @@ export default function EditarJuego() {
     if (error) return <p style={{ color: "red" }}>Error: {error.message}</p>;
 
     const j = data.juego;
-    const portadaUrl = `https://catalogo-backend-f4sk.onrender.com/portadas/${j.Portada}`;
+    const portadaUrl = `https://catalogo-backend-f4sk.onrender.com/portadas/Portadas Juegos/${j.Portada}`;
 
     // Construye payload con validaciones
     const construirPayload = () => {

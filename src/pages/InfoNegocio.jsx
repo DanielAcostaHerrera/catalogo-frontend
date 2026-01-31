@@ -101,6 +101,10 @@ export default function InfoNegocio() {
                     🎮 Todos los juegos <em translate="no">online</em> cuestan <span translate="no">{data.juegos.online} CUP</span> y siempre se entregan actualizados.
                 </p>
 
+                <p style={{ fontSize: '0.95em', color: '#ccc' }}>
+                    📺 Todas las series cuestan <span translate="no">{data.series.precioPorCapitulo} CUP</span> por capítulo.
+                </p>
+
                 {/* OFERTAS */}
                 <h2 style={{ marginTop: 20, marginBottom: 10 }}>💿 Ofertas llenado de discos duros</h2>
                 <div style={{

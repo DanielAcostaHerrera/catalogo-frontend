@@ -1,19 +1,18 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import AddToCartButton from "../components/AddToCartButton";
 import { useAuth } from "../AuthContext";
 import { Mutation } from "react-apollo";
-import { ELIMINAR_JUEGO } from "../mutations";
+import { ELIMINAR_SERIE } from "../mutations";
 
-export default function JuegoCard({ juego, showToast, from }) {
+export default function SerieCard({ serie, from }) {
     const auth = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
 
-    const portadaUrl = `https://catalogo-backend-f4sk.onrender.com/portadas/Portadas Juegos/${juego.Portada}`;
+    const portadaUrl = `https://catalogo-backend-f4sk.onrender.com/portadas/Portadas Series/${serie.Portada}`;
 
     function handleEdit() {
-        navigate(`/editar/${juego.Id}`, {
-            state: { from: location.pathname }
+        navigate(`/editarSerie/${serie.Id}`, {
+            state: { from }
         });
     }
 
@@ -27,13 +26,13 @@ export default function JuegoCard({ juego, showToast, from }) {
             }}
         >
             <Link
-                to={`/juego/${juego.Id}`}
+                to={`/serie/${serie.Id}`}
                 state={{ from }}
                 style={{ textDecoration: "none", color: "inherit" }}
             >
                 <img
                     src={portadaUrl}
-                    alt={juego.Nombre}
+                    alt={serie.Titulo}
                     style={{
                         width: "100%",
                         height: 180,
@@ -62,7 +61,7 @@ export default function JuegoCard({ juego, showToast, from }) {
                         textAlign: "center",
                     }}
                 >
-                    {juego.Nombre}
+                    {serie.Titulo}
                 </h3>
             </Link>
 
@@ -75,11 +74,9 @@ export default function JuegoCard({ juego, showToast, from }) {
                     marginBottom: 8,
                 }}
             >
-                <AddToCartButton game={juego} showToast={showToast} />
-
                 {auth.isLogged && (
-                    <Mutation mutation={ELIMINAR_JUEGO}>
-                        {(eliminarJuego) => (
+                    <Mutation mutation={ELIMINAR_SERIE}>
+                        {(eliminarSerie) => (
                             <>
                                 <button
                                     onClick={handleEdit}
@@ -90,22 +87,22 @@ export default function JuegoCard({ juego, showToast, from }) {
 
                                 <button
                                     onClick={async () => {
-                                        if (!window.confirm(`¿Eliminar "${juego.Nombre}" del catálogo?`)) return;
+                                        if (!window.confirm(`¿Eliminar "${serie.Titulo}" del catálogo?`)) return;
 
                                         try {
-                                            const res = await eliminarJuego({
-                                                variables: { id: juego.Id },
+                                            const res = await eliminarSerie({
+                                                variables: { id: serie.Id },
                                             });
 
-                                            if (res.data.eliminarJuego) {
-                                                alert("Juego eliminado correctamente");
+                                            if (res.data.eliminarSerie) {
+                                                alert("Serie eliminada correctamente");
                                                 window.location.reload();
                                             } else {
-                                                alert("No se pudo eliminar el juego");
+                                                alert("No se pudo eliminar la serie");
                                             }
                                         } catch (err) {
                                             console.error(err);
-                                            alert("Error eliminando el juego");
+                                            alert("Error eliminando la serie");
                                         }
                                     }}
                                     className="admin-delete-btn"

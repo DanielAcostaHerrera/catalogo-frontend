@@ -97,3 +97,56 @@ export const GET_ULTIMOS_ESTRENOS = gql`
     }
   }
 `;
+
+// ============================================================
+//  CATÁLOGO DE SERIES (SIN FILTROS)
+// ============================================================
+export const GET_CATALOGO_SERIES = gql`
+  query CatalogoSeries($page: Int!, $limit: Int!) {
+    catalogoSeries(page: $page, limit: $limit) {
+      series {
+        Id
+        Titulo
+        Portada
+        Anno
+        Temporadas
+      }
+      total
+    }
+  }
+`;
+
+// ============================================================
+//  CATÁLOGO DE SERIES FILTRADO (POR NOMBRE)
+// ============================================================
+export const GET_CATALOGO_SERIES_FILTRADO = gql`
+  query CatalogoSeriesFiltrado($page: Int!, $limit: Int!, $titulo: String) {
+    catalogoSeriesFiltrado(page: $page, limit: $limit, titulo: $titulo) {
+      series {
+        Id
+        Titulo
+        Portada
+        Anno
+        Temporadas
+      }
+      total
+    }
+  }
+`;
+
+// ============================================================
+//  DETALLES DE UNA SERIE
+// ============================================================
+export const GET_SERIE = gql`
+  query Serie($id: Int!) {
+    serie(id: $id) {
+      Id
+      Titulo
+      Portada
+      Anno
+      Temporadas
+      Sinopsis
+      Episodios
+    }
+  }
+`;

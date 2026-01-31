@@ -40,3 +40,46 @@ export const ELIMINAR_JUEGO = gql`
     eliminarJuego(id: $id)
   }
 `;
+
+// ============================================================
+//  CREAR SERIE
+// ============================================================
+export const CREAR_SERIE = gql`
+  mutation CrearSerie($data: CreateSeriesInput!) {
+    crearSerie(data: $data) {
+      Id
+      Titulo
+      Portada
+      Anno
+      Temporadas
+      Sinopsis
+      Episodios
+    }
+  }
+`;
+
+// ============================================================
+//  ACTUALIZAR SERIE
+// ============================================================
+export const ACTUALIZAR_SERIE = gql`
+  mutation ActualizarSerie($data: UpdateSeriesInput!) {
+    actualizarSerie(data: $data) {
+      Id
+      Titulo
+      Portada
+      Anno
+      Temporadas
+      Sinopsis
+      Episodios
+    }
+  }
+`;
+
+// ============================================================
+//  ELIMINAR SERIE
+// ============================================================
+export const ELIMINAR_SERIE = gql`
+  mutation EliminarSerie($id: Int!) {
+    eliminarSerie(id: $id)
+  }
+`;

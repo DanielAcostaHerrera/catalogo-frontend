@@ -48,7 +48,7 @@ export default function JuegoDetalles() {
                 if (!j) return <p>No se encontró el juego.</p>;
 
                 // 🔹 Portada directa desde Render (sin encode)
-                const portadaUrl = `https://catalogo-backend-f4sk.onrender.com/portadas/${j.Portada}`;
+                const portadaUrl = `https://catalogo-backend-f4sk.onrender.com/portadas/Portadas Juegos/${j.Portada}`;
 
                 return (
                     <div className="detalle-wrapper">
