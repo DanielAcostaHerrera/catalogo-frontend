@@ -1,34 +1,28 @@
 import { useState, useRef } from "react";
 import { Query } from "react-apollo";
-import { GET_ULTIMOS_ESTRENOS } from "../graphql";
-import JuegoCard from "../components/JuegoCard";
+import { GET_ULTIMOS_ESTRENOS_SERIES } from "../graphql";
+import SerieCard from "../components/SerieCard";
 import Paginacion from "../components/Paginacion";
 import "../App.css";
 import Toast from "../components/Toast";
 import { useLocation } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
 
-export default function UltimosEstrenos() {
+export default function UltimosEstrenosSeries() {
     const location = useLocation();
     const [searchParams, setSearchParams] = useSearchParams();
 
-    // 🔹 Página desde la URL (o 1 si no existe)
     const [page, setPage] = useState(Number(searchParams.get("page")) || 1);
-
-    // 🔹 Estado visible (input) y estado real (backend)
     const [limitInput, setLimitInput] = useState(searchParams.get("limit") || "10");
     const [limit, setLimit] = useState(Number(searchParams.get("limit")) || 10);
 
-    // 🔹 Toast
     const toastRef = useRef();
     const showToast = (msg) => {
         if (toastRef.current) toastRef.current.showToast(msg);
     };
 
-    // 🔹 Variables para GraphQL (siempre con valor válido)
-    const variables = { page: 1, limit }; // backend devuelve hasta "limit" juegos
+    const variables = { page: 1, limit };
 
-    // 🔹 Solo permitir números en el input
     const soloNumeros = (e) => {
         const allowed = ["Backspace", "Tab", "ArrowLeft", "ArrowRight", "Delete"];
         if (!/[0-9]/.test(e.key) && !allowed.includes(e.key)) {
@@ -36,7 +30,6 @@ export default function UltimosEstrenos() {
         }
     };
 
-    // 🔹 Manejo en tiempo real
     const manejarLimitInput = (valor) => {
         setLimitInput(valor);
 
@@ -55,17 +48,16 @@ export default function UltimosEstrenos() {
         }
     };
 
-    const PAGE_SIZE = 100; // 🔹 límite fijo por página
+    const PAGE_SIZE = 100;
 
     return (
         <div className="catalogo-container">
             <Toast ref={toastRef} />
 
             <h2 style={{ color: "#f0f0f0", marginBottom: "20px" }}>
-                Últimos Estrenos (Juegos)
+                Últimos Estrenos (Series)
             </h2>
 
-            {/* Input para cantidad */}
             <div style={{ marginBottom: "20px" }}>
                 <label style={{ color: "#f0f0f0", marginRight: "10px" }}>
                     Mostrar:
@@ -80,21 +72,18 @@ export default function UltimosEstrenos() {
                 />
             </div>
 
-            {/* Query */}
-            <Query query={GET_ULTIMOS_ESTRENOS} variables={variables}>
+            <Query query={GET_ULTIMOS_ESTRENOS_SERIES} variables={variables}>
                 {({ loading, error, data }) => {
                     if (loading) return <p style={{ color: "#ccc" }}>Cargando…</p>;
                     if (error) return <p style={{ color: "red" }}>Error: {error.message}</p>;
 
-                    const juegos = data?.ultimosEstrenos?.juegos || [];
+                    const series = data?.ultimosEstrenosSeries?.series || [];
 
-                    // 🔹 total de páginas = cantidad pedida / 100
                     const totalPages = Math.max(1, Math.ceil(limit / PAGE_SIZE));
 
-                    // 🔹 cortar array según página actual
                     const startIndex = (page - 1) * PAGE_SIZE;
                     const endIndex = startIndex + PAGE_SIZE;
-                    const juegosPagina = juegos.slice(startIndex, endIndex);
+                    const seriesPagina = series.slice(startIndex, endIndex);
 
                     return (
                         <>
@@ -105,10 +94,10 @@ export default function UltimosEstrenos() {
                                     gap: "20px",
                                 }}
                             >
-                                {juegosPagina.map((j) => (
-                                    <JuegoCard
-                                        key={j.Id}
-                                        juego={j}
+                                {seriesPagina.map((s) => (
+                                    <SerieCard
+                                        key={s.Id}
+                                        serie={s}
                                         showToast={showToast}
                                         from={location.pathname + location.search}
                                     />

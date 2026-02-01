@@ -37,14 +37,16 @@ export default function Header() {
                     position: "relative",
                 }}
             >
-                {/* Logo */}
+                {/* Logo → lleva a / */}
                 <div className="logo-box">
-                    <img
-                        src="/logo.png"
-                        alt="PixelPlay Habana"
-                        className="logo-img"
-                        style={{ height: "60px" }}
-                    />
+                    <NavLink to="/" style={{ display: "inline-block" }}>
+                        <img
+                            src="/logo.png"
+                            alt="PixelPlay Habana"
+                            className="logo-img"
+                            style={{ height: "60px", cursor: "pointer" }}
+                        />
+                    </NavLink>
                 </div>
 
                 {/* Botón sándwich (solo móvil) */}
@@ -69,7 +71,7 @@ export default function Header() {
                     </span>
                 </div>
 
-                {/* Navegación PC */}
+                {/* Navegación escritorio */}
                 <nav
                     className="header-nav desktop-nav"
                     style={{
@@ -79,9 +81,8 @@ export default function Header() {
                         marginLeft: "auto",
                     }}
                 >
-                    {/* 🔹 JUEGOS */}
                     <NavLink
-                        to="/"
+                        to="/catalogo-juegos"
                         end
                         style={({ isActive }) =>
                             isActive ? { ...linkStyle, ...activeStyle } : linkStyle
@@ -90,7 +91,6 @@ export default function Header() {
                         Juegos
                     </NavLink>
 
-                    {/* 🔹 SERIES */}
                     <NavLink
                         to="/catalogo-series"
                         style={({ isActive }) =>
@@ -101,12 +101,21 @@ export default function Header() {
                     </NavLink>
 
                     <NavLink
-                        to="/ultimos-estrenos"
+                        to="/ultimos-estrenos-juegos"
                         style={({ isActive }) =>
                             isActive ? { ...linkStyle, ...activeStyle } : linkStyle
                         }
                     >
-                        Últimos Estrenos
+                        Últimos Estrenos (Juegos)
+                    </NavLink>
+
+                    <NavLink
+                        to="/ultimos-estrenos-series"
+                        style={({ isActive }) =>
+                            isActive ? { ...linkStyle, ...activeStyle } : linkStyle
+                        }
+                    >
+                        Últimos Estrenos (Series)
                     </NavLink>
 
                     <NavLink
@@ -128,7 +137,7 @@ export default function Header() {
                     </NavLink>
                 </nav>
 
-                {/* Candado PC */}
+                {/* Candado escritorio */}
                 <button
                     onClick={() => {
                         if (auth.isLogged) auth.logout();
@@ -150,10 +159,8 @@ export default function Header() {
                 {/* Navegación móvil */}
                 {menuOpen && (
                     <nav className="mobile-menu">
-
-                        {/* 🔹 JUEGOS */}
                         <NavLink
-                            to="/"
+                            to="/catalogo-juegos"
                             end
                             style={({ isActive }) =>
                                 isActive ? { ...linkStyle, ...activeStyle } : linkStyle
@@ -162,7 +169,6 @@ export default function Header() {
                             Juegos
                         </NavLink>
 
-                        {/* 🔹 SERIES */}
                         <NavLink
                             to="/catalogo-series"
                             style={({ isActive }) =>
@@ -173,12 +179,21 @@ export default function Header() {
                         </NavLink>
 
                         <NavLink
-                            to="/ultimos-estrenos"
+                            to="/ultimos-estrenos-juegos"
                             style={({ isActive }) =>
                                 isActive ? { ...linkStyle, ...activeStyle } : linkStyle
                             }
                         >
-                            Últimos Estrenos
+                            Últimos Estrenos (Juegos)
+                        </NavLink>
+
+                        <NavLink
+                            to="/ultimos-estrenos-series"
+                            style={({ isActive }) =>
+                                isActive ? { ...linkStyle, ...activeStyle } : linkStyle
+                            }
+                        >
+                            Últimos Estrenos (Series)
                         </NavLink>
 
                         <NavLink

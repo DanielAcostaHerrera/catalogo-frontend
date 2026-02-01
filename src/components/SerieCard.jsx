@@ -36,7 +36,7 @@ export default function SerieCard({ serie, from }) {
                     style={{
                         width: "100%",
                         height: 180,
-                        objectFit: "contain",
+                        objectFit: "fill",
                         backgroundColor: "#000",
                         transition: "transform 0.2s, boxShadow 0.2s",
                         display: "block",

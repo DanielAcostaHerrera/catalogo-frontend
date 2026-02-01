@@ -1,6 +1,5 @@
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useQuery, Mutation } from "react-apollo";
-import gql from "graphql-tag";
 import "../App.css";
 import { useState, useEffect } from "react";
 import { ACTUALIZAR_JUEGO } from "../mutations";
@@ -157,7 +156,7 @@ export default function EditarJuego() {
                     if (location.state?.from) {
                         navigate(location.state.from);
                     } else {
-                        navigate("/");
+                        navigate("/catalogo-juegos");
                     }
                 }}
             >
@@ -252,7 +251,7 @@ export default function EditarJuego() {
                                 if (res.data.actualizarJuego) {
                                     alert("Juego actualizado correctamente");
                                     navigate(`/juego/${id}`, {
-                                        state: { from: location.state?.from || "/" }
+                                        state: { from: location.state?.from || "/catalogo-juegos" }
                                     });
                                 } else {
                                     alert("No se pudo actualizar el juego");

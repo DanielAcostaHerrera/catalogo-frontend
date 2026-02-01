@@ -79,7 +79,7 @@ export const GET_JUEGO = gql`
 `;
 
 // ============================================================
-//  ÚLTIMOS ESTRENOS (AÑO ACTUAL, SIN ONLINE)
+//  ÚLTIMOS ESTRENOS JUEGOS (SIN ONLINE)
 // ============================================================
 export const GET_ULTIMOS_ESTRENOS = gql`
   query UltimosEstrenos($limit: Int!) {
@@ -122,6 +122,24 @@ export const GET_CATALOGO_SERIES = gql`
 export const GET_CATALOGO_SERIES_FILTRADO = gql`
   query CatalogoSeriesFiltrado($page: Int!, $limit: Int!, $titulo: String) {
     catalogoSeriesFiltrado(page: $page, limit: $limit, titulo: $titulo) {
+      series {
+        Id
+        Titulo
+        Portada
+        Anno
+        Temporadas
+      }
+      total
+    }
+  }
+`;
+
+// ============================================================
+//  ÚLTIMOS ESTRENOS DE SERIES (ORDENADOS POR Id DESC)
+// ============================================================
+export const GET_ULTIMOS_ESTRENOS_SERIES = gql`
+  query UltimosEstrenosSeries($limit: Int!) {
+    ultimosEstrenosSeries(limit: $limit) {
       series {
         Id
         Titulo
