@@ -60,7 +60,7 @@ export default function JuegoDetalles() {
                                 if (location.state?.from) {
                                     navigate(location.state.from);
                                 } else {
-                                    navigate("/catalogo");
+                                    navigate("/");
                                 }
                             }}
                         >

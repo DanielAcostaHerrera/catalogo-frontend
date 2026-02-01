@@ -12,7 +12,7 @@ export default function JuegoCard({ juego, showToast, from }) {
     const portadaUrl = `https://catalogo-backend-f4sk.onrender.com/portadas/Portadas Juegos/${juego.Portada}`;
 
     function handleEdit() {
-        navigate(`/editar/${juego.Id}`, {
+        navigate(`/editar-juego/${juego.Id}`, {
             state: { from: location.pathname }
         });
     }

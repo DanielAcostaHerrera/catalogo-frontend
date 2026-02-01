@@ -132,9 +132,9 @@ export default function Paginacion({ page, totalPages, onPageChange }) {
 
             <div style={{ marginTop: 8 }}>
                 <input
-                    type="text"
-                    inputMode="numeric"
-                    pattern="[0-9]*"
+                    type="number"
+                    min="1"
+                    max={totalPages}
                     value={inputPage}
                     onChange={(e) => setInputPage(e.target.value)}
                     placeholder="Ir a página..."

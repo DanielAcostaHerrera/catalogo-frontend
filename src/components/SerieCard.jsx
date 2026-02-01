@@ -11,7 +11,7 @@ export default function SerieCard({ serie, from }) {
     const portadaUrl = `https://catalogo-backend-f4sk.onrender.com/portadas/Portadas Series/${serie.Portada}`;
 
     function handleEdit() {
-        navigate(`/editarSerie/${serie.Id}`, {
+        navigate(`/editar-serie/${serie.Id}`, {
             state: { from }
         });
     }

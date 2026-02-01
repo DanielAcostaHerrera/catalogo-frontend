@@ -304,37 +304,80 @@ body {
 }
 
 /* --------------------------------------------------
-   HEADER
+   HEADER (PC)
 -------------------------------------------------- */
-.site-header {
-  width: 100%;
-  background-color: #121212;
-  border-bottom: 1px solid #2a2a2a;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
-}
-
-/* PC: header sticky */
 @media (min-width: 951px) {
   .site-header {
-    position: sticky;
-    top: 0;
-    z-index: 100;
+    position: relative;
+    width: 100%;
   }
-}
 
-/* Botón sándwich oculto por defecto */
-.hamburger-btn {
-  display: none;
-  background: none;
-  border: none;
-  color: #f0f0f0;
-  font-size: 32px;
-  cursor: pointer;
-}
+  .header-container {
+    position: relative;
+    width: 100%;
+  }
 
-/* Menú móvil oculto por defecto */
-.mobile-menu {
-  display: none;
+  .logo-box {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0;
+  }
+
+  .title-box {
+    position: absolute;
+    top: 13px;
+    left: 60px;
+    text-align: left;
+    margin: 0;
+  }
+
+  .header-title {
+    font-weight: 600;
+    color: #f0f0f0;
+    white-space: nowrap;
+  }
+
+  .hamburger-btn {
+    display: block;
+    background: transparent;
+    border: none;
+    color: #f0f0f0;
+    font-size: 32px;
+    cursor: pointer;
+    position: absolute;
+    right: -20px;
+    top: -18px;
+  }
+
+  .desktop-nav {
+    display: none !important;
+  }
+
+  .mobile-menu {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 60px;
+    gap: 10px;
+    text-align: left;
+  }
+
+  .mobile-menu a,
+  .mobile-menu button {
+    width: 100%;
+    text-align: left;
+  }
+
+  .admin-lock-desktop {
+    display: none !important;
+  }
+
+  .admin-lock-mobile {
+    justify-content: flex-start;
+    text-align: left;
+  }
+
 }
 
 /* --------------------------------------------------
@@ -373,6 +416,11 @@ body {
 
   .hamburger-btn {
     display: block;
+    background: transparent;
+    border: none;
+    color: #f0f0f0;
+    font-size: 32px;
+    cursor: pointer;
     position: absolute;
     right: -20px;
     top: -18px;
@@ -391,47 +439,38 @@ body {
     text-align: center;
   }
 
-  .mobile-menu a {
-    width: 100%;
-  }
-
+  .mobile-menu a,
   .mobile-menu button {
     width: 100%;
     text-align: center;
   }
-}
 
-/* Candado visible en PC */
-.admin-lock-desktop {
-  margin-left: 10px;
-  background: transparent;
-  border: none;
-  color: #e6e6e6;
-  font-size: 20px;
-  cursor: pointer;
-}
-
-/* Ocultar candado de PC en móvil */
-@media (max-width: 950px) {
   .admin-lock-desktop {
-    display: none;
+    display: none !important;
   }
+
+  .admin-lock-mobile {
+    justify-content: center;
+    text-align: center;
+  }
+
 }
 
-/* Candado dentro del menú móvil */
+/* --------------------------------------------------
+   Candado dentro del menú (PC y MÓVIL)
+-------------------------------------------------- */
 .admin-lock-mobile {
   background: transparent;
   border: none;
   color: #e6e6e6;
   font-size: 20px;
   padding: 10px 14px;
-  text-align: center;
   width: 100%;
   cursor: pointer;
   display: flex;
-  justify-content: center;
   align-items: center;
 }
+
 
 /* --------------------------------------------------
    SELECTOR DE LÍMITE (ÚLTIMOS ESTRENOS)

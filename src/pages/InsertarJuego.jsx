@@ -148,7 +148,7 @@ export default function InsertarJuego() {
                     if (location.state?.from) {
                         navigate(location.state.from);
                     } else {
-                        navigate("/catalogo");
+                        navigate("/");
                     }
                 }}
             >
@@ -239,7 +239,7 @@ export default function InsertarJuego() {
 
                                 if (res.data.crearJuego) {
                                     alert("Juego añadido correctamente");
-                                    navigate("/catalogo");
+                                    navigate("/");
                                 } else {
                                     alert("No se pudo añadir el juego");
                                 }

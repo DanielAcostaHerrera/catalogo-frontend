@@ -53,7 +53,7 @@ export default function CatalogoSeries() {
                     className="btn-dark"
                     style={{ marginBottom: 15 }}
                     onClick={() =>
-                        navigate("/insertarSerie", {
+                        navigate("/insertar-serie", {
                             state: { from: location.pathname + location.search }
                         })
                     }

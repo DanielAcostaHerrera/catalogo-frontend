@@ -247,7 +247,7 @@ export default function Catalogo() {
                 <button
                     className="btn-dark"
                     style={{ marginBottom: 15 }}
-                    onClick={() => navigate("/insertar", { state: { from: location.pathname } })}
+                    onClick={() => navigate("/insertar-juego", { state: { from: location.pathname } })}
                 >
                     Añadir Juego
                 </button>

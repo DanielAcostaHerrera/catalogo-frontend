@@ -15,7 +15,6 @@ export default function FiltrosSeries({ nombre, onNombre }) {
                 <input
                     style={inputStyle}
                     type="text"
-                    placeholder="Buscar por nombre…"
                     value={nombre}
                     onChange={(e) => onNombre(e.target.value)}
                 />

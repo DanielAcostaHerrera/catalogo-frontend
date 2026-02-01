@@ -16,7 +16,7 @@ const client = new ApolloClient({
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <ApolloProvider client={client}>
-      <AuthProvider>        {/* 🔹 Ahora sí existe */}
+      <AuthProvider>
         <App />
       </AuthProvider>
     </ApolloProvider>

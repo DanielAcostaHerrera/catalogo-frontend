@@ -130,7 +130,7 @@ export default function InsertarSerie() {
                     if (location.state?.from) {
                         navigate(location.state.from);
                     } else {
-                        navigate("/catalogoSeries");
+                        navigate("/catalogo-series");
                     }
                 }}
             >
@@ -221,7 +221,7 @@ export default function InsertarSerie() {
 
                                 if (res.data.crearSerie) {
                                     alert("Serie añadida correctamente");
-                                    navigate("/catalogoSeries");
+                                    navigate("/catalogo-series");
                                 } else {
                                     alert("No se pudo añadir la serie");
                                 }

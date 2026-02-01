@@ -35,7 +35,7 @@ export default function SerieDetalles() {
                                 if (location.state?.from) {
                                     navigate(location.state.from);
                                 } else {
-                                    navigate("/catalogoSeries");
+                                    navigate("/catalogo-series");
                                 }
                             }}
                         >

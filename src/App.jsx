@@ -41,24 +41,22 @@ export default function App() {
               }}
             >
               <Routes>
-
                 {/* 🔹 JUEGOS */}
                 <Route path="/" element={<Catalogo />} />
                 <Route path="/juego/:id" element={<JuegoDetalles />} />
-                <Route path="/editar/:id" element={<EditarJuego />} />
-                <Route path="/insertar" element={<InsertarJuego />} />
+                <Route path="/editar-juego/:id" element={<EditarJuego />} />
+                <Route path="/insertar-juego" element={<InsertarJuego />} />
 
                 {/* 🔹 SERIES */}
-                <Route path="/catalogoSeries" element={<CatalogoSeries />} />
+                <Route path="/catalogo-series" element={<CatalogoSeries />} />
                 <Route path="/serie/:id" element={<SerieDetalles />} />
-                <Route path="/editarSerie/:id" element={<EditarSerie />} />
-                <Route path="/insertarSerie" element={<InsertarSerie />} />
+                <Route path="/editar-serie/:id" element={<EditarSerie />} />
+                <Route path="/insertar-serie" element={<InsertarSerie />} />
 
                 {/* 🔹 OTROS */}
                 <Route path="/ultimos-estrenos" element={<UltimosEstrenos />} />
                 <Route path="/info" element={<InfoNegocio />} />
                 <Route path="/carrito" element={<CarritoView />} />
-
               </Routes>
             </main>
           </CartProvider>

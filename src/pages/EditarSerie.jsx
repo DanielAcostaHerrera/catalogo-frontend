@@ -95,7 +95,7 @@ export default function EditarSerie() {
                     if (location.state?.from) {
                         navigate(location.state.from);
                     } else {
-                        navigate("/catalogoSeries");
+                        navigate("/catalogo-series");
                     }
                 }}
             >
@@ -190,7 +190,7 @@ export default function EditarSerie() {
                                 if (res.data.actualizarSerie) {
                                     alert("Serie actualizada correctamente");
                                     navigate(`/serie/${id}`, {
-                                        state: { from: location.state?.from || "/catalogoSeries" }
+                                        state: { from: location.state?.from || "/catalogo-series" }
                                     });
                                 } else {
                                     alert("No se pudo actualizar la serie");

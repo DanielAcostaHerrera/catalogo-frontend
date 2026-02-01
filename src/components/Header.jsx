@@ -92,7 +92,7 @@ export default function Header() {
 
                     {/* 🔹 SERIES */}
                     <NavLink
-                        to="/catalogoSeries"
+                        to="/catalogo-series"
                         style={({ isActive }) =>
                             isActive ? { ...linkStyle, ...activeStyle } : linkStyle
                         }
@@ -164,7 +164,7 @@ export default function Header() {
 
                         {/* 🔹 SERIES */}
                         <NavLink
-                            to="/catalogoSeries"
+                            to="/catalogo-series"
                             style={({ isActive }) =>
                                 isActive ? { ...linkStyle, ...activeStyle } : linkStyle
                             }
