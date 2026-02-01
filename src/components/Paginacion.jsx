@@ -132,11 +132,23 @@ export default function Paginacion({ page, totalPages, onPageChange }) {
 
             <div style={{ marginTop: 8 }}>
                 <input
-                    type="number"
-                    min="1"
-                    max={totalPages}
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     value={inputPage}
-                    onChange={(e) => setInputPage(e.target.value)}
+                    onChange={(e) => {
+                        const value = e.target.value;
+
+                        // 🔹 Solo permitir dígitos
+                        if (/^\d*$/.test(value)) {
+                            const num = parseInt(value, 10);
+
+                            // 🔹 Permitir vacío (para borrar) o valores dentro del rango
+                            if (value === "" || (num >= 1 && num <= totalPages)) {
+                                setInputPage(value);
+                            }
+                        }
+                    }}
                     placeholder="Ir a página..."
                     style={{
                         padding: "6px",
