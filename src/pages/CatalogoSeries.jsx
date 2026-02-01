@@ -71,7 +71,6 @@ export default function CatalogoSeries() {
                         value={nombre}
                         onChange={(e) => actualizarFiltro(e.target.value)}
                         className="filtro-input"
-                        placeholder="Buscar por nombre…"
                     />
                 </div>
             </div>
