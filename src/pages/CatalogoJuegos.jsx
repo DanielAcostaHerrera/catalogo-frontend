@@ -12,7 +12,7 @@ import { useEffect } from "react";
 import { useAuth } from "../AuthContext";
 import { useNavigate } from "react-router-dom";
 
-export default function Catalogo() {
+export default function CatalogoJuegos() {
     const location = useLocation();
     const [searchParams, setSearchParams] = useSearchParams();
     const auth = useAuth();

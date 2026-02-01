@@ -1,11 +1,10 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 
-import Catalogo from "./pages/Catalogo";
 import JuegoDetalles from "./pages/JuegoDetalles";
 import EditarJuego from "./pages/EditarJuego";
 import InsertarJuego from "./pages/InsertarJuego";
-
+import CatalogoJuegos from "./pages/CatalogoJuegos";
 import CatalogoSeries from "./pages/CatalogoSeries";
 import SerieDetalles from "./pages/SerieDetalles";
 import EditarSerie from "./pages/EditarSerie";
@@ -17,6 +16,7 @@ import UltimosEstrenos from "./pages/UltimosEstrenos";
 
 import { CartProvider } from "./context/CartContext";
 import { AuthProvider } from "./AuthContext";
+
 
 export default function App() {
   return (
@@ -42,7 +42,7 @@ export default function App() {
             >
               <Routes>
                 {/* 🔹 JUEGOS */}
-                <Route path="/" element={<Catalogo />} />
+                <Route path="/" element={<CatalogoJuegos />} />
                 <Route path="/juego/:id" element={<JuegoDetalles />} />
                 <Route path="/editar-juego/:id" element={<EditarJuego />} />
                 <Route path="/insertar-juego" element={<InsertarJuego />} />

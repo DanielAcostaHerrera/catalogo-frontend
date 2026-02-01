@@ -252,7 +252,7 @@ export default function EditarJuego() {
                                 if (res.data.actualizarJuego) {
                                     alert("Juego actualizado correctamente");
                                     navigate(`/juego/${id}`, {
-                                        state: { from: location.state?.from || "/catalogo" }
+                                        state: { from: location.state?.from || "/" }
                                     });
                                 } else {
                                     alert("No se pudo actualizar el juego");
