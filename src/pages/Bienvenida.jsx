@@ -8,11 +8,11 @@ export default function Bienvenida() {
     const location = useLocation();
 
     const { data: juegosData, loading: juegosLoading, error: juegosError } = useQuery(GET_ULTIMOS_ESTRENOS, {
-        variables: { limit: 100 },
+        variables: { limit: 25 },
     });
 
     const { data: seriesData, loading: seriesLoading, error: seriesError } = useQuery(GET_ULTIMOS_ESTRENOS_SERIES, {
-        variables: { limit: 100 },
+        variables: { limit: 25 },
     });
 
     if (juegosLoading || seriesLoading) return <p style={{ color: "#ccc" }}>Cargando…</p>;
