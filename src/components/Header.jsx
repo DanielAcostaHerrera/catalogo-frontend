@@ -49,14 +49,6 @@ export default function Header() {
                     </NavLink>
                 </div>
 
-                {/* Botón sándwich (solo móvil) */}
-                <button
-                    className="hamburger-btn"
-                    onClick={() => setMenuOpen(!menuOpen)}
-                >
-                    ☰
-                </button>
-
                 {/* Título */}
                 <div className="title-box">
                     <span
@@ -71,110 +63,28 @@ export default function Header() {
                     </span>
                 </div>
 
-                {/* Navegación escritorio */}
-                <nav
-                    className="header-nav desktop-nav"
-                    style={{
-                        display: "flex",
-                        gap: 8,
-                        flexWrap: "wrap",
-                        marginLeft: "auto",
-                    }}
-                >
-                    <NavLink
-                        to="/catalogo-juegos"
-                        end
-                        style={({ isActive }) =>
-                            isActive ? { ...linkStyle, ...activeStyle } : linkStyle
-                        }
-                    >
-                        Juegos
-                    </NavLink>
+                {/* --- BLOQUE DERECHO: Candado + Hamburguesa --- */}
 
-                    <NavLink
-                        to="/catalogo-series"
-                        style={({ isActive }) =>
-                            isActive ? { ...linkStyle, ...activeStyle } : linkStyle
-                        }
-                    >
-                        Series
-                    </NavLink>
-
-                    <NavLink
-                        to="/catalogo-animados"
-                        style={({ isActive }) =>
-                            isActive ? { ...linkStyle, ...activeStyle } : linkStyle
-                        }
-                    >
-                        Animados
-                    </NavLink>
-
-                    <NavLink
-                        to="/ultimos-estrenos-juegos"
-                        style={({ isActive }) =>
-                            isActive ? { ...linkStyle, ...activeStyle } : linkStyle
-                        }
-                    >
-                        Últimos Estrenos (Juegos)
-                    </NavLink>
-
-                    <NavLink
-                        to="/ultimos-estrenos-series"
-                        style={({ isActive }) =>
-                            isActive ? { ...linkStyle, ...activeStyle } : linkStyle
-                        }
-                    >
-                        Últimos Estrenos (Series)
-                    </NavLink>
-
-                    <NavLink
-                        to="/ultimos-estrenos-animados"
-                        style={({ isActive }) =>
-                            isActive ? { ...linkStyle, ...activeStyle } : linkStyle
-                        }
-                    >
-                        Últimos Estrenos (Animados)
-                    </NavLink>
-
-                    <NavLink
-                        to="/info"
-                        style={({ isActive }) =>
-                            isActive ? { ...linkStyle, ...activeStyle } : linkStyle
-                        }
-                    >
-                        Información del negocio
-                    </NavLink>
-
-                    <NavLink
-                        to="/carrito"
-                        style={({ isActive }) =>
-                            isActive ? { ...linkStyle, ...activeStyle } : linkStyle
-                        }
-                    >
-                        🛒 Carrito ({cartItems.length})
-                    </NavLink>
-                </nav>
-
-                {/* Candado escritorio */}
+                {/* Candado SIEMPRE visible (PC y móvil) */}
                 <button
                     onClick={() => {
                         if (auth.isLogged) auth.logout();
                         else setShowLogin(true);
                     }}
                     className="admin-lock-desktop"
-                    style={{
-                        marginLeft: 10,
-                        background: "transparent",
-                        border: "none",
-                        color: "#e6e6e6",
-                        fontSize: "20px",
-                        cursor: "pointer",
-                    }}
                 >
                     {auth.isLogged ? "🔓" : "🔐"}
                 </button>
 
-                {/* Navegación móvil */}
+                {/* Botón sándwich (PC y móvil) */}
+                <button
+                    className="hamburger-btn"
+                    onClick={() => setMenuOpen(!menuOpen)}
+                >
+                    ☰
+                </button>
+
+                {/* --- MENÚ MÓVIL --- */}
                 {menuOpen && (
                     <nav className="mobile-menu">
                         <NavLink
@@ -222,27 +132,6 @@ export default function Header() {
                         >
                             🛒 Carrito ({cartItems.length})
                         </NavLink>
-
-                        {/* Candado móvil */}
-                        <button
-                            onClick={() => {
-                                if (auth.isLogged) auth.logout();
-                                else setShowLogin(true);
-                            }}
-                            className="admin-lock-mobile"
-                            style={{
-                                background: "transparent",
-                                border: "none",
-                                color: "#e6e6e6",
-                                fontSize: "20px",
-                                padding: "10px 14px",
-                                textAlign: "left",
-                                width: "100%",
-                                cursor: "pointer",
-                            }}
-                        >
-                            {auth.isLogged ? "🔓" : "🔐"}
-                        </button>
                     </nav>
                 )}
             </div>

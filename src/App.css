@@ -403,15 +403,21 @@ body {
   }
 
   .hamburger-btn {
-    display: block;
+    position: absolute;
+    right: 0px;
+    top: 12px;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: transparent;
     border: none;
     color: #f0f0f0;
-    font-size: 32px;
+    font-size: 22px;
+    line-height: 1;
     cursor: pointer;
-    position: absolute;
-    right: -20px;
-    top: -18px;
+    z-index: 10;
   }
 
   .desktop-nav {
@@ -434,14 +440,16 @@ body {
   }
 
   .admin-lock-desktop {
-    display: none !important;
+    display: block !important;
+    position: absolute;
+    right: 25px;
+    top: 0px;
+    background: transparent;
+    border: none;
+    color: #e6e6e6;
+    font-size: 20px;
+    cursor: pointer;
   }
-
-  .admin-lock-mobile {
-    justify-content: flex-start;
-    text-align: left;
-  }
-
 }
 
 /* --------------------------------------------------
@@ -479,15 +487,21 @@ body {
   }
 
   .hamburger-btn {
-    display: block;
+    position: absolute;
+    right: 0px;
+    top: 12px;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: transparent;
     border: none;
     color: #f0f0f0;
-    font-size: 32px;
+    font-size: 22px;
+    line-height: 1;
     cursor: pointer;
-    position: absolute;
-    right: -20px;
-    top: -18px;
+    z-index: 10;
   }
 
   .desktop-nav {
@@ -510,14 +524,16 @@ body {
   }
 
   .admin-lock-desktop {
-    display: none !important;
+    display: block !important;
+    position: absolute;
+    right: 25px;
+    top: 0px;
+    background: transparent;
+    border: none;
+    color: #e6e6e6;
+    font-size: 20px;
+    cursor: pointer;
   }
-
-  .admin-lock-mobile {
-    justify-content: center;
-    text-align: center;
-  }
-
 }
 
 /* --------------------------------------------------
