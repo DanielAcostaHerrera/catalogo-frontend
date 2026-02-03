@@ -123,20 +123,6 @@ export default function InsertarAnimado() {
     return (
         <div className="detalle-wrapper">
 
-            {/* VOLVER */}
-            <button
-                className="btn-volver"
-                onClick={() => {
-                    if (location.state?.from) {
-                        navigate(location.state.from);
-                    } else {
-                        navigate("/catalogo-animados");
-                    }
-                }}
-            >
-                ← Volver
-            </button>
-
             <h2 className="detalle-titulo">Añadir Nuevo Animado</h2>
 
             {/* BLOQUE SUPERIOR */}

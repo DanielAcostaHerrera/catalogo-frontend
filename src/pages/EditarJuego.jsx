@@ -149,20 +149,6 @@ export default function EditarJuego() {
     return (
         <div className="detalle-wrapper">
 
-            {/* VOLVER */}
-            <button
-                className="btn-volver"
-                onClick={() => {
-                    if (location.state?.from) {
-                        navigate(location.state.from);
-                    } else {
-                        navigate("/catalogo-juegos");
-                    }
-                }}
-            >
-                ← Volver
-            </button>
-
             <h2 className="detalle-titulo">Editar {j.Nombre}</h2>
 
             {/* BLOQUE SUPERIOR: Portada + Campos básicos */}

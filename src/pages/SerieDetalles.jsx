@@ -28,20 +28,6 @@ export default function SerieDetalles() {
                 return (
                     <div className="detalle-wrapper">
 
-                        {/* 🔹 BOTÓN VOLVER */}
-                        <button
-                            className="btn-volver"
-                            onClick={() => {
-                                if (location.state?.from) {
-                                    navigate(location.state.from);
-                                } else {
-                                    navigate("/catalogo-series");
-                                }
-                            }}
-                        >
-                            ← Volver
-                        </button>
-
                         {/* 🔹 TÍTULO */}
                         <h2 className="detalle-titulo">{s.Titulo}</h2>
 

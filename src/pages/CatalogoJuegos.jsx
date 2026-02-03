@@ -247,15 +247,23 @@ export default function CatalogoJuegos() {
                 Catálogo de Juegos
             </h2>
 
-            {auth.isLogged && (
+            <div style={{ display: "flex", gap: 10, marginBottom: 15 }}>
                 <button
                     className="btn-dark"
-                    style={{ marginBottom: 15 }}
-                    onClick={() => navigate("/insertar-juego", { state: { from: location.pathname } })}
+                    onClick={() => navigate("/ultimos-estrenos-juegos")}
                 >
-                    Añadir Juego
+                    Últimos estrenos
                 </button>
-            )}
+
+                {auth.isLogged && (
+                    <button
+                        className="btn-dark"
+                        onClick={() => navigate("/insertar-juego", { state: { from: location.pathname } })}
+                    >
+                        Añadir Juego
+                    </button>
+                )}
+            </div>
 
             <div className="filtros-grid">
 

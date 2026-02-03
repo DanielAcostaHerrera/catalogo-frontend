@@ -53,19 +53,27 @@ export default function CatalogoSeries() {
                 Catálogo de Series
             </h2>
 
-            {auth.isLogged && (
+            <div style={{ display: "flex", gap: 10, marginBottom: 15 }}>
                 <button
                     className="btn-dark"
-                    style={{ marginBottom: 15 }}
-                    onClick={() =>
-                        navigate("/insertar-serie", {
-                            state: { from: location.pathname + location.search }
-                        })
-                    }
+                    onClick={() => navigate("/ultimos-estrenos-series")}
                 >
-                    Añadir Serie
+                    Últimos estrenos
                 </button>
-            )}
+
+                {auth.isLogged && (
+                    <button
+                        className="btn-dark"
+                        onClick={() =>
+                            navigate("/insertar-serie", {
+                                state: { from: location.pathname + location.search }
+                            })
+                        }
+                    >
+                        Añadir Serie
+                    </button>
+                )}
+            </div>
 
             {/* Filtro por nombre */}
             <div className="filtros-grid">

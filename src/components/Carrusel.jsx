@@ -1,10 +1,11 @@
 import { useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function Carrusel({ items }) {
     const trackRef = useRef(null);
     const autoScrollRef = useRef(null);
     const navigate = useNavigate();
+    const location = useLocation();
 
     const startAutoScroll = () => {
         stopAutoScroll();
@@ -55,12 +56,14 @@ export default function Carrusel({ items }) {
     };
 
     const handleClick = (item) => {
+        const from = location.pathname + location.search;
+
         if (item.tipo === "juego") {
-            navigate(`/juego/${item.id}`);
+            navigate(`/juego/${item.id}`, { state: { from } });
         } else if (item.tipo === "serie") {
-            navigate(`/serie/${item.id}`);
+            navigate(`/serie/${item.id}`, { state: { from } });
         } else if (item.tipo === "animado") {
-            navigate(`/animado/${item.id}`);
+            navigate(`/animado/${item.id}`, { state: { from } });
         }
     };
 

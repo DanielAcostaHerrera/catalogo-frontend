@@ -216,23 +216,6 @@ body {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 }
 
-.btn-volver {
-  background: #2a2a2a;
-  color: #f0f0f0;
-  border: 1px solid #444;
-  padding: 6px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-  margin-bottom: 15px;
-  transition: background 0.2s, transform 0.2s;
-}
-
-.btn-volver:hover {
-  background: #3a3a3a;
-  transform: scale(1.05);
-}
-
 /* --------------------------------------------------
    DETALLE DE JUEGO (MÓVIL)
 -------------------------------------------------- */
@@ -750,23 +733,6 @@ textarea.input-dark {
 }
 
 /* ====== Botón oscuro genérico (Guardar Cambios, etc.) ====== */
-
-.btn-volver {
-  background: #2a2a2a;
-  color: #f0f0f0;
-  border: 1px solid #444;
-  padding: 6px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-  margin-bottom: 15px;
-  transition: background 0.2s, transform 0.2s;
-}
-
-.btn-volver:hover {
-  background: #3a3a3a;
-  transform: scale(1.05);
-}
 
 .btn-guardar {
   margin-top: 20px;

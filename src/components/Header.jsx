@@ -206,33 +206,6 @@ export default function Header() {
                         </NavLink>
 
                         <NavLink
-                            to="/ultimos-estrenos-juegos"
-                            style={({ isActive }) =>
-                                isActive ? { ...linkStyle, ...activeStyle } : linkStyle
-                            }
-                        >
-                            Últimos Estrenos (Juegos)
-                        </NavLink>
-
-                        <NavLink
-                            to="/ultimos-estrenos-series"
-                            style={({ isActive }) =>
-                                isActive ? { ...linkStyle, ...activeStyle } : linkStyle
-                            }
-                        >
-                            Últimos Estrenos (Series)
-                        </NavLink>
-
-                        <NavLink
-                            to="/ultimos-estrenos-animados"
-                            style={({ isActive }) =>
-                                isActive ? { ...linkStyle, ...activeStyle } : linkStyle
-                            }
-                        >
-                            Últimos Estrenos (Animados)
-                        </NavLink>
-
-                        <NavLink
                             to="/info"
                             style={({ isActive }) =>
                                 isActive ? { ...linkStyle, ...activeStyle } : linkStyle

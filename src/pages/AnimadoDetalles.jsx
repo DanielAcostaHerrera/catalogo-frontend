@@ -28,20 +28,6 @@ export default function AnimadoDetalles() {
                 return (
                     <div className="detalle-wrapper">
 
-                        {/* 🔹 BOTÓN VOLVER */}
-                        <button
-                            className="btn-volver"
-                            onClick={() => {
-                                if (location.state?.from) {
-                                    navigate(location.state.from);
-                                } else {
-                                    navigate("/catalogo-animados");
-                                }
-                            }}
-                        >
-                            ← Volver
-                        </button>
-
                         {/* 🔹 TÍTULO */}
                         <h2 className="detalle-titulo">{a.Titulo}</h2>
 

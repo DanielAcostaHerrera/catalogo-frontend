@@ -123,20 +123,6 @@ export default function InsertarSerie() {
     return (
         <div className="detalle-wrapper">
 
-            {/* VOLVER */}
-            <button
-                className="btn-volver"
-                onClick={() => {
-                    if (location.state?.from) {
-                        navigate(location.state.from);
-                    } else {
-                        navigate("/catalogo-series");
-                    }
-                }}
-            >
-                ← Volver
-            </button>
-
             <h2 className="detalle-titulo">Añadir Nueva Serie</h2>
 
             {/* BLOQUE SUPERIOR */}

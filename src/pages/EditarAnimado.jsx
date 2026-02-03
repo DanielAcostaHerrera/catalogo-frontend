@@ -88,20 +88,6 @@ export default function EditarAnimado() {
     return (
         <div className="detalle-wrapper">
 
-            {/* VOLVER */}
-            <button
-                className="btn-volver"
-                onClick={() => {
-                    if (location.state?.from) {
-                        navigate(location.state.from);
-                    } else {
-                        navigate("/catalogo-animados");
-                    }
-                }}
-            >
-                ← Volver
-            </button>
-
             {/* TÍTULO ARRIBA, CENTRADO */}
             <h2 className="detalle-titulo">Editar {a.Titulo}</h2>
 

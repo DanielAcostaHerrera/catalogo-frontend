@@ -141,20 +141,6 @@ export default function InsertarJuego() {
     return (
         <div className="detalle-wrapper">
 
-            {/* VOLVER */}
-            <button
-                className="btn-volver"
-                onClick={() => {
-                    if (location.state?.from) {
-                        navigate(location.state.from);
-                    } else {
-                        navigate("/catalogo-juegos");
-                    }
-                }}
-            >
-                ← Volver
-            </button>
-
             <h2 className="detalle-titulo">Añadir Nuevo Juego</h2>
 
             {/* BLOQUE SUPERIOR: Portada (input) + Campos básicos */}

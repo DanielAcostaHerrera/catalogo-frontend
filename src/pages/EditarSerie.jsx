@@ -88,20 +88,6 @@ export default function EditarSerie() {
     return (
         <div className="detalle-wrapper">
 
-            {/* VOLVER */}
-            <button
-                className="btn-volver"
-                onClick={() => {
-                    if (location.state?.from) {
-                        navigate(location.state.from);
-                    } else {
-                        navigate("/catalogo-series");
-                    }
-                }}
-            >
-                ← Volver
-            </button>
-
             {/* TÍTULO ARRIBA, CENTRADO */}
             <h2 className="detalle-titulo">Editar {s.Titulo}</h2>
 

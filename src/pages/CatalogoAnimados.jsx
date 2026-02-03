@@ -53,19 +53,27 @@ export default function CatalogoAnimados() {
                 Catálogo de Animados
             </h2>
 
-            {auth.isLogged && (
+            <div style={{ display: "flex", gap: 10, marginBottom: 15 }}>
                 <button
                     className="btn-dark"
-                    style={{ marginBottom: 15 }}
-                    onClick={() =>
-                        navigate("/insertar-animado", {
-                            state: { from: location.pathname + location.search }
-                        })
-                    }
+                    onClick={() => navigate("/ultimos-estrenos-animados")}
                 >
-                    Añadir Animado
+                    Últimos estrenos
                 </button>
-            )}
+
+                {auth.isLogged && (
+                    <button
+                        className="btn-dark"
+                        onClick={() =>
+                            navigate("/insertar-animado", {
+                                state: { from: location.pathname + location.search }
+                            })
+                        }
+                    >
+                        Añadir Animado
+                    </button>
+                )}
+            </div>
 
             {/* Filtro por nombre */}
             <div className="filtros-grid">

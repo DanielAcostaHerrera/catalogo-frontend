@@ -53,20 +53,6 @@ export default function JuegoDetalles() {
                 return (
                     <div className="detalle-wrapper">
 
-                        {/* 🔹 BOTÓN VOLVER */}
-                        <button
-                            className="btn-volver"
-                            onClick={() => {
-                                if (location.state?.from) {
-                                    navigate(location.state.from);
-                                } else {
-                                    navigate("/catalogo-juegos");
-                                }
-                            }}
-                        >
-                            ← Volver
-                        </button>
-
                         {/* 🔹 TÍTULO */}
                         <h2 className="detalle-titulo">{j.Nombre}</h2>
 
