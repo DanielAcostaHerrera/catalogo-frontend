@@ -26,7 +26,6 @@ body {
 
 .carousel-track {
   overflow-x: auto;
-  scroll-behavior: smooth;
   white-space: nowrap;
   flex: 1;
   scrollbar-width: none;
@@ -36,7 +35,6 @@ body {
 .carousel-track::-webkit-scrollbar {
   display: none;
 }
-
 
 .carousel-img {
   width: 180px;

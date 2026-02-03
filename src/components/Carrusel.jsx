@@ -11,11 +11,21 @@ export default function Carrusel({ items }) {
         autoScrollRef.current = setInterval(() => {
             const track = trackRef.current;
             if (!track) return;
-            track.scrollBy({ left: 2, behavior: "smooth" });
-            if (track.scrollLeft + track.clientWidth >= track.scrollWidth) {
-                track.scrollTo({ left: 0, behavior: "smooth" });
+
+            // velocidad EXACTA equivalente a tu smooth original:
+            // 1px cada 88ms ≈ 16.62s por imagen
+            track.scrollLeft += 1;
+
+            const lastImage = track.lastElementChild;
+            if (lastImage) {
+                const lastImageRight = lastImage.offsetLeft + lastImage.offsetWidth;
+
+                if (track.scrollLeft + track.clientWidth >= lastImageRight) {
+                    track.scrollLeft = 0;
+                }
             }
-        }, 50);
+
+        }, 88); // ← velocidad calibrada EXACTA (ANTES: 90)
     };
 
     const stopAutoScroll = () => {
@@ -28,33 +38,34 @@ export default function Carrusel({ items }) {
     }, []);
 
     const scrollLeft = () => {
-        trackRef.current.scrollBy({ left: -200, behavior: "smooth" });
+        const track = trackRef.current;
+        track.scrollBy({ left: -200, behavior: "smooth" });
         restartAutoScroll();
     };
 
     const scrollRight = () => {
-        trackRef.current.scrollBy({ left: 200, behavior: "smooth" });
+        const track = trackRef.current;
+        track.scrollBy({ left: 200, behavior: "smooth" });
         restartAutoScroll();
     };
 
     const restartAutoScroll = () => {
         stopAutoScroll();
-        setTimeout(() => {
-            startAutoScroll();
-        }, 5000);
+        setTimeout(() => startAutoScroll(), 5000);
     };
 
     const handleClick = (item) => {
         if (item.tipo === "juego") {
-            navigate(`/juego/${item.id}`);   // ✅ ahora correcto
+            navigate(`/juego/${item.id}`);
         } else if (item.tipo === "serie") {
-            navigate(`/serie/${item.id}`);   // ✅ ahora correcto
+            navigate(`/serie/${item.id}`);
         }
     };
 
     return (
         <div className="carousel" style={{ position: "relative" }}>
             <button className="carousel-button left" onClick={scrollLeft}>‹</button>
+
             <div
                 className="carousel-track"
                 ref={trackRef}
@@ -65,13 +76,14 @@ export default function Carrusel({ items }) {
                     <img
                         key={i}
                         src={item.portada}
-                        alt={`item-${i}`}
+                        alt=""
                         className="carousel-img"
                         onClick={() => handleClick(item)}
                         style={{ cursor: "pointer" }}
                     />
                 ))}
             </div>
+
             <button className="carousel-button right" onClick={scrollRight}>›</button>
         </div>
     );
