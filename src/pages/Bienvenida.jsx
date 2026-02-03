@@ -1,7 +1,11 @@
 import { useQuery } from "@apollo/react-hooks";
 import { useNavigate, useLocation } from "react-router-dom";
-import { GET_ULTIMOS_ESTRENOS, GET_ULTIMOS_ESTRENOS_SERIES } from "../graphql";
-import Carrusel from "../components/Carrusel"; // 🔹 nuestro carrusel reutilizable
+import {
+    GET_ULTIMOS_ESTRENOS,
+    GET_ULTIMOS_ESTRENOS_SERIES,
+    GET_ULTIMOS_ESTRENOS_ANIMADOS
+} from "../graphql";
+import Carrusel from "../components/Carrusel";
 
 export default function Bienvenida() {
     const navigate = useNavigate();
@@ -15,11 +19,19 @@ export default function Bienvenida() {
         variables: { limit: 25 },
     });
 
-    if (juegosLoading || seriesLoading) return <p style={{ color: "#ccc" }}>Cargando…</p>;
-    if (juegosError || seriesError) return <p style={{ color: "red" }}>Error al cargar datos.</p>;
+    const { data: animadosData, loading: animadosLoading, error: animadosError } = useQuery(GET_ULTIMOS_ESTRENOS_ANIMADOS, {
+        variables: { limit: 25 },
+    });
+
+    if (juegosLoading || seriesLoading || animadosLoading)
+        return <p style={{ color: "#ccc" }}>Cargando…</p>;
+
+    if (juegosError || seriesError || animadosError)
+        return <p style={{ color: "red" }}>Error al cargar datos.</p>;
 
     const juegos = juegosData?.ultimosEstrenos?.juegos || [];
     const series = seriesData?.ultimosEstrenosSeries?.series || [];
+    const animados = animadosData?.ultimosEstrenosAnimados?.series || [];
 
     return (
         <div
@@ -70,7 +82,7 @@ export default function Bienvenida() {
             <Carrusel
                 items={juegos.map((j) => ({
                     portada: `https://catalogo-backend-f4sk.onrender.com/portadas/Portadas Juegos/${j.Portada}`,
-                    id: j.Id,   // 🔹 usa el campo correcto
+                    id: j.Id,
                     tipo: "juego",
                 }))}
             />
@@ -89,7 +101,7 @@ export default function Bienvenida() {
             <Carrusel
                 items={series.map((s) => ({
                     portada: `https://catalogo-backend-f4sk.onrender.com/portadas/Portadas Series/${s.Portada}`,
-                    id: s.Id,   // 🔹 usa el campo correcto
+                    id: s.Id,
                     tipo: "serie",
                 }))}
             />
@@ -100,6 +112,25 @@ export default function Bienvenida() {
                     onClick={() => navigate("/catalogo-series", { state: { from: location.pathname } })}
                 >
                     Ver Catálogo de Series
+                </button>
+            </div>
+
+            {/* Últimos Animados */}
+            <h2 style={{ textAlign: "center", margin: "40px 0 20px" }}>🐭 Últimos Animados</h2>
+            <Carrusel
+                items={animados.map((a) => ({
+                    portada: `https://catalogo-backend-f4sk.onrender.com/portadas/Portadas Animados/${a.Portada}`,
+                    id: a.Id,
+                    tipo: "animado",
+                }))}
+            />
+            <div style={{ textAlign: "center", marginTop: 15 }}>
+                <button
+                    className="btn-dark"
+                    style={{ marginBottom: 15 }}
+                    onClick={() => navigate("/catalogo-animados", { state: { from: location.pathname } })}
+                >
+                    Ver Catálogo de Animados
                 </button>
             </div>
         </div>

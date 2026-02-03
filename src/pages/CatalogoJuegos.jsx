@@ -18,16 +18,12 @@ export default function CatalogoJuegos() {
     const auth = useAuth();
     const navigate = useNavigate();
 
-    // 🔹 Página desde la URL (o 1 si no existe)
     const [page, setPage] = useState(Number(searchParams.get("page")) || 1);
-
     const [limit] = useState(100);
 
-    // 🔹 Estados temporales de año (también desde URL)
     const [annoMinTemp, setAnnoMinTemp] = useState(searchParams.get("annoMin") || "");
     const [annoMaxTemp, setAnnoMaxTemp] = useState(searchParams.get("annoMax") || "");
 
-    // 🔹 Filtros iniciales desde la URL
     const [filtros, setFiltros] = useState({
         nombre: searchParams.get("nombre") || "",
         tamanoMin: searchParams.get("tamanoMin") || "",
@@ -38,7 +34,6 @@ export default function CatalogoJuegos() {
         precioMax: searchParams.get("precioMax") || "",
     });
 
-    // 🔹 Toast (queda igual que antes)
     const toastRef = useRef();
     const showToast = (msg) => {
         if (toastRef.current) toastRef.current.showToast(msg);
@@ -73,6 +68,8 @@ export default function CatalogoJuegos() {
         const newFiltros = { ...filtros, [campo]: valor };
         setFiltros(newFiltros);
 
+        setPage(1);
+
         const newParams = new URLSearchParams(searchParams);
         if (valor) {
             newParams.set(campo, valor);
@@ -80,12 +77,13 @@ export default function CatalogoJuegos() {
             newParams.delete(campo);
         }
 
-        // 🔹 Si el campo estaba vacío y ahora empieza a tener valor → crear entrada nueva
+        newParams.set("page", 1);
+
         const estabaVacio = !searchParams.get(campo);
         if (estabaVacio && valor) {
-            setSearchParams(newParams); // crea entrada en historial
+            setSearchParams(newParams);
         } else {
-            setSearchParams(newParams, { replace: true }); // reemplaza mientras escribes
+            setSearchParams(newParams, { replace: true });
         }
     };
 
@@ -106,14 +104,12 @@ export default function CatalogoJuegos() {
                                     campoMin.includes("anno") ? "año mínimo" :
                                         "precio mínimo"}`
                     );
-                    // limpiar el último campo escrito
                     setFiltros((prev) => ({ ...prev, [campoMax]: "" }));
                 }
             }
         }
     };
 
-    // 🔹 Validación de año solo si hay algo escrito
     const validarAnno = (campo, valor) => {
         if (valor === "") return;
         const year = parseInt(valor);
@@ -124,7 +120,6 @@ export default function CatalogoJuegos() {
         }
     };
 
-    // 🔹 Solo permitir números en inputs de año
     const soloAnios = (e) => {
         const allowed = ["Backspace", "Tab", "ArrowLeft", "ArrowRight", "Delete"];
         if (!/[0-9]/.test(e.key) && !allowed.includes(e.key)) {
@@ -133,6 +128,16 @@ export default function CatalogoJuegos() {
     };
 
     const manejarAnno = (campo, valor, setTemp) => {
+        if (valor === "") {
+            setTemp("");
+            setFiltros((prev) => ({ ...prev, [campo]: "" }));
+            const p = new URLSearchParams(searchParams);
+            p.delete(campo);
+            p.set("page", 1);
+            setSearchParams(p, { replace: true });
+            return;
+        }
+
         if (valor.length > 4) return;
         setTemp(valor);
 
@@ -142,10 +147,11 @@ export default function CatalogoJuegos() {
         const currentYear = new Date().getFullYear();
         if (isNaN(year) || year < 1970 || year > currentYear) {
             alert(`Debe ingresar un año válido entre 1970 y ${currentYear}`);
-            setTemp(""); // limpia el input visible
-            setFiltros((prev) => ({ ...prev, [campo]: "" })); // limpia el filtro real
+            setTemp("");
+            setFiltros((prev) => ({ ...prev, [campo]: "" }));
             const newParams = new URLSearchParams(searchParams);
-            newParams.delete(campo); // limpia la URL
+            newParams.delete(campo);
+            newParams.set("page", 1);
             setSearchParams(newParams, { replace: true });
             return;
         }
@@ -156,33 +162,34 @@ export default function CatalogoJuegos() {
 
         const newParams = new URLSearchParams(searchParams);
         newParams.set(campo, yearStr);
+        newParams.set("page", 1);
         setSearchParams(newParams, { replace: true });
 
-        // 🔹 validación cruzada inmediata
         const otroCampo = campo === "annoMin" ? "annoMax" : "annoMin";
         const otroTemp = otroCampo === "annoMin" ? annoMinTemp : annoMaxTemp;
         if (otroTemp && otroTemp.length === 4) {
             const otroYear = parseInt(otroTemp);
             if (campo === "annoMin" && year > otroYear) {
                 alert("El año mínimo debe ser menor o igual al año máximo");
-                setAnnoMinTemp(""); // limpia input visible
-                setFiltros((prev) => ({ ...prev, annoMin: "" })); // limpia filtro real
+                setAnnoMinTemp("");
+                setFiltros((prev) => ({ ...prev, annoMin: "" }));
                 const p = new URLSearchParams(searchParams);
                 p.delete("annoMin");
+                p.set("page", 1);
                 setSearchParams(p, { replace: true });
             }
             if (campo === "annoMax" && year < otroYear) {
                 alert("El año máximo debe ser mayor o igual al año mínimo");
-                setAnnoMaxTemp(""); // limpia input visible
-                setFiltros((prev) => ({ ...prev, annoMax: "" })); // limpia filtro real
+                setAnnoMaxTemp("");
+                setFiltros((prev) => ({ ...prev, annoMax: "" }));
                 const p = new URLSearchParams(searchParams);
                 p.delete("annoMax");
+                p.set("page", 1);
                 setSearchParams(p, { replace: true });
             }
         }
     };
 
-    // 🔹 Bloquear letras en inputs numéricos (tamaño/precio)
     const soloNumeros = (e, permitirDecimal = false) => {
         const allowed = ["Backspace", "Tab", "ArrowLeft", "ArrowRight", "Delete"];
         if (permitirDecimal) allowed.push(".");
@@ -191,7 +198,6 @@ export default function CatalogoJuegos() {
         }
     };
 
-    // 🔹 Query según filtros
     const query =
         filtros.nombre ||
             filtros.tamanoMin ||
@@ -203,7 +209,6 @@ export default function CatalogoJuegos() {
             ? GET_CATALOGO_FILTRADO
             : GET_CATALOGO;
 
-    // 🔹 Variables para GraphQL
     const variables = {
         page,
         limit,
@@ -216,7 +221,6 @@ export default function CatalogoJuegos() {
         precioMax: filtros.precioMax !== "" ? parseInt(filtros.precioMax) : undefined,
     };
 
-    // 🔹 Reiniciar filtros
     const reiniciarCatalogo = () => {
         setFiltros({
             nombre: "",
@@ -232,7 +236,7 @@ export default function CatalogoJuegos() {
         setAnnoMaxTemp("");
         setPage(1);
 
-        setSearchParams({});
+        setSearchParams({ page: 1 });
     };
 
     return (
@@ -253,10 +257,8 @@ export default function CatalogoJuegos() {
                 </button>
             )}
 
-
-            {/* 🔹 Bloque de filtros */}
             <div className="filtros-grid">
-                {/* Nombre */}
+
                 <div className="filtro-nombre">
                     <label style={{ color: "#f0f0f0" }}>Nombre</label>
                     <input
@@ -267,7 +269,6 @@ export default function CatalogoJuegos() {
                     />
                 </div>
 
-                {/* Año mínimo */}
                 <div>
                     <label style={{ color: "#f0f0f0" }}>Año mínimo</label>
                     <input
@@ -279,7 +280,6 @@ export default function CatalogoJuegos() {
                     />
                 </div>
 
-                {/* Año máximo */}
                 <div>
                     <label style={{ color: "#f0f0f0" }}>Año máximo</label>
                     <input
@@ -291,7 +291,6 @@ export default function CatalogoJuegos() {
                     />
                 </div>
 
-                {/* Tamaño mínimo */}
                 <div>
                     <label style={{ color: "#f0f0f0" }}>Tamaño mínimo</label>
                     <div style={{ display: "flex", alignItems: "center" }}>
@@ -309,6 +308,10 @@ export default function CatalogoJuegos() {
                                     if (minVal > maxVal) {
                                         alert("El tamaño mínimo debe ser menor o igual al tamaño máximo");
                                         setFiltros((prev) => ({ ...prev, tamanoMin: "" }));
+                                        const p = new URLSearchParams(searchParams);
+                                        p.delete("tamanoMin");
+                                        p.set("page", 1);
+                                        setSearchParams(p, { replace: true });
                                     }
                                 }
                             }}
@@ -319,7 +322,6 @@ export default function CatalogoJuegos() {
                     </div>
                 </div>
 
-                {/* Tamaño máximo */}
                 <div>
                     <label style={{ color: "#f0f0f0" }}>Tamaño máximo</label>
                     <div style={{ display: "flex", alignItems: "center" }}>
@@ -337,6 +339,10 @@ export default function CatalogoJuegos() {
                                     if (maxVal < minVal) {
                                         alert("El tamaño máximo debe ser mayor o igual al tamaño mínimo");
                                         setFiltros((prev) => ({ ...prev, tamanoMax: "" }));
+                                        const p = new URLSearchParams(searchParams);
+                                        p.delete("tamanoMax");
+                                        p.set("page", 1);
+                                        setSearchParams(p, { replace: true });
                                     }
                                 }
                             }}
@@ -347,7 +353,6 @@ export default function CatalogoJuegos() {
                     </div>
                 </div>
 
-                {/* Precio mínimo */}
                 <div>
                     <label style={{ color: "#f0f0f0" }}>Precio mínimo</label>
                     <div style={{ display: "flex", alignItems: "center" }}>
@@ -362,6 +367,10 @@ export default function CatalogoJuegos() {
                                     if (minVal > maxVal) {
                                         alert("El precio mínimo debe ser menor o igual al precio máximo");
                                         setFiltros((prev) => ({ ...prev, precioMin: "" }));
+                                        const p = new URLSearchParams(searchParams);
+                                        p.delete("precioMin");
+                                        p.set("page", 1);
+                                        setSearchParams(p, { replace: true });
                                     }
                                 }
                             }}
@@ -372,7 +381,6 @@ export default function CatalogoJuegos() {
                     </div>
                 </div>
 
-                {/* Precio máximo */}
                 <div>
                     <label style={{ color: "#f0f0f0" }}>Precio máximo</label>
                     <div style={{ display: "flex", alignItems: "center" }}>
@@ -387,6 +395,10 @@ export default function CatalogoJuegos() {
                                     if (maxVal < minVal) {
                                         alert("El precio máximo debe ser mayor o igual al precio mínimo");
                                         setFiltros((prev) => ({ ...prev, precioMax: "" }));
+                                        const p = new URLSearchParams(searchParams);
+                                        p.delete("precioMax");
+                                        p.set("page", 1);
+                                        setSearchParams(p, { replace: true });
                                     }
                                 }
                             }}
@@ -398,7 +410,6 @@ export default function CatalogoJuegos() {
                 </div>
             </div>
 
-            {/* Botón de reinicio */}
             <div style={{ marginBottom: "20px" }}>
                 <button
                     className="btn-dark"
@@ -408,7 +419,6 @@ export default function CatalogoJuegos() {
                 </button>
             </div>
 
-            {/* Query */}
             <Query query={query} variables={variables}>
                 {({ loading, error, data }) => {
                     if (loading) return <p style={{ color: "#ccc" }}>Cargando…</p>;

@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { Query } from "react-apollo";
-import { GET_CATALOGO_SERIES, GET_CATALOGO_SERIES_FILTRADO } from "../graphql";
-import SerieCard from "../components/SerieCard";
+import { GET_CATALOGO_ANIMADOS, GET_CATALOGO_ANIMADOS_FILTRADO } from "../graphql";
+import AnimadoCard from "../components/AnimadoCard";
 import Paginacion from "../components/Paginacion";
 import "../App.css";
 import { useLocation, useSearchParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthContext";
 
-export default function CatalogoSeries() {
+export default function CatalogoAnimados() {
     const location = useLocation();
     const [searchParams, setSearchParams] = useSearchParams();
     const navigate = useNavigate();
@@ -44,13 +44,13 @@ export default function CatalogoSeries() {
         setSearchParams({});
     };
 
-    const query = nombre ? GET_CATALOGO_SERIES_FILTRADO : GET_CATALOGO_SERIES;
+    const query = nombre ? GET_CATALOGO_ANIMADOS_FILTRADO : GET_CATALOGO_ANIMADOS;
     const variables = { page, limit, titulo: nombre || null };
 
     return (
         <div className="catalogo-container">
             <h2 style={{ color: "#f0f0f0", marginBottom: "20px" }}>
-                Catálogo de Series
+                Catálogo de Animados
             </h2>
 
             {auth.isLogged && (
@@ -58,12 +58,12 @@ export default function CatalogoSeries() {
                     className="btn-dark"
                     style={{ marginBottom: 15 }}
                     onClick={() =>
-                        navigate("/insertar-serie", {
+                        navigate("/insertar-animado", {
                             state: { from: location.pathname + location.search }
                         })
                     }
                 >
-                    Añadir Serie
+                    Añadir Animado
                 </button>
             )}
 
@@ -93,13 +93,13 @@ export default function CatalogoSeries() {
                     if (loading) return <p style={{ color: "#ccc" }}>Cargando…</p>;
                     if (error) return <p style={{ color: "red" }}>Error: {error.message}</p>;
 
-                    const series =
-                        data?.catalogoSeries?.series ||
-                        data?.catalogoSeriesFiltrado?.series ||
+                    const animados =
+                        data?.catalogoAnimados?.series ||
+                        data?.catalogoAnimadosFiltrado?.series ||
                         [];
                     const total =
-                        data?.catalogoSeries?.total ||
-                        data?.catalogoSeriesFiltrado?.total ||
+                        data?.catalogoAnimados?.total ||
+                        data?.catalogoAnimadosFiltrado?.total ||
                         0;
                     const totalPages = Math.ceil(total / limit);
 
@@ -112,10 +112,10 @@ export default function CatalogoSeries() {
                                     gap: "20px",
                                 }}
                             >
-                                {series.map((s) => (
-                                    <SerieCard
-                                        key={s.Id}
-                                        serie={s}
+                                {animados.map((a) => (
+                                    <AnimadoCard
+                                        key={a.Id}
+                                        animado={a}
                                         from={location.pathname + location.search}
                                     />
                                 ))}

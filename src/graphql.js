@@ -168,3 +168,74 @@ export const GET_SERIE = gql`
     }
   }
 `;
+
+// ============================================================
+//  CATÁLOGO DE ANIMADOS (SIN FILTROS)
+// ============================================================
+export const GET_CATALOGO_ANIMADOS = gql`
+  query CatalogoAnimados($page: Int!, $limit: Int!) {
+    catalogoAnimados(page: $page, limit: $limit) {
+      series {
+        Id
+        Titulo
+        Portada
+        Anno
+        Temporadas
+      }
+      total
+    }
+  }
+`;
+
+// ============================================================
+//  CATÁLOGO DE ANIMADOS FILTRADO (POR TÍTULO)
+// ============================================================
+export const GET_CATALOGO_ANIMADOS_FILTRADO = gql`
+  query CatalogoAnimadosFiltrado($page: Int!, $limit: Int!, $titulo: String) {
+    catalogoAnimadosFiltrado(page: $page, limit: $limit, titulo: $titulo) {
+      series {
+        Id
+        Titulo
+        Portada
+        Anno
+        Temporadas
+      }
+      total
+    }
+  }
+`;
+
+// ============================================================
+//  ÚLTIMOS ESTRENOS DE ANIMADOS (ORDENADOS POR Id DESC)
+// ============================================================
+export const GET_ULTIMOS_ESTRENOS_ANIMADOS = gql`
+  query UltimosEstrenosAnimados($limit: Int!) {
+    ultimosEstrenosAnimados(limit: $limit) {
+      series {
+        Id
+        Titulo
+        Portada
+        Anno
+        Temporadas
+      }
+      total
+    }
+  }
+`;
+
+// ============================================================
+//  DETALLES DE UN ANIMADO
+// ============================================================
+export const GET_ANIMADO = gql`
+  query Animado($id: Int!) {
+    animado(id: $id) {
+      Id
+      Titulo
+      Portada
+      Anno
+      Temporadas
+      Sinopsis
+      Episodios
+    }
+  }
+`;

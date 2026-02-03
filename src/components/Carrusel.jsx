@@ -59,6 +59,8 @@ export default function Carrusel({ items }) {
             navigate(`/juego/${item.id}`);
         } else if (item.tipo === "serie") {
             navigate(`/serie/${item.id}`);
+        } else if (item.tipo === "animado") {
+            navigate(`/animado/${item.id}`);
         }
     };
 

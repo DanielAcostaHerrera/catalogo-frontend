@@ -101,6 +101,15 @@ export default function Header() {
                     </NavLink>
 
                     <NavLink
+                        to="/catalogo-animados"
+                        style={({ isActive }) =>
+                            isActive ? { ...linkStyle, ...activeStyle } : linkStyle
+                        }
+                    >
+                        Animados
+                    </NavLink>
+
+                    <NavLink
                         to="/ultimos-estrenos-juegos"
                         style={({ isActive }) =>
                             isActive ? { ...linkStyle, ...activeStyle } : linkStyle
@@ -116,6 +125,15 @@ export default function Header() {
                         }
                     >
                         Últimos Estrenos (Series)
+                    </NavLink>
+
+                    <NavLink
+                        to="/ultimos-estrenos-animados"
+                        style={({ isActive }) =>
+                            isActive ? { ...linkStyle, ...activeStyle } : linkStyle
+                        }
+                    >
+                        Últimos Estrenos (Animados)
                     </NavLink>
 
                     <NavLink
@@ -179,6 +197,15 @@ export default function Header() {
                         </NavLink>
 
                         <NavLink
+                            to="/catalogo-animados"
+                            style={({ isActive }) =>
+                                isActive ? { ...linkStyle, ...activeStyle } : linkStyle
+                            }
+                        >
+                            Animados
+                        </NavLink>
+
+                        <NavLink
                             to="/ultimos-estrenos-juegos"
                             style={({ isActive }) =>
                                 isActive ? { ...linkStyle, ...activeStyle } : linkStyle
@@ -194,6 +221,15 @@ export default function Header() {
                             }
                         >
                             Últimos Estrenos (Series)
+                        </NavLink>
+
+                        <NavLink
+                            to="/ultimos-estrenos-animados"
+                            style={({ isActive }) =>
+                                isActive ? { ...linkStyle, ...activeStyle } : linkStyle
+                            }
+                        >
+                            Últimos Estrenos (Animados)
                         </NavLink>
 
                         <NavLink

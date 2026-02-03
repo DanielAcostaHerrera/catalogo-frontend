@@ -83,3 +83,46 @@ export const ELIMINAR_SERIE = gql`
     eliminarSerie(id: $id)
   }
 `;
+
+// ============================================================
+//  CREAR ANIMADO
+// ============================================================
+export const CREAR_ANIMADO = gql`
+  mutation CrearAnimado($data: CreateAnimadoInput!) {
+    crearAnimado(data: $data) {
+      Id
+      Titulo
+      Portada
+      Anno
+      Temporadas
+      Sinopsis
+      Episodios
+    }
+  }
+`;
+
+// ============================================================
+//  ACTUALIZAR ANIMADO
+// ============================================================
+export const ACTUALIZAR_ANIMADO = gql`
+  mutation ActualizarAnimado($data: UpdateAnimadoInput!) {
+    actualizarAnimado(data: $data) {
+      Id
+      Titulo
+      Portada
+      Anno
+      Temporadas
+      Sinopsis
+      Episodios
+    }
+  }
+`;
+
+// ============================================================
+//  ELIMINAR ANIMADO
+// ============================================================
+export const ELIMINAR_ANIMADO = gql`
+  mutation EliminarAnimado($id: Int!) {
+    eliminarAnimado(id: $id)
+  }
+`;
