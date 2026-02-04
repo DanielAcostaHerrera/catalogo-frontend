@@ -64,6 +64,8 @@ export default function Carrusel({ items }) {
             navigate(`/serie/${item.id}`, { state: { from } });
         } else if (item.tipo === "animado") {
             navigate(`/animado/${item.id}`, { state: { from } });
+        } else if (item.tipo === "anime") {
+            navigate(`/anime/${item.id}`, { state: { from } });
         }
     };
 

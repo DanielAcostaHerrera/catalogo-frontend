@@ -116,6 +116,15 @@ export default function Header() {
                         </NavLink>
 
                         <NavLink
+                            to="/catalogo-animes"
+                            style={({ isActive }) =>
+                                isActive ? { ...linkStyle, ...activeStyle } : linkStyle
+                            }
+                        >
+                            Animes
+                        </NavLink>
+
+                        <NavLink
                             to="/info"
                             style={({ isActive }) =>
                                 isActive ? { ...linkStyle, ...activeStyle } : linkStyle

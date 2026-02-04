@@ -3,7 +3,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import {
     GET_ULTIMOS_ESTRENOS,
     GET_ULTIMOS_ESTRENOS_SERIES,
-    GET_ULTIMOS_ESTRENOS_ANIMADOS
+    GET_ULTIMOS_ESTRENOS_ANIMADOS,
+    GET_ULTIMOS_ESTRENOS_ANIMES, // 👈 añadido
 } from "../graphql";
 import Carrusel from "../components/Carrusel";
 
@@ -23,15 +24,20 @@ export default function Bienvenida() {
         variables: { limit: 25 },
     });
 
-    if (juegosLoading || seriesLoading || animadosLoading)
+    const { data: animesData, loading: animesLoading, error: animesError } = useQuery(GET_ULTIMOS_ESTRENOS_ANIMES, {
+        variables: { limit: 25 },
+    });
+
+    if (juegosLoading || seriesLoading || animadosLoading || animesLoading)
         return <p style={{ color: "#ccc" }}>Cargando…</p>;
 
-    if (juegosError || seriesError || animadosError)
+    if (juegosError || seriesError || animadosError || animesError)
         return <p style={{ color: "red" }}>Error al cargar datos.</p>;
 
     const juegos = juegosData?.ultimosEstrenos?.juegos || [];
     const series = seriesData?.ultimosEstrenosSeries?.series || [];
     const animados = animadosData?.ultimosEstrenosAnimados?.series || [];
+    const animes = animesData?.ultimosEstrenosAnimes?.animes || [];
 
     return (
         <div
@@ -131,6 +137,26 @@ export default function Bienvenida() {
                     onClick={() => navigate("/catalogo-animados", { state: { from: location.pathname } })}
                 >
                     Ver Catálogo de Animados
+                </button>
+            </div>
+
+            {/* Últimos Animes */}
+            <h2 style={{ textAlign: "center", margin: "40px 0 20px" }}>🍥 Últimos Animes</h2>
+            <Carrusel
+                items={animes.map((an) => ({
+                    portada: `https://catalogo-backend-f4sk.onrender.com/portadas/Portadas Anime/${an.Portada}`,
+                    id: an.Id,
+                    tipo: "anime",
+                }))}
+            />
+
+            <div style={{ textAlign: "center", marginTop: 15 }}>
+                <button
+                    className="btn-dark"
+                    style={{ marginBottom: 15 }}
+                    onClick={() => navigate("/catalogo-animes", { state: { from: location.pathname } })}
+                >
+                    Ver Catálogo de Animes
                 </button>
             </div>
         </div>

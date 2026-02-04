@@ -126,3 +126,46 @@ export const ELIMINAR_ANIMADO = gql`
     eliminarAnimado(id: $id)
   }
 `;
+
+// ============================================================
+//  CREAR ANIME
+// ============================================================
+export const CREAR_ANIME = gql`
+  mutation CrearAnime($data: CreateAnimeInput!) {
+    crearAnime(data: $data) {
+      Id
+      Titulo
+      Portada
+      Anno
+      Temporadas
+      Sinopsis
+      Episodios
+    }
+  }
+`;
+
+// ============================================================
+//  ACTUALIZAR ANIME
+// ============================================================
+export const ACTUALIZAR_ANIME = gql`
+  mutation ActualizarAnime($data: UpdateAnimeInput!) {
+    actualizarAnime(data: $data) {
+      Id
+      Titulo
+      Portada
+      Anno
+      Temporadas
+      Sinopsis
+      Episodios
+    }
+  }
+`;
+
+// ============================================================
+//  ELIMINAR ANIME
+// ============================================================
+export const ELIMINAR_ANIME = gql`
+  mutation EliminarAnime($id: Int!) {
+    eliminarAnime(id: $id)
+  }
+`;

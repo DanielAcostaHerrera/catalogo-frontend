@@ -239,3 +239,74 @@ export const GET_ANIMADO = gql`
     }
   }
 `;
+
+// ============================================================
+//  CATÁLOGO DE ANIMES (SIN FILTROS)
+// ============================================================
+export const GET_CATALOGO_ANIMES = gql`
+  query CatalogoAnimes($page: Int!, $limit: Int!) {
+    catalogoAnimes(page: $page, limit: $limit) {
+      animes {
+        Id
+        Titulo
+        Portada
+        Anno
+        Temporadas
+      }
+      total
+    }
+  }
+`;
+
+// ============================================================
+//  CATÁLOGO DE ANIMES FILTRADO (POR TÍTULO)
+// ============================================================
+export const GET_CATALOGO_ANIMES_FILTRADO = gql`
+  query CatalogoAnimesFiltrado($page: Int!, $limit: Int!, $titulo: String) {
+    catalogoAnimesFiltrado(page: $page, limit: $limit, titulo: $titulo) {
+      animes {
+        Id
+        Titulo
+        Portada
+        Anno
+        Temporadas
+      }
+      total
+    }
+  }
+`;
+
+// ============================================================
+//  ÚLTIMOS ESTRENOS DE ANIMES (ORDENADOS POR Id DESC)
+// ============================================================
+export const GET_ULTIMOS_ESTRENOS_ANIMES = gql`
+  query UltimosEstrenosAnimes($limit: Int!) {
+    ultimosEstrenosAnimes(limit: $limit) {
+      animes {
+        Id
+        Titulo
+        Portada
+        Anno
+        Temporadas
+      }
+      total
+    }
+  }
+`;
+
+// ============================================================
+//  DETALLES DE UN ANIME
+// ============================================================
+export const GET_ANIME = gql`
+  query Anime($id: Int!) {
+    anime(id: $id) {
+      Id
+      Titulo
+      Portada
+      Anno
+      Temporadas
+      Sinopsis
+      Episodios
+    }
+  }
+`;

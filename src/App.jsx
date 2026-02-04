@@ -19,10 +19,17 @@ import AnimadoDetalles from "./pages/AnimadoDetalles";
 import EditarAnimado from "./pages/EditarAnimado";
 import InsertarAnimado from "./pages/InsertarAnimado";
 
+/* 🔹 ANIMES */
+import CatalogoAnimes from "./pages/CatalogoAnimes";
+import AnimeDetalles from "./pages/AnimeDetalles";
+import EditarAnime from "./pages/EditarAnime";
+import InsertarAnime from "./pages/InsertarAnime";
+
 /* 🔹 ÚLTIMOS ESTRENOS */
-import UltimosEstrenos from "./pages/UltimosEstrenos"; // Juegos
+import UltimosEstrenos from "./pages/UltimosEstrenos";
 import UltimosEstrenosSeries from "./pages/UltimosEstrenosSeries";
 import UltimosEstrenosAnimados from "./pages/UltimosEstrenosAnimados";
+import UltimosEstrenosAnimes from "./pages/UltimosEstrenosAnimes";
 
 /* 🔹 OTROS */
 import InfoNegocio from "./pages/InfoNegocio";
@@ -77,10 +84,17 @@ function AppContent() {
               <Route path="/editar-animado/:id" element={<EditarAnimado />} />
               <Route path="/insertar-animado" element={<InsertarAnimado />} />
 
+              {/* 🔹 ANIMES */}
+              <Route path="/catalogo-animes" element={<CatalogoAnimes />} />
+              <Route path="/anime/:id" element={<AnimeDetalles />} />
+              <Route path="/editar-anime/:id" element={<EditarAnime />} />
+              <Route path="/insertar-anime" element={<InsertarAnime />} />
+
               {/* 🔹 ÚLTIMOS ESTRENOS */}
               <Route path="/ultimos-estrenos-juegos" element={<UltimosEstrenos />} />
               <Route path="/ultimos-estrenos-series" element={<UltimosEstrenosSeries />} />
               <Route path="/ultimos-estrenos-animados" element={<UltimosEstrenosAnimados />} />
+              <Route path="/ultimos-estrenos-animes" element={<UltimosEstrenosAnimes />} />
 
               {/* 🔹 OTROS */}
               <Route path="/info" element={<InfoNegocio />} />
