@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://pixelplayhabana.pages.dev/sitemap.xml

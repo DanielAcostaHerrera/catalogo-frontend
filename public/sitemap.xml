@@ -1,9 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Página principal -->
   <url>
     <loc>https://pixelplayhabana.pages.dev/</loc>
-    <lastmod>2026-01-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
+
+  <!-- Catálogo de Juegos -->
+  <url>
+    <loc>https://pixelplayhabana.pages.dev/catalogo-juegos</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Catálogo de Series -->
+  <url>
+    <loc>https://pixelplayhabana.pages.dev/catalogo-series</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Catálogo de Animes -->
+  <url>
+    <loc>https://pixelplayhabana.pages.dev/catalogo-animes</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Catálogo de Animados -->
+  <url>
+    <loc>https://pixelplayhabana.pages.dev/catalogo-animados</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Últimos Estrenos (Juegos) -->
+  <url>
+    <loc>https://pixelplayhabana.pages.dev/ultimos-estrenos-juegos</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Últimos Estrenos (Series) -->
+  <url>
+    <loc>https://pixelplayhabana.pages.dev/ultimos-estrenos-series</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Últimos Estrenos (Animes) -->
+  <url>
+    <loc>https://pixelplayhabana.pages.dev/ultimos-estrenos-animes</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Últimos Estrenos (Animados) -->
+  <url>
+    <loc>https://pixelplayhabana.pages.dev/ultimos-estrenos-animados</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
 </urlset>
