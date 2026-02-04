@@ -1,0 +1,17 @@
+{
+    "version": 1,
+    "include": [
+        "/*"
+    ],
+    "exclude": [
+        "/sitemap.xml",
+        "/robots.txt",
+        "/assets/*"
+    ],
+    "routes": [
+        {
+            "pattern": "/*",
+            "serve": "/index.html"
+        }
+    ]
+}
