@@ -7,11 +7,5 @@
         "/sitemap.xml",
         "/robots.txt",
         "/assets/*"
-    ],
-    "routes": [
-        {
-            "pattern": "/*",
-            "serve": "/index.html"
-        }
     ]
 }
