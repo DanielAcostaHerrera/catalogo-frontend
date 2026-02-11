@@ -115,12 +115,21 @@ export default function EditarJuego() {
         payload.Nombre = Nombre.trim();
 
         // Tamaño requerido
-        const tamanoParseado = parseTamano(Tamano);
-        if (tamanoParseado === null) {
-            alert("El tamaño debe ser un número válido (ej: 500, 500 Mb, 2 Gb)");
-            return null;
+        if (Tamano.trim().toLowerCase() === "variable") {
+            // Solo se permite "Variable" si el nombre contiene exactamente [online]
+            if (!Nombre.includes("[online]")) {
+                alert("Solo se puede declarar tamaño variable en juegos online");
+                return null;
+            }
+            payload.Tamano = j.Tamano;; // 🔹 se conserva tal cual
+        } else {
+            const tamanoParseado = parseTamano(Tamano);
+            if (tamanoParseado === null) {
+                alert("El tamaño debe ser un valor válido (ej: 500, 500 Mb, 2 Gb, Variable)");
+                return null;
+            }
+            payload.Tamano = tamanoParseado;
         }
-        payload.Tamano = Math.round(tamanoParseado); // 🔹 siempre entero
 
         // Año opcional
         if (AnnoAct.trim() === "" || AnnoAct.trim() === "0") {
@@ -144,7 +153,6 @@ export default function EditarJuego() {
 
         return payload;
     };
-
 
     return (
         <div className="detalle-wrapper">
