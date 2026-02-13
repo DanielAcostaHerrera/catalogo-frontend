@@ -4,7 +4,7 @@ import { Mutation } from "react-apollo";
 import { ELIMINAR_ANIME } from "../mutations";
 import AddToCartButton from "../components/AddToCartButton";
 
-export default function AnimeCard({ anime, from, showToast }) {
+export default function AnimeCard({ anime, from, showToast, precioPorCapitulo }) {
     const auth = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
@@ -36,7 +36,7 @@ export default function AnimeCard({ anime, from, showToast }) {
         bloques = [{ descripcion: "Serie entera" }];
     }
 
-    const precioCalculado = totalEpisodios * 10;
+    const precioCalculado = totalEpisodios * Number(precioPorCapitulo);
 
     return (
         <div
@@ -49,7 +49,7 @@ export default function AnimeCard({ anime, from, showToast }) {
         >
             <Link
                 to={`/anime/${anime.Id}`}
-                state={{ from }}
+                state={{ from, precioPorCapitulo }}
                 style={{ textDecoration: "none", color: "inherit" }}
             >
                 <img

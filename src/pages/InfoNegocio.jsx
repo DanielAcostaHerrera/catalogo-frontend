@@ -127,7 +127,6 @@ export default function InfoNegocio() {
                 <p style={{ fontSize: '0.95em', color: '#ccc' }}>
                     📦 Entregas a domicilio por un costo adicional siempre y cuando sea una compra mínima de
                     <span translate="no"> {data.entregas.minimoCUP} CUP</span> dependiendo de la lejanía.<br />
-                    🔄 Si usted desea algún juego que no aparezca en el listado pregunte, constantemente entran nuevos juegos que aún no aparecerán en el listado.
                 </p>
             </div>
         </div>

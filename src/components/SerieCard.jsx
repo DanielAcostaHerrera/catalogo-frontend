@@ -4,7 +4,7 @@ import { Mutation } from "react-apollo";
 import { ELIMINAR_SERIE } from "../mutations";
 import AddToCartButton from "../components/AddToCartButton";
 
-export default function SerieCard({ serie, from, showToast }) {
+export default function SerieCard({ serie, from, showToast, precioPorCapitulo }) {
     const auth = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
@@ -21,22 +21,21 @@ export default function SerieCard({ serie, from, showToast }) {
     lineas.forEach((l) => {
         const match = l.match(/(\d+)\s*Episodios?/i);
         if (match) {
-            const cantidad = parseInt(match[1], 10);
+            const cantidad = parseInt(match[1], 10); // base decimal, no es precio
             bloques.push({
                 cantidad,
-                descripcion: l.trim(), // usar el texto original como descripción
+                descripcion: l.trim(),
             });
         }
     });
 
     const totalEpisodios = bloques.reduce((acc, b) => acc + b.cantidad, 0);
 
-    // 🔹 Si el texto incluye "Serie entera", mostrar solo eso
     if (/serie entera/i.test(serie.Episodios)) {
         bloques = [{ descripcion: "Serie entera" }];
     }
 
-    const precioCalculado = totalEpisodios * 10;
+    const precioCalculado = totalEpisodios * Number(precioPorCapitulo);
 
     return (
         <div
@@ -49,7 +48,7 @@ export default function SerieCard({ serie, from, showToast }) {
         >
             <Link
                 to={`/serie/${serie.Id}`}
-                state={{ from }}
+                state={{ from, precioPorCapitulo }}
                 style={{ textDecoration: "none", color: "inherit" }}
             >
                 <img
@@ -92,7 +91,7 @@ export default function SerieCard({ serie, from, showToast }) {
                         id: serie.Id,
                         tipo: "serie",
                         nombre: serie.Titulo,
-                        portada: serie.Portada, // solo nombre del archivo
+                        portada: serie.Portada,
                         precio: precioCalculado,
                         bloques,
                         Episodios: serie.Episodios,

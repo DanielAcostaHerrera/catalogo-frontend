@@ -9,6 +9,7 @@ export default function AnimadoDetalles({ showToast }) {
     const location = useLocation();
     const navigate = useNavigate();
     const { cartItems, addToCart, updateCartItem } = useCart();
+    const precioPorCapitulo = location.state?.precioPorCapitulo;
 
     const normalizarTexto = (txt) => (txt ? txt.replace(/\\n/g, "\n") : "");
 
@@ -27,7 +28,7 @@ export default function AnimadoDetalles({ showToast }) {
             }
 
             const nuevoBloques = [...existente.bloques, { descripcion: nombreBloque }];
-            const nuevoPrecio = existente.precio + cantidad * 10;
+            const nuevoPrecio = existente.precio + cantidad * Number(precioPorCapitulo);
 
             updateCartItem(animado.Id, {
                 ...existente,
@@ -37,7 +38,7 @@ export default function AnimadoDetalles({ showToast }) {
 
             if (showToast) showToast(`${nombreBloque} añadida correctamente`);
         } else {
-            const precio = cantidad * 10;
+            const precio = cantidad * Number(precioPorCapitulo);
             const nuevoItem = {
                 id: animado.Id,
                 tipo: "animado",

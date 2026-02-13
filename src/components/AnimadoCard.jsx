@@ -4,7 +4,7 @@ import { Mutation } from "react-apollo";
 import { ELIMINAR_ANIMADO } from "../mutations";
 import AddToCartButton from "../components/AddToCartButton";
 
-export default function AnimadoCard({ animado, from, showToast }) {
+export default function AnimadoCard({ animado, from, showToast, precioPorCapitulo }) {
     const auth = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
@@ -24,19 +24,18 @@ export default function AnimadoCard({ animado, from, showToast }) {
             const cantidad = parseInt(match[1], 10);
             bloques.push({
                 cantidad,
-                descripcion: l.trim(), // usar el texto original como descripción
+                descripcion: l.trim(),
             });
         }
     });
 
     const totalEpisodios = bloques.reduce((acc, b) => acc + b.cantidad, 0);
 
-    // 🔹 Si el texto incluye "Serie entera", mostrar solo eso
     if (/serie entera/i.test(animado.Episodios)) {
         bloques = [{ descripcion: "Serie entera" }];
     }
 
-    const precioCalculado = totalEpisodios * 10;
+    const precioCalculado = totalEpisodios * Number(precioPorCapitulo);
 
     return (
         <div
@@ -49,7 +48,7 @@ export default function AnimadoCard({ animado, from, showToast }) {
         >
             <Link
                 to={`/animado/${animado.Id}`}
-                state={{ from }}
+                state={{ from, precioPorCapitulo }}
                 style={{ textDecoration: "none", color: "inherit" }}
             >
                 <img
@@ -92,7 +91,7 @@ export default function AnimadoCard({ animado, from, showToast }) {
                         id: animado.Id,
                         tipo: "animado",
                         nombre: animado.Titulo,
-                        portada: animado.Portada, // solo nombre del archivo
+                        portada: animado.Portada,
                         precio: precioCalculado,
                         bloques,
                         Episodios: animado.Episodios,

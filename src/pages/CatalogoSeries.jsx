@@ -16,6 +16,7 @@ export default function CatalogoSeries({ showToast }) {
     const [page, setPage] = useState(Number(searchParams.get("page")) || 1);
     const [limit] = useState(100);
     const [nombre, setNombre] = useState(searchParams.get("nombre") || "");
+    const [precios, setPrecios] = useState(null);
 
     useEffect(() => {
         const newPage = Number(searchParams.get("page")) || 1;
@@ -24,6 +25,15 @@ export default function CatalogoSeries({ showToast }) {
         const newNombre = searchParams.get("nombre") || "";
         if (newNombre !== nombre) setNombre(newNombre);
     }, [searchParams]);
+
+    useEffect(() => {
+        fetch("https://catalogo-backend-f4sk.onrender.com/precios")
+            .then(res => res.json())
+            .then(setPrecios)
+            .catch(err => console.error("Error cargando precios:", err));
+    }, []);
+
+    if (!precios) return <p style={{ color: "#ccc" }}>Cargando precios…</p>;
 
     const actualizarFiltro = (valor) => {
         setNombre(valor);
@@ -126,6 +136,7 @@ export default function CatalogoSeries({ showToast }) {
                                         serie={s}
                                         from={location.pathname + location.search}
                                         showToast={showToast}
+                                        precioPorCapitulo={Number(precios.series.precioPorCapitulo)}
                                     />
                                 ))}
                             </div>
