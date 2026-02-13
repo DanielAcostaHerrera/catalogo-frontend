@@ -11,23 +11,44 @@ function CarritoView({ showToast }) {
 
     const startIndex = (page - 1) * limit;
     const endIndex = startIndex + limit;
-    const itemsPagina = cartItems.slice(startIndex, endIndex);
 
-    const exportTxt = () => {
-        let content = cartItems
-            .map((g) => {
+    // 🔹 Orden de prioridad
+    const ordenTipo = { juego: 1, serie: 2, anime: 3, animado: 4 };
+
+    const itemsPagina = cartItems
+        .slice(startIndex, endIndex)
+        .sort((a, b) => (ordenTipo[a.tipo] ?? 99) - (ordenTipo[b.tipo] ?? 99));
+
+    // 🔹 Función para agrupar por tipo con encabezados
+    const generarContenidoAgrupado = () => {
+        const grupos = { juego: [], serie: [], anime: [], animado: [] };
+
+        [...cartItems]
+            .sort((a, b) => (ordenTipo[a.tipo] ?? 99) - (ordenTipo[b.tipo] ?? 99))
+            .forEach((g) => {
                 if (g.tipo === "juego") {
-                    return `${g.nombre} (${(g.Precio ?? g.precio ?? 0).toFixed(2)} CUP) (${g.tamanoFormateado ?? "?"})`;
+                    grupos.juego.push(`${g.nombre} (${(g.Precio ?? g.precio ?? 0).toFixed(2)} CUP) (${g.tamanoFormateado ?? "?"})`);
                 } else if (g.tipo === "serie" || g.tipo === "anime" || g.tipo === "animado") {
                     const bloquesTxt = g.bloques?.map((b) => b.descripcion).join("\n   ");
-                    return `${g.nombre} (${(g.Precio ?? g.precio ?? 0).toFixed(2)} CUP)\n   ${bloquesTxt ?? ""}`;
+                    grupos[g.tipo].push(`${g.nombre} (${(g.Precio ?? g.precio ?? 0).toFixed(2)} CUP)\n   ${bloquesTxt ?? ""}`);
+                } else {
+                    grupos[g.tipo]?.push(`${g.nombre} (${(g.Precio ?? g.precio ?? 0).toFixed(2)} CUP)`);
                 }
-                return `${g.nombre} (${(g.Precio ?? g.precio ?? 0).toFixed(2)} CUP)`;
-            })
-            .join("\n");
+            });
 
-        content += `\n\nTotal: ${(totals.price ?? 0).toFixed(2)} CUP\nEspacio: ${(totals.size ?? 0).toFixed(1)} GB`;
+        let content = "";
+        if (grupos.juego.length) content += "Juegos:\n" + grupos.juego.join("\n") + "\n\n";
+        if (grupos.serie.length) content += "Series:\n" + grupos.serie.join("\n") + "\n\n";
+        if (grupos.anime.length) content += "Animes:\n" + grupos.anime.join("\n") + "\n\n";
+        if (grupos.animado.length) content += "Animados:\n" + grupos.animado.join("\n") + "\n\n";
 
+        content += `Total: ${(totals.price ?? 0).toFixed(2)} CUP\nEspacio: ${(totals.size ?? 0).toFixed(1)} GB`;
+
+        return content;
+    };
+
+    const exportTxt = () => {
+        const content = generarContenidoAgrupado();
         const blob = new Blob([content], { type: "text/plain" });
         const url = URL.createObjectURL(blob);
 
@@ -41,24 +62,10 @@ function CarritoView({ showToast }) {
     };
 
     const enviarWhatsApp = () => {
-        let content = cartItems
-            .map((g) => {
-                if (g.tipo === "juego") {
-                    return `${g.nombre} (${(g.Precio ?? g.precio ?? 0).toFixed(2)} CUP) (${g.tamanoFormateado ?? "?"})`;
-                } else if (g.tipo === "serie" || g.tipo === "anime" || g.tipo === "animado") {
-                    const bloquesTxt = g.bloques?.map((b) => b.descripcion).join("\n   ");
-                    return `${g.nombre} (${(g.Precio ?? g.precio ?? 0).toFixed(2)} CUP)\n   ${bloquesTxt ?? ""}`;
-                }
-                return `${g.nombre} (${(g.Precio ?? g.precio ?? 0).toFixed(2)} CUP)`;
-            })
-            .join("\n");
-
-        content += `\n\nTotal: ${(totals.price ?? 0).toFixed(2)} CUP\nEspacio: ${(totals.size ?? 0).toFixed(1)} GB`;
-
+        const content = generarContenidoAgrupado();
         const mensaje = `Hola, le escribo para realizar el siguiente pedido:\n\n${content}`;
         const numero = "5352524842";
         const url = `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;
-
         window.open(url, "_blank");
     };
 
@@ -113,9 +120,9 @@ function CarritoView({ showToast }) {
                         default: carpeta = ""; break;
                     }
 
-                    const portadaUrl = carpeta
-                        ? `https://catalogo-backend-f4sk.onrender.com/portadas/${carpeta}/${g.portada}`
-                        : `https://catalogo-backend-f4sk.onrender.com/portadas/${g.portada}`;
+                    const portadaUrl = g.portada.includes("Portadas")
+                        ? `https://catalogo-backend-f4sk.onrender.com/portadas/${g.portada}`
+                        : `https://catalogo-backend-f4sk.onrender.com/portadas/${carpeta}/${g.portada}`;
 
                     return (
                         <li key={g.id} style={{ display: "flex", gap: "12px", alignItems: "center" }}>
@@ -125,7 +132,7 @@ function CarritoView({ showToast }) {
                                 style={{
                                     width: "80px",
                                     height: "100px",
-                                    objectFit: "contain",
+                                    objectFit: "fill", // 🔹 todas las imágenes mismo tamaño
                                     borderRadius: 4,
                                 }}
                             />

@@ -114,5 +114,5 @@ function normalizeGame(j) {
     const tamanoFormateado = j.TamanoFormateado ?? j.tamanoFormateado;
     const portada = j.Portada ?? j.portada;
 
-    return { id, nombre, precio: Number(precio), tamanoFormateado, portada };
+    return { id, tipo: "juego", nombre, precio: Number(precio), tamanoFormateado, portada };
 }
