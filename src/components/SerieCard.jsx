@@ -2,8 +2,9 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../AuthContext";
 import { Mutation } from "react-apollo";
 import { ELIMINAR_SERIE } from "../mutations";
+import AddToCartButton from "../components/AddToCartButton";
 
-export default function SerieCard({ serie, from }) {
+export default function SerieCard({ serie, from, showToast }) {
     const auth = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
@@ -11,10 +12,31 @@ export default function SerieCard({ serie, from }) {
     const portadaUrl = `https://catalogo-backend-f4sk.onrender.com/portadas/Portadas Series/${serie.Portada}`;
 
     function handleEdit() {
-        navigate(`/editar-serie/${serie.Id}`, {
-            state: { from }
-        });
+        navigate(`/editar-serie/${serie.Id}`, { state: { from } });
     }
+
+    const lineas = (serie.Episodios ?? "").split("\n").filter(l => l.trim() !== "");
+    let bloques = [];
+
+    lineas.forEach((l) => {
+        const match = l.match(/(\d+)\s*Episodios?/i);
+        if (match) {
+            const cantidad = parseInt(match[1], 10);
+            bloques.push({
+                cantidad,
+                descripcion: l.trim(), // usar el texto original como descripción
+            });
+        }
+    });
+
+    const totalEpisodios = bloques.reduce((acc, b) => acc + b.cantidad, 0);
+
+    // 🔹 Si el texto incluye "Serie entera", mostrar solo eso
+    if (/serie entera/i.test(serie.Episodios)) {
+        bloques = [{ descripcion: "Serie entera" }];
+    }
+
+    const precioCalculado = totalEpisodios * 10;
 
     return (
         <div
@@ -42,15 +64,6 @@ export default function SerieCard({ serie, from }) {
                         display: "block",
                     }}
                     loading="lazy"
-                    onMouseOver={(e) => {
-                        e.currentTarget.style.transform = "scale(1.05)";
-                        e.currentTarget.style.boxShadow =
-                            "0 4px 12px rgba(0,0,0,0.4)";
-                    }}
-                    onMouseOut={(e) => {
-                        e.currentTarget.style.transform = "scale(1)";
-                        e.currentTarget.style.boxShadow = "none";
-                    }}
                 />
 
                 <h3
@@ -74,14 +87,24 @@ export default function SerieCard({ serie, from }) {
                     marginBottom: 8,
                 }}
             >
+                <AddToCartButton
+                    item={{
+                        id: serie.Id,
+                        tipo: "serie",
+                        nombre: serie.Titulo,
+                        portada: serie.Portada, // solo nombre del archivo
+                        precio: precioCalculado,
+                        bloques,
+                        Episodios: serie.Episodios,
+                    }}
+                    showToast={showToast}
+                />
+
                 {auth.isLogged && (
                     <Mutation mutation={ELIMINAR_SERIE}>
                         {(eliminarSerie) => (
                             <>
-                                <button
-                                    onClick={handleEdit}
-                                    className="admin-edit-btn"
-                                >
+                                <button onClick={handleEdit} className="admin-edit-btn">
                                     ✏️
                                 </button>
 
@@ -90,10 +113,7 @@ export default function SerieCard({ serie, from }) {
                                         if (!window.confirm(`¿Eliminar "${serie.Titulo}" del catálogo?`)) return;
 
                                         try {
-                                            const res = await eliminarSerie({
-                                                variables: { id: serie.Id },
-                                            });
-
+                                            const res = await eliminarSerie({ variables: { id: serie.Id } });
                                             if (res.data.eliminarSerie) {
                                                 alert("Serie eliminada correctamente");
                                                 window.location.reload();

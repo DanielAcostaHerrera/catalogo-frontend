@@ -7,7 +7,7 @@ import "../App.css";
 import { useLocation, useSearchParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthContext";
 
-export default function CatalogoSeries() {
+export default function CatalogoSeries({ showToast }) {
     const location = useLocation();
     const [searchParams, setSearchParams] = useSearchParams();
     const navigate = useNavigate();
@@ -125,6 +125,7 @@ export default function CatalogoSeries() {
                                         key={s.Id}
                                         serie={s}
                                         from={location.pathname + location.search}
+                                        showToast={showToast}
                                     />
                                 ))}
                             </div>

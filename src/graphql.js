@@ -110,6 +110,7 @@ export const GET_CATALOGO_SERIES = gql`
         Portada
         Anno
         Temporadas
+        Episodios
       }
       total
     }
@@ -128,6 +129,7 @@ export const GET_CATALOGO_SERIES_FILTRADO = gql`
         Portada
         Anno
         Temporadas
+        Episodios
       }
       total
     }
@@ -146,6 +148,7 @@ export const GET_ULTIMOS_ESTRENOS_SERIES = gql`
         Portada
         Anno
         Temporadas
+        Episodios
       }
       total
     }
@@ -181,6 +184,7 @@ export const GET_CATALOGO_ANIMADOS = gql`
         Portada
         Anno
         Temporadas
+        Episodios
       }
       total
     }
@@ -199,6 +203,7 @@ export const GET_CATALOGO_ANIMADOS_FILTRADO = gql`
         Portada
         Anno
         Temporadas
+        Episodios
       }
       total
     }
@@ -217,6 +222,7 @@ export const GET_ULTIMOS_ESTRENOS_ANIMADOS = gql`
         Portada
         Anno
         Temporadas
+        Episodios
       }
       total
     }
@@ -252,6 +258,7 @@ export const GET_CATALOGO_ANIMES = gql`
         Portada
         Anno
         Temporadas
+        Episodios
       }
       total
     }
@@ -270,6 +277,7 @@ export const GET_CATALOGO_ANIMES_FILTRADO = gql`
         Portada
         Anno
         Temporadas
+        Episodios
       }
       total
     }
@@ -288,6 +296,7 @@ export const GET_ULTIMOS_ESTRENOS_ANIMES = gql`
         Portada
         Anno
         Temporadas
+        Episodios
       }
       total
     }

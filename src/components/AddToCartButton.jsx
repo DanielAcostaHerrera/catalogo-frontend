@@ -1,15 +1,33 @@
 import { useCart } from "../context/CartContext";
 
-function AddToCartButton({ game, showToast }) {
+function AddToCartButton({ item, showToast }) {
   const { addToCart } = useCart();
 
   const handleClick = () => {
-    const result = addToCart(game);
+    // 🔹 Forzar que siempre sea serie entera si es serie/anime/animado
+    let finalItem = { ...item };
+    if (item.tipo === "serie" || item.tipo === "anime" || item.tipo === "animado") {
+      finalItem = {
+        ...item,
+        bloques: [{ descripcion: "Serie entera" }],
+      };
+    }
+
+    const result = addToCart(finalItem);
+
     if (showToast) {
       if (result.status === "added") {
-        showToast("Añadido correctamente");
+        showToast(
+          item.tipo === "serie" || item.tipo === "anime" || item.tipo === "animado"
+            ? "Serie añadida correctamente"
+            : "Juego añadido correctamente"
+        );
       } else {
-        showToast("Este juego ya está en el carrito");
+        showToast(
+          item.tipo === "serie" || item.tipo === "anime" || item.tipo === "animado"
+            ? "Esta serie ya está en el carrito"
+            : "Este juego ya está en el carrito"
+        );
       }
     }
   };
@@ -18,7 +36,6 @@ function AddToCartButton({ game, showToast }) {
     <button onClick={handleClick} className="btn-add">
       🛒 Añadir
     </button>
-
   );
 }
 

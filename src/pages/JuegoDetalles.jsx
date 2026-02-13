@@ -3,17 +3,12 @@ import { Query } from "react-apollo";
 import { GET_JUEGO } from "../graphql";
 import "../App.css";
 import { limpiarNombreParaBusqueda } from "../utils/FormatoJuego";
-import { useRef } from "react";
 import AddToCartButton from "../components/AddToCartButton";
-import Toast from "../components/Toast";
 
-export default function JuegoDetalles() {
+export default function JuegoDetalles({ showToast }) {
     const { id } = useParams();
     const location = useLocation();
     const navigate = useNavigate();
-
-    const toastRef = useRef();
-    const showToast = (msg) => toastRef.current?.showToast(msg);
 
     const normalizarTexto = (txt) => (txt ? txt.replace(/\\n/g, "\n") : "");
 
@@ -47,19 +42,13 @@ export default function JuegoDetalles() {
                 const j = data?.juego;
                 if (!j) return <p>No se encontró el juego.</p>;
 
-                // 🔹 Portada directa desde Render (sin encode)
                 const portadaUrl = `https://catalogo-backend-f4sk.onrender.com/portadas/Portadas Juegos/${j.Portada}`;
 
                 return (
                     <div className="detalle-wrapper">
-
-                        {/* 🔹 TÍTULO */}
                         <h2 className="detalle-titulo">{j.Nombre}</h2>
 
                         <div className="detalle-container">
-                            <Toast ref={toastRef} />
-
-                            {/* 🔹 IZQUIERDA: Portada + Añadir */}
                             <div className="detalle-portada">
                                 <img
                                     src={portadaUrl}
@@ -67,10 +56,20 @@ export default function JuegoDetalles() {
                                     className="detalle-portada-img"
                                 />
 
-                                <AddToCartButton game={j} showToast={showToast} />
+                                {/* 🔹 Corrección: añadir portada igual que en JuegoCard */}
+                                <AddToCartButton
+                                    item={{
+                                        id: j.Id,
+                                        tipo: "juego",
+                                        nombre: j.Nombre,
+                                        portada: `Portadas Juegos/${j.Portada}`,
+                                        precio: j.Precio ?? 0,
+                                        tamanoFormateado: j.TamanoFormateado ?? "Tamaño desconocido"
+                                    }}
+                                    showToast={showToast}
+                                />
                             </div>
 
-                            {/* 🔹 DERECHA: Info */}
                             <div className="detalle-info">
                                 <p><strong>Tamaño:</strong> {j.TamanoFormateado}</p>
 
@@ -88,9 +87,7 @@ export default function JuegoDetalles() {
                             </div>
                         </div>
 
-                        {/* 🔹 SINOPSIS + REQUISITOS */}
                         <div className="detalle-extra">
-
                             <div className="detalle-card">
                                 <strong>Sinopsis:</strong>
                                 <p style={{ whiteSpace: "pre-line", marginLeft: 10, textAlign: "justify" }}>

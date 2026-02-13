@@ -2,8 +2,9 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../AuthContext";
 import { Mutation } from "react-apollo";
 import { ELIMINAR_ANIMADO } from "../mutations";
+import AddToCartButton from "../components/AddToCartButton";
 
-export default function AnimadoCard({ animado, from }) {
+export default function AnimadoCard({ animado, from, showToast }) {
     const auth = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
@@ -11,10 +12,31 @@ export default function AnimadoCard({ animado, from }) {
     const portadaUrl = `https://catalogo-backend-f4sk.onrender.com/portadas/Portadas Animados/${animado.Portada}`;
 
     function handleEdit() {
-        navigate(`/editar-animado/${animado.Id}`, {
-            state: { from }
-        });
+        navigate(`/editar-animado/${animado.Id}`, { state: { from } });
     }
+
+    const lineas = (animado.Episodios ?? "").split("\n").filter(l => l.trim() !== "");
+    let bloques = [];
+
+    lineas.forEach((l) => {
+        const match = l.match(/(\d+)\s*Episodios?/i);
+        if (match) {
+            const cantidad = parseInt(match[1], 10);
+            bloques.push({
+                cantidad,
+                descripcion: l.trim(), // usar el texto original como descripción
+            });
+        }
+    });
+
+    const totalEpisodios = bloques.reduce((acc, b) => acc + b.cantidad, 0);
+
+    // 🔹 Si el texto incluye "Serie entera", mostrar solo eso
+    if (/serie entera/i.test(animado.Episodios)) {
+        bloques = [{ descripcion: "Serie entera" }];
+    }
+
+    const precioCalculado = totalEpisodios * 10;
 
     return (
         <div
@@ -42,15 +64,6 @@ export default function AnimadoCard({ animado, from }) {
                         display: "block",
                     }}
                     loading="lazy"
-                    onMouseOver={(e) => {
-                        e.currentTarget.style.transform = "scale(1.05)";
-                        e.currentTarget.style.boxShadow =
-                            "0 4px 12px rgba(0,0,0,0.4)";
-                    }}
-                    onMouseOut={(e) => {
-                        e.currentTarget.style.transform = "scale(1)";
-                        e.currentTarget.style.boxShadow = "none";
-                    }}
                 />
 
                 <h3
@@ -74,14 +87,24 @@ export default function AnimadoCard({ animado, from }) {
                     marginBottom: 8,
                 }}
             >
+                <AddToCartButton
+                    item={{
+                        id: animado.Id,
+                        tipo: "animado",
+                        nombre: animado.Titulo,
+                        portada: animado.Portada, // solo nombre del archivo
+                        precio: precioCalculado,
+                        bloques,
+                        Episodios: animado.Episodios,
+                    }}
+                    showToast={showToast}
+                />
+
                 {auth.isLogged && (
                     <Mutation mutation={ELIMINAR_ANIMADO}>
                         {(eliminarAnimado) => (
                             <>
-                                <button
-                                    onClick={handleEdit}
-                                    className="admin-edit-btn"
-                                >
+                                <button onClick={handleEdit} className="admin-edit-btn">
                                     ✏️
                                 </button>
 
@@ -90,10 +113,7 @@ export default function AnimadoCard({ animado, from }) {
                                         if (!window.confirm(`¿Eliminar "${animado.Titulo}" del catálogo?`)) return;
 
                                         try {
-                                            const res = await eliminarAnimado({
-                                                variables: { id: animado.Id },
-                                            });
-
+                                            const res = await eliminarAnimado({ variables: { id: animado.Id } });
                                             if (res.data.eliminarAnimado) {
                                                 alert("Animado eliminado correctamente");
                                                 window.location.reload();

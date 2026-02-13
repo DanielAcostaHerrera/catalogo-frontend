@@ -12,39 +12,55 @@ export function CartProvider({ children }) {
         }
     });
 
-    // 🔹 Persistencia
     useEffect(() => {
         localStorage.setItem("pph_cart", JSON.stringify(cartItems));
     }, [cartItems]);
 
-    // 🔹 Añadir con verificación de duplicado por id
-    const addToCart = (game) => {
-        const item = normalizeGame(game);
+    const addToCart = (item) => {
+        let finalItem = item;
 
-        const exists = cartItems.some((g) => g.id === item.id);
+        if (item.tipo === "juego") {
+            finalItem = normalizeGame(item);
+        }
+
+        if (
+            (item.tipo === "serie" || item.tipo === "anime" || item.tipo === "animado") &&
+            item.bloques?.some((b) => /entera/i.test(b.descripcion))
+        ) {
+            setCartItems((prev) => {
+                // eliminar temporadas previas de esa serie/anime/animado
+                const sinPrevias = prev.filter((i) => i.id !== item.id);
+                return [...sinPrevias, finalItem];
+            });
+            return { status: "added" };
+        }
+
+        const exists = cartItems.some((g) => g.id === finalItem.id);
         if (exists) {
             return { status: "duplicate" };
         }
 
-        setCartItems((prev) => [...prev, item]);
+        setCartItems((prev) => [...prev, finalItem]);
         return { status: "added" };
     };
 
-    // 🔹 Quitar por id
+    const updateCartItem = (id, nuevoItem) => {
+        setCartItems((prev) =>
+            prev.map((i) => (i.id === id ? nuevoItem : i))
+        );
+    };
+
     const removeFromCart = (id) => {
         setCartItems((prev) => prev.filter((g) => g.id !== id));
     };
 
-    // 🔹 Vaciar carrito completo
     const clearCart = () => {
         setCartItems([]);
     };
 
-    // 🔹 Totales seguros
     const totals = useMemo(() => {
         const price = cartItems.reduce((acc, g) => acc + (Number(g.precio) || 0), 0);
 
-        // Convertir MB a GB si hace falta
         const size = cartItems.reduce((acc, g) => {
             if (!g.tamanoFormateado) return acc;
             const str = String(g.tamanoFormateado).toLowerCase();
@@ -53,15 +69,15 @@ export function CartProvider({ children }) {
             const num = parseFloat(m[1].replace(",", "."));
             const unit = m[2];
             if (unit === "mb") {
-                return acc + num / 1024; // convertir MB a GB
+                return acc + num / 1024;
             }
-            return acc + num; // ya en GB
+            return acc + num;
         }, 0);
 
         return { price, size };
     }, [cartItems]);
 
-    const value = { cartItems, addToCart, removeFromCart, clearCart, totals };
+    const value = { cartItems, addToCart, updateCartItem, removeFromCart, clearCart, totals };
     return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }
 
@@ -69,6 +85,25 @@ export function useCart() {
     const ctx = useContext(CartContext);
     if (!ctx) throw new Error("useCart must be used within CartProvider");
     return ctx;
+}
+
+function normalizeSerie(j) {
+    const id = j.Id ?? j.id;
+    const nombre = j.Nombre ?? j.nombre;
+    const precio = j.Precio ?? j.precio ?? 0;
+    const portada = j.Portada ?? j.portada;
+    const episodios = j.Episodios ?? j.episodios;
+    let bloques = j.Bloques ?? j.bloques;
+
+    // 🔹 Conservar la descripción literal, solo ajustar casos especiales
+    bloques = (bloques || []).map((b) => {
+        if (/serie entera/i.test(b.descripcion) || b.temporada === "entera") {
+            return "Serie entera";
+        }
+        return b.descripcion; // usar literal
+    });
+
+    return { id, nombre, precio: Number(precio), portada, bloques, episodios };
 }
 
 // 🔹 Normalización: guarda directamente TamanoFormateado y Portada

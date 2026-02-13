@@ -7,7 +7,7 @@ import "../App.css";
 import { useLocation, useSearchParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthContext";
 
-export default function CatalogoAnimados() {
+export default function CatalogoAnimados({ showToast }) {
     const location = useLocation();
     const [searchParams, setSearchParams] = useSearchParams();
     const navigate = useNavigate();
@@ -125,6 +125,7 @@ export default function CatalogoAnimados() {
                                         key={a.Id}
                                         animado={a}
                                         from={location.pathname + location.search}
+                                        showToast={showToast}
                                     />
                                 ))}
                             </div>

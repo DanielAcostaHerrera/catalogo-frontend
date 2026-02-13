@@ -1,14 +1,12 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { Query } from "react-apollo";
 import { GET_ULTIMOS_ESTRENOS } from "../graphql";
 import JuegoCard from "../components/JuegoCard";
 import Paginacion from "../components/Paginacion";
 import "../App.css";
-import Toast from "../components/Toast";
-import { useLocation } from "react-router-dom";
-import { useSearchParams } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 
-export default function UltimosEstrenos() {
+export default function UltimosEstrenos({ showToast }) {
     const location = useLocation();
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -18,12 +16,6 @@ export default function UltimosEstrenos() {
     // 🔹 Estado visible (input) y estado real (backend)
     const [limitInput, setLimitInput] = useState(searchParams.get("limit") || "10");
     const [limit, setLimit] = useState(Number(searchParams.get("limit")) || 10);
-
-    // 🔹 Toast
-    const toastRef = useRef();
-    const showToast = (msg) => {
-        if (toastRef.current) toastRef.current.showToast(msg);
-    };
 
     // 🔹 Variables para GraphQL (siempre con valor válido)
     const variables = { page: 1, limit }; // backend devuelve hasta "limit" juegos
@@ -59,8 +51,6 @@ export default function UltimosEstrenos() {
 
     return (
         <div className="catalogo-container">
-            <Toast ref={toastRef} />
-
             <h2 style={{ color: "#f0f0f0", marginBottom: "20px" }}>
                 Últimos Estrenos (Juegos)
             </h2>

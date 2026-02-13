@@ -1,25 +1,18 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { Query } from "react-apollo";
 import { GET_ULTIMOS_ESTRENOS_SERIES } from "../graphql";
 import SerieCard from "../components/SerieCard";
 import Paginacion from "../components/Paginacion";
 import "../App.css";
-import Toast from "../components/Toast";
-import { useLocation } from "react-router-dom";
-import { useSearchParams } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 
-export default function UltimosEstrenosSeries() {
+export default function UltimosEstrenosSeries({ showToast }) {
     const location = useLocation();
     const [searchParams, setSearchParams] = useSearchParams();
 
     const [page, setPage] = useState(Number(searchParams.get("page")) || 1);
     const [limitInput, setLimitInput] = useState(searchParams.get("limit") || "10");
     const [limit, setLimit] = useState(Number(searchParams.get("limit")) || 10);
-
-    const toastRef = useRef();
-    const showToast = (msg) => {
-        if (toastRef.current) toastRef.current.showToast(msg);
-    };
 
     const variables = { page: 1, limit };
 
@@ -52,8 +45,6 @@ export default function UltimosEstrenosSeries() {
 
     return (
         <div className="catalogo-container">
-            <Toast ref={toastRef} />
-
             <h2 style={{ color: "#f0f0f0", marginBottom: "20px" }}>
                 Últimos Estrenos (Series)
             </h2>
