@@ -19,11 +19,19 @@ export default function AnimadoDetalles({ showToast }) {
         );
 
         if (existente) {
+            const yaSerieCompleta = existente.bloques.some(
+                (b) => b.descripcion === "Serie entera"
+            );
+            if (yaSerieCompleta) {
+                showToast("La serie completa ya está en el carrito, no puedes añadir temporadas.");
+                return;
+            }
+
             const yaTemporada = existente.bloques.some(
                 (b) => b.descripcion === nombreBloque
             );
             if (yaTemporada) {
-                if (showToast) showToast(`${nombreBloque} ya está en el carrito.`);
+                showToast("Esta temporada ya esta en el carrito");
                 return;
             }
 
@@ -35,8 +43,6 @@ export default function AnimadoDetalles({ showToast }) {
                 precio: nuevoPrecio,
                 bloques: nuevoBloques,
             });
-
-            if (showToast) showToast(`${nombreBloque} añadida correctamente`);
         } else {
             const precio = cantidad * Number(precioPorCapitulo);
             const nuevoItem = {
@@ -49,15 +55,10 @@ export default function AnimadoDetalles({ showToast }) {
                 Episodios: animado.Episodios,
             };
 
-            const result = addToCart(nuevoItem);
-            if (showToast) {
-                if (result.status === "added") {
-                    showToast(`${nombreBloque} añadida correctamente`);
-                } else {
-                    showToast(`${nombreBloque} ya estaba en el carrito`);
-                }
-            }
+            addToCart(nuevoItem);
         }
+
+        showToast("Temporada añadida correctamente");
     };
 
     return (
