@@ -21,7 +21,7 @@ export default function SerieCard({ serie, from, showToast, precioPorCapitulo })
     lineas.forEach((l) => {
         const match = l.match(/(\d+)\s*Episodios?/i);
         if (match) {
-            const cantidad = parseInt(match[1], 10); // base decimal, no es precio
+            const cantidad = parseInt(match[1], 10);
             bloques.push({
                 cantidad,
                 descripcion: l.trim(),

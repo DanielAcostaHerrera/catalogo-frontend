@@ -15,7 +15,6 @@ export default function InsertarAnime() {
     const [Sinopsis, setSinopsis] = useState("");
     const [Episodios, setEpisodios] = useState("");
 
-    // Validación: solo 4 dígitos
     const soloCuatroDigitos = (e, valorActual) => {
         const allowed = ["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Tab"];
 
@@ -39,11 +38,9 @@ export default function InsertarAnime() {
         }
     };
 
-    // Normalizar saltos de línea
     const prepararTexto = (txt) =>
         txt.replace(/\r/g, "").replace(/\n/g, "\\n");
 
-    // Validar año
     const validarAnno = (valor) => {
         if (!/^\d{4}$/.test(valor)) return null;
         const year = Number(valor);
@@ -52,18 +49,15 @@ export default function InsertarAnime() {
         return null;
     };
 
-    // Construir payload
     const construirPayload = () => {
         const payload = {};
 
-        // Título requerido
         if (Titulo.trim() === "") {
             alert("El título es obligatorio");
             return null;
         }
         payload.Titulo = Titulo.trim();
 
-        // Año requerido
         const annoValido = validarAnno(Anno);
         if (annoValido === null) {
             alert("El año debe ser un número válido entre 1970 y el actual");
@@ -71,14 +65,12 @@ export default function InsertarAnime() {
         }
         payload.Anno = annoValido;
 
-        // Temporadas requeridas
         if (Temporadas.trim() === "" || isNaN(Number(Temporadas))) {
             alert("Las temporadas deben ser un número válido");
             return null;
         }
         payload.Temporadas = Number(Temporadas);
 
-        // Portada opcional con validación .png
         if (Portada.trim() !== "") {
             let portada = Portada.trim();
 
@@ -94,11 +86,9 @@ export default function InsertarAnime() {
             payload.Portada = portada;
         }
 
-        // Sinopsis opcional
         if (Sinopsis.trim() !== "")
             payload.Sinopsis = prepararTexto(Sinopsis);
 
-        // Episodios opcional
         if (Episodios.trim() !== "")
             payload.Episodios = prepararTexto(Episodios);
 
@@ -110,10 +100,8 @@ export default function InsertarAnime() {
 
             <h2 className="detalle-titulo">Añadir Nuevo Anime</h2>
 
-            {/* BLOQUE SUPERIOR */}
             <div className="detalle-container">
 
-                {/* IZQUIERDA: Portada */}
                 <div className="detalle-portada insertar-portada">
                     <label>Nombre de la portada (archivo):</label>
                     <input
@@ -123,7 +111,6 @@ export default function InsertarAnime() {
                     />
                 </div>
 
-                {/* DERECHA: Campos */}
                 <div className="detalle-info">
 
                     <label>Título *</label>
@@ -150,7 +137,6 @@ export default function InsertarAnime() {
                 </div>
             </div>
 
-            {/* BLOQUE INFERIOR */}
             <div className="detalle-extra">
 
                 <div className="detalle-card">
@@ -163,7 +149,7 @@ export default function InsertarAnime() {
                         style={{
                             width: "100%",
                             marginTop: 10,
-                            whiteSpace: "pre-wrap" // respeta saltos y espacios
+                            whiteSpace: "pre-wrap"
                         }}
                     />
                 </div>
@@ -178,13 +164,12 @@ export default function InsertarAnime() {
                         style={{
                             width: "100%",
                             marginTop: 10,
-                            whiteSpace: "pre-wrap" // respeta saltos y espacios
+                            whiteSpace: "pre-wrap"
                         }}
                     />
                 </div>
             </div>
 
-            {/* GUARDAR */}
             <Mutation mutation={CREAR_ANIME}>
                 {(crearAnime) => (
                     <button

@@ -17,17 +17,14 @@ export default function EditarJuego() {
     const [Sinopsis, setSinopsis] = useState("");
     const [Requisitos, setRequisitos] = useState("");
 
-    //Validaciones para el campo año
     const soloCuatroDigitos = (e, valorActual) => {
         const allowed = ["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Tab"];
 
-        // Bloquear letras y símbolos
         if (!/[0-9]/.test(e.key) && !allowed.includes(e.key)) {
             e.preventDefault();
             return;
         }
 
-        // Si no es número, dejamos pasar (teclas de control)
         if (!/[0-9]/.test(e.key)) return;
 
         const input = e.target;
@@ -35,7 +32,6 @@ export default function EditarJuego() {
         const end = input.selectionEnd ?? 0;
         const seleccion = end - start;
 
-        // Longitud resultante si se escribe este dígito
         const longitudActual = valorActual.length;
         const longitudResultante = longitudActual - seleccion + 1;
 
@@ -44,10 +40,8 @@ export default function EditarJuego() {
         }
     };
 
-    // Convierte \n de BD → saltos reales
     const normalizarTexto = (txt) => (txt ? txt.replace(/\\n/g, "\n") : "");
 
-    // Convierte saltos reales → \n y \n\n para BD
     const prepararRequisitos = (txt) => {
         return txt
             .replace(/\r/g, "")
@@ -55,13 +49,10 @@ export default function EditarJuego() {
             .replace(/\n/g, "\\n");
     };
 
-    // Parsear tamaño (ej: "123 Mb", "10 Gb", "7.3 Gb" "500")
     const parseTamano = (valor) => {
-        // acepta enteros o decimales con punto o coma
         const match = valor.trim().match(/^(\d+(?:[.,]\d+)?)\s*(MB|Mb|mb|GB|Gb|gb)?$/);
         if (!match) return null;
 
-        // normaliza coma a punto
         const num = Number(match[1].replace(",", "."));
         const unit = match[2]?.toLowerCase();
 
@@ -70,7 +61,6 @@ export default function EditarJuego() {
         return null;
     };
 
-    // Validar año
     const validarAnno = (valor) => {
         if (valor.trim() === "" || valor.trim() === "0") return "No Disponible";
         if (!/^\d{4}$/.test(valor)) return null;
@@ -80,12 +70,10 @@ export default function EditarJuego() {
         return null;
     };
 
-    // Apollo Client 2 — useQuery
     const { loading, error, data } = useQuery(GET_JUEGO, {
         variables: { id: Number(id) },
     });
 
-    // Inicializar campos cuando llegan los datos
     useEffect(() => {
         if (data?.juego) {
             const j = data.juego;
@@ -103,25 +91,21 @@ export default function EditarJuego() {
     const j = data.juego;
     const portadaUrl = `https://catalogo-backend-f4sk.onrender.com/portadas/Portadas Juegos/${j.Portada}`;
 
-    // Construye payload con validaciones
     const construirPayload = () => {
         const payload = { Id: j.Id };
 
-        // Nombre requerido
         if (Nombre.trim() === "") {
             alert("El nombre es obligatorio");
             return null;
         }
         payload.Nombre = Nombre.trim();
 
-        // Tamaño requerido
         if (Tamano.trim().toLowerCase() === "variable") {
-            // Solo se permite "Variable" si el nombre contiene exactamente [online]
             if (!Nombre.includes("[online]")) {
                 alert("Solo se puede declarar tamaño variable en juegos online");
                 return null;
             }
-            payload.Tamano = j.Tamano;; // 🔹 se conserva tal cual
+            payload.Tamano = j.Tamano;
         } else {
             const tamanoParseado = parseTamano(Tamano);
             if (tamanoParseado === null) {
@@ -131,7 +115,6 @@ export default function EditarJuego() {
             payload.Tamano = tamanoParseado;
         }
 
-        // Año opcional
         if (AnnoAct.trim() === "" || AnnoAct.trim() === "0") {
             payload.AnnoAct = 0;
         } else {
@@ -143,11 +126,9 @@ export default function EditarJuego() {
             payload.AnnoAct = annoValido;
         }
 
-        // Sinopsis opcional
         if (Sinopsis.trim() !== "")
             payload.Sinopsis = Sinopsis.replace(/\n/g, "\\n");
 
-        // Requisitos opcional
         if (Requisitos.trim() !== "")
             payload.Requisitos = prepararRequisitos(Requisitos);
 
@@ -159,10 +140,8 @@ export default function EditarJuego() {
 
             <h2 className="detalle-titulo">Editar {j.Nombre}</h2>
 
-            {/* BLOQUE SUPERIOR: Portada + Campos básicos */}
             <div className="detalle-container">
 
-                {/* IZQUIERDA: Portada */}
                 <div className="detalle-portada">
                     <img
                         src={portadaUrl}
@@ -171,7 +150,6 @@ export default function EditarJuego() {
                     />
                 </div>
 
-                {/* DERECHA: FORMULARIO BÁSICO */}
                 <div className="detalle-info">
 
                     <label>Nombre</label>
@@ -198,7 +176,6 @@ export default function EditarJuego() {
                 </div>
             </div>
 
-            {/* BLOQUE INFERIOR: Sinopsis + Requisitos (full width) */}
             <div className="detalle-extra">
 
                 <div className="detalle-card">
@@ -224,7 +201,6 @@ export default function EditarJuego() {
                 </div>
             </div>
 
-            {/* GUARDAR CAMBIOS */}
             <Mutation mutation={ACTUALIZAR_JUEGO}>
                 {(actualizarJuego) => (
                     <button

@@ -15,9 +15,6 @@ export default function InsertarAnimado() {
     const [Sinopsis, setSinopsis] = useState("");
     const [Episodios, setEpisodios] = useState("");
 
-    // ============================================================
-    //  AUTOGENERAR EPISODIOS AL CAMBIAR TEMPORADAS
-    // ============================================================
     useEffect(() => {
         const n = Number(Temporadas);
         if (!n || n <= 0) return;
@@ -30,7 +27,6 @@ export default function InsertarAnimado() {
         setEpisodios(texto.trim());
     }, [Temporadas]);
 
-    // Validación: solo 4 dígitos
     const soloCuatroDigitos = (e, valorActual) => {
         const allowed = ["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Tab"];
 
@@ -54,11 +50,9 @@ export default function InsertarAnimado() {
         }
     };
 
-    // Normalizar saltos de línea
     const prepararTexto = (txt) =>
         txt.replace(/\r/g, "").replace(/\n/g, "\\n");
 
-    // Validar año
     const validarAnno = (valor) => {
         if (!/^\d{4}$/.test(valor)) return null;
         const year = Number(valor);
@@ -67,18 +61,15 @@ export default function InsertarAnimado() {
         return null;
     };
 
-    // Construir payload
     const construirPayload = () => {
         const payload = {};
 
-        // Título requerido
         if (Titulo.trim() === "") {
             alert("El título es obligatorio");
             return null;
         }
         payload.Titulo = Titulo.trim();
 
-        // Año requerido
         const annoValido = validarAnno(Anno);
         if (annoValido === null) {
             alert("El año debe ser un número válido entre 1970 y el actual");
@@ -86,14 +77,12 @@ export default function InsertarAnimado() {
         }
         payload.Anno = annoValido;
 
-        // Temporadas requeridas
         if (Temporadas.trim() === "" || isNaN(Number(Temporadas))) {
             alert("Las temporadas deben ser un número válido");
             return null;
         }
         payload.Temporadas = Number(Temporadas);
 
-        // Portada opcional con validación .png
         if (Portada.trim() !== "") {
             let portada = Portada.trim();
 
@@ -109,11 +98,9 @@ export default function InsertarAnimado() {
             payload.Portada = portada;
         }
 
-        // Sinopsis opcional
         if (Sinopsis.trim() !== "")
             payload.Sinopsis = prepararTexto(Sinopsis);
 
-        // Episodios opcional
         if (Episodios.trim() !== "")
             payload.Episodios = prepararTexto(Episodios);
 
@@ -125,10 +112,8 @@ export default function InsertarAnimado() {
 
             <h2 className="detalle-titulo">Añadir Nuevo Animado</h2>
 
-            {/* BLOQUE SUPERIOR */}
             <div className="detalle-container">
 
-                {/* IZQUIERDA: Portada */}
                 <div className="detalle-portada insertar-portada">
                     <label>Nombre de la portada (archivo):</label>
                     <input
@@ -138,7 +123,6 @@ export default function InsertarAnimado() {
                     />
                 </div>
 
-                {/* DERECHA: Campos */}
                 <div className="detalle-info">
 
                     <label>Título *</label>
@@ -165,7 +149,6 @@ export default function InsertarAnimado() {
                 </div>
             </div>
 
-            {/* BLOQUE INFERIOR */}
             <div className="detalle-extra">
 
                 <div className="detalle-card">
@@ -191,7 +174,6 @@ export default function InsertarAnimado() {
                 </div>
             </div>
 
-            {/* GUARDAR */}
             <Mutation mutation={CREAR_ANIMADO}>
                 {(crearAnimado) => (
                     <button

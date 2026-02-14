@@ -85,7 +85,6 @@ export default function CatalogoSeries({ showToast }) {
                 )}
             </div>
 
-            {/* Filtro por nombre */}
             <div className="filtros-grid">
                 <div className="filtro-nombre">
                     <label style={{ color: "#f0f0f0" }}>Nombre</label>
@@ -98,14 +97,12 @@ export default function CatalogoSeries({ showToast }) {
                 </div>
             </div>
 
-            {/* Botón de reinicio */}
             <div style={{ marginBottom: "20px" }}>
                 <button className="btn-dark" onClick={reiniciarCatalogo}>
                     Limpiar Filtros
                 </button>
             </div>
 
-            {/* Query */}
             <Query query={query} variables={variables}>
                 {({ loading, error, data }) => {
                     if (loading) return <p style={{ color: "#ccc" }}>Cargando…</p>;

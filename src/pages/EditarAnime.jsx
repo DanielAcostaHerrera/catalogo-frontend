@@ -16,12 +16,10 @@ export default function EditarAnime() {
     const [Sinopsis, setSinopsis] = useState("");
     const [Episodios, setEpisodios] = useState("");
 
-    // Normalizar saltos de línea
     const normalizarTexto = (txt) => (txt ? txt.replace(/\\n/g, "\n") : "");
     const prepararTexto = (txt) =>
         txt.replace(/\r/g, "").replace(/\n/g, "\\n");
 
-    // Validar año
     const validarAnno = (valor) => {
         if (!/^\d{4}$/.test(valor)) return null;
         const year = Number(valor);
@@ -30,12 +28,10 @@ export default function EditarAnime() {
         return null;
     };
 
-    // Obtener datos del anime
     const { loading, error, data } = useQuery(GET_ANIME, {
         variables: { id: Number(id) },
     });
 
-    // Inicializar campos
     useEffect(() => {
         if (data?.anime) {
             const a = data.anime;
@@ -53,7 +49,6 @@ export default function EditarAnime() {
     const a = data.anime;
     const portadaUrl = `https://catalogo-backend-f4sk.onrender.com/portadas/Portadas Anime/${a.Portada}`;
 
-    // Construir payload
     const construirPayload = () => {
         const payload = { Id: a.Id };
 
@@ -88,13 +83,10 @@ export default function EditarAnime() {
     return (
         <div className="detalle-wrapper">
 
-            {/* TÍTULO ARRIBA, CENTRADO */}
             <h2 className="detalle-titulo">Editar {a.Titulo}</h2>
 
-            {/* BLOQUE SUPERIOR */}
             <div className="detalle-container">
 
-                {/* IZQUIERDA: PORTADA */}
                 <div className="detalle-portada">
                     <img
                         src={portadaUrl}
@@ -103,7 +95,6 @@ export default function EditarAnime() {
                     />
                 </div>
 
-                {/* DERECHA: CAMPOS */}
                 <div className="detalle-info">
 
                     <label>Título</label>
@@ -129,7 +120,6 @@ export default function EditarAnime() {
                 </div>
             </div>
 
-            {/* BLOQUE INFERIOR */}
             <div className="detalle-extra">
 
                 <div className="detalle-card">
@@ -142,7 +132,7 @@ export default function EditarAnime() {
                         style={{
                             width: "100%",
                             marginTop: 10,
-                            whiteSpace: "pre-wrap" // respeta saltos y espacios
+                            whiteSpace: "pre-wrap"
                         }}
                     />
                 </div>
@@ -157,13 +147,12 @@ export default function EditarAnime() {
                         style={{
                             width: "100%",
                             marginTop: 10,
-                            whiteSpace: "pre-wrap" // respeta saltos y espacios
+                            whiteSpace: "pre-wrap"
                         }}
                     />
                 </div>
             </div>
 
-            {/* GUARDAR */}
             <Mutation mutation={ACTUALIZAR_ANIME}>
                 {(actualizarAnime) => (
                     <button

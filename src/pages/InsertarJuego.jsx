@@ -16,25 +16,20 @@ export default function InsertarJuego() {
     const [Sinopsis, setSinopsis] = useState("");
     const [Requisitos, setRequisitos] = useState("");
 
-    //Validaciones para el campo año
     const soloCuatroDigitos = (e, valorActual) => {
         const allowed = ["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Tab"];
 
-        // Bloquear letras y símbolos
         if (!/[0-9]/.test(e.key) && !allowed.includes(e.key)) {
             e.preventDefault();
             return;
         }
 
-        // Si no es número, dejamos pasar (teclas de control)
         if (!/[0-9]/.test(e.key)) return;
 
         const input = e.target;
         const start = input.selectionStart ?? 0;
         const end = input.selectionEnd ?? 0;
         const seleccion = end - start;
-
-        // Longitud resultante si se escribe este dígito
         const longitudActual = valorActual.length;
         const longitudResultante = longitudActual - seleccion + 1;
 
@@ -43,7 +38,6 @@ export default function InsertarJuego() {
         }
     };
 
-    // Convierte saltos reales → \n y \n\n para BD
     const prepararRequisitos = (txt) => {
         return txt
             .replace(/\r/g, "")
@@ -51,13 +45,10 @@ export default function InsertarJuego() {
             .replace(/\n/g, "\\n");
     };
 
-    // Parsear tamaño (ej: "123 Mb", "10 Gb", "7.3 Gb" "500")
     const parseTamano = (valor) => {
-        // acepta enteros o decimales con punto o coma
         const match = valor.trim().match(/^(\d+(?:[.,]\d+)?)\s*(MB|Mb|mb|GB|Gb|gb)?$/);
         if (!match) return null;
 
-        // normaliza coma a punto
         const num = Number(match[1].replace(",", "."));
         const unit = match[2]?.toLowerCase();
 
@@ -66,7 +57,6 @@ export default function InsertarJuego() {
         return null;
     };
 
-    // Validar año
     const validarAnno = (valor) => {
         if (valor.trim() === "") return "No Disponible";
         if (!/^\d{4}$/.test(valor)) return null;
@@ -76,25 +66,21 @@ export default function InsertarJuego() {
         return null;
     };
 
-    // Construye payload solo con campos válidos
     const construirPayload = () => {
         const payload = {};
 
-        // Nombre requerido
         if (Nombre.trim() === "") {
             alert("El nombre es obligatorio");
             return null;
         }
         payload.Nombre = Nombre.trim();
 
-        // Tamaño requerido
         if (Tamano.trim().toLowerCase() === "variable") {
-            // Solo se permite "Variable" si el nombre contiene exactamente [online]
             if (!Nombre.includes("[online]")) {
                 alert("Solo se puede declarar tamaño variable en juegos online");
                 return null;
             }
-            payload.Tamano = 0; // 🔹 en BD se guarda como 0
+            payload.Tamano = 0;
         } else {
             const tamanoParseado = parseTamano(Tamano);
             if (tamanoParseado === null) {
@@ -104,7 +90,6 @@ export default function InsertarJuego() {
             payload.Tamano = tamanoParseado;
         }
 
-        // Año opcional
         if (AnnoAct.trim() !== "") {
             const annoValido = validarAnno(AnnoAct);
             if (annoValido === null) {
@@ -113,49 +98,40 @@ export default function InsertarJuego() {
             }
             payload.AnnoAct = annoValido;
         } else {
-            payload.AnnoAct = 0; // 🔹 backend recibe 0, frontend lo muestra como "No disponible"
+            payload.AnnoAct = 0;
         }
 
-        // Portada opcional con validación y autocompletado .png
         if (Portada.trim() !== "") {
             let portada = Portada.trim();
 
-            // Si tiene extensión pero NO es .png → error
             if (portada.includes(".")) {
                 if (!portada.toLowerCase().endsWith(".png")) {
                     alert("La portada debe terminar en .png");
                     return null;
                 }
             } else {
-                // Si no tiene extensión → añadir .png
                 portada = portada + ".png";
             }
 
             payload.Portada = portada;
         }
 
-
-        // Sinopsis opcional
         if (Sinopsis.trim() !== "")
             payload.Sinopsis = Sinopsis.replace(/\n/g, "\\n");
 
-        // Requisitos opcional
         if (Requisitos.trim() !== "")
             payload.Requisitos = prepararRequisitos(Requisitos);
 
         return payload;
     };
 
-
     return (
         <div className="detalle-wrapper">
 
             <h2 className="detalle-titulo">Añadir Nuevo Juego</h2>
 
-            {/* BLOQUE SUPERIOR: Portada (input) + Campos básicos */}
             <div className="detalle-container">
 
-                {/* IZQUIERDA: Campo portada */}
                 <div className="detalle-portada insertar-portada">
                     <label>Nombre de la portada (archivo):</label>
                     <input
@@ -165,7 +141,6 @@ export default function InsertarJuego() {
                     />
                 </div>
 
-                {/* DERECHA: FORMULARIO BÁSICO */}
                 <div className="detalle-info">
 
                     <label>Nombre *</label>
@@ -192,7 +167,6 @@ export default function InsertarJuego() {
                 </div>
             </div>
 
-            {/* BLOQUE INFERIOR: Sinopsis + Requisitos (full width) */}
             <div className="detalle-extra">
 
                 <div className="detalle-card">
@@ -218,7 +192,6 @@ export default function InsertarJuego() {
                 </div>
             </div>
 
-            {/* GUARDAR */}
             <Mutation mutation={CREAR_JUEGO}>
                 {(crearJuego) => (
                     <button

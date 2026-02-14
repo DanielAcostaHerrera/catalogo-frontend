@@ -4,7 +4,6 @@ function AddToCartButton({ item, showToast }) {
   const { addToCart } = useCart();
 
   const handleClick = () => {
-    // 🔹 Forzar que siempre sea serie entera si es serie/anime/animado
     let finalItem = { ...item };
     if (item.tipo === "serie" || item.tipo === "anime" || item.tipo === "animado") {
       finalItem = {

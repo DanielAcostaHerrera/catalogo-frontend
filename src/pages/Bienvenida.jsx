@@ -4,7 +4,7 @@ import {
     GET_ULTIMOS_ESTRENOS,
     GET_ULTIMOS_ESTRENOS_SERIES,
     GET_ULTIMOS_ESTRENOS_ANIMADOS,
-    GET_ULTIMOS_ESTRENOS_ANIMES, // 👈 añadido
+    GET_ULTIMOS_ESTRENOS_ANIMES,
 } from "../graphql";
 import Carrusel from "../components/Carrusel";
 
@@ -48,13 +48,11 @@ export default function Bienvenida() {
                 padding: "20px",
             }}
         >
-            {/* Logo + Título */}
             <div className="brand-box">
                 <img src="/logo.png" alt="PixelPlay Habana" />
                 <h1>PixelPlay Habana</h1>
             </div>
 
-            {/* Descripción */}
             <p
                 style={{
                     textAlign: "justify",
@@ -70,7 +68,6 @@ export default function Bienvenida() {
                 lo que buscas. Explora y descubre nuevas aventuras digitales o maratones imperdibles, todo en un solo lugar.
             </p>
 
-            {/* Botón Preguntas Frecuentes */}
             <div style={{ textAlign: "center", marginBottom: "30px" }}>
                 <button
                     className="btn-dark"
@@ -83,7 +80,6 @@ export default function Bienvenida() {
 
             <hr style={{ border: "0", height: "1px", background: "#444", margin: "30px 0" }} />
 
-            {/* Últimos Juegos */}
             <h2 style={{ textAlign: "center", marginBottom: "20px" }}>🎮 Últimos Juegos</h2>
             <Carrusel
                 items={juegos.map((j) => ({
@@ -102,7 +98,6 @@ export default function Bienvenida() {
                 </button>
             </div>
 
-            {/* Últimas Series */}
             <h2 style={{ textAlign: "center", margin: "40px 0 20px" }}>🎬 Últimas Series</h2>
             <Carrusel
                 items={series.map((s) => ({
@@ -121,7 +116,6 @@ export default function Bienvenida() {
                 </button>
             </div>
 
-            {/* Últimos Animados */}
             <h2 style={{ textAlign: "center", margin: "40px 0 20px" }}>🐭 Últimos Animados</h2>
             <Carrusel
                 items={animados.map((a) => ({
@@ -140,7 +134,6 @@ export default function Bienvenida() {
                 </button>
             </div>
 
-            {/* Últimos Animes */}
             <h2 style={{ textAlign: "center", margin: "40px 0 20px" }}>🍥 Últimos Animes</h2>
             <Carrusel
                 items={animes.map((an) => ({

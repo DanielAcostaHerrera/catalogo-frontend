@@ -56,7 +56,6 @@ export default function JuegoDetalles({ showToast }) {
                                     className="detalle-portada-img"
                                 />
 
-                                {/* 🔹 Corrección: añadir portada igual que en JuegoCard */}
                                 <AddToCartButton
                                     item={{
                                         id: j.Id,

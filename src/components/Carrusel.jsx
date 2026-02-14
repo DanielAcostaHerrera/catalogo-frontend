@@ -13,8 +13,6 @@ export default function Carrusel({ items }) {
             const track = trackRef.current;
             if (!track) return;
 
-            // velocidad EXACTA equivalente a tu smooth original:
-            // 1px cada 88ms ≈ 16.62s por imagen
             track.scrollLeft += 1;
 
             const lastImage = track.lastElementChild;
@@ -26,7 +24,7 @@ export default function Carrusel({ items }) {
                 }
             }
 
-        }, 88); // ← velocidad calibrada EXACTA (ANTES: 90)
+        }, 88);
     };
 
     const stopAutoScroll = () => {

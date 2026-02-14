@@ -9,18 +9,11 @@ import { useLocation, useSearchParams } from "react-router-dom";
 export default function UltimosEstrenos({ showToast }) {
     const location = useLocation();
     const [searchParams, setSearchParams] = useSearchParams();
-
-    // 🔹 Página desde la URL (o 1 si no existe)
     const [page, setPage] = useState(Number(searchParams.get("page")) || 1);
-
-    // 🔹 Estado visible (input) y estado real (backend)
     const [limitInput, setLimitInput] = useState(searchParams.get("limit") || "10");
     const [limit, setLimit] = useState(Number(searchParams.get("limit")) || 10);
+    const variables = { page: 1, limit };
 
-    // 🔹 Variables para GraphQL (siempre con valor válido)
-    const variables = { page: 1, limit }; // backend devuelve hasta "limit" juegos
-
-    // 🔹 Solo permitir números en el input
     const soloNumeros = (e) => {
         const allowed = ["Backspace", "Tab", "ArrowLeft", "ArrowRight", "Delete"];
         if (!/[0-9]/.test(e.key) && !allowed.includes(e.key)) {
@@ -28,7 +21,6 @@ export default function UltimosEstrenos({ showToast }) {
         }
     };
 
-    // 🔹 Manejo en tiempo real
     const manejarLimitInput = (valor) => {
         setLimitInput(valor);
 
@@ -47,7 +39,7 @@ export default function UltimosEstrenos({ showToast }) {
         }
     };
 
-    const PAGE_SIZE = 100; // 🔹 límite fijo por página
+    const PAGE_SIZE = 100;
 
     return (
         <div className="catalogo-container">
@@ -55,7 +47,6 @@ export default function UltimosEstrenos({ showToast }) {
                 Últimos Estrenos (Juegos)
             </h2>
 
-            {/* Input para cantidad */}
             <div style={{ marginBottom: "20px" }}>
                 <label style={{ color: "#f0f0f0", marginRight: "10px" }}>
                     Mostrar:
@@ -70,18 +61,13 @@ export default function UltimosEstrenos({ showToast }) {
                 />
             </div>
 
-            {/* Query */}
             <Query query={GET_ULTIMOS_ESTRENOS} variables={variables}>
                 {({ loading, error, data }) => {
                     if (loading) return <p style={{ color: "#ccc" }}>Cargando…</p>;
                     if (error) return <p style={{ color: "red" }}>Error: {error.message}</p>;
 
                     const juegos = data?.ultimosEstrenos?.juegos || [];
-
-                    // 🔹 total de páginas = cantidad pedida / 100
                     const totalPages = Math.max(1, Math.ceil(limit / PAGE_SIZE));
-
-                    // 🔹 cortar array según página actual
                     const startIndex = (page - 1) * PAGE_SIZE;
                     const endIndex = startIndex + PAGE_SIZE;
                     const juegosPagina = juegos.slice(startIndex, endIndex);

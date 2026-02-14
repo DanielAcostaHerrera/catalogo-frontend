@@ -24,7 +24,6 @@ export default function LoginModal({ onClose }) {
             <div className="auth-modal">
                 <h2 className="auth-title">Acceso Administrativo</h2>
 
-                {/* Usuario */}
                 <input
                     ref={userRef}
                     className="auth-input"
@@ -36,7 +35,6 @@ export default function LoginModal({ onClose }) {
                     }}
                 />
 
-                {/* Contraseña + ojito */}
                 <div style={{ position: "relative", width: "100%" }}>
                     <input
                         className="auth-input"

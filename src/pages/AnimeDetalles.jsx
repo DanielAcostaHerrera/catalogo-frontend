@@ -99,7 +99,7 @@ export default function AnimeDetalles({ showToast }) {
                             <div className="detalle-card">
                                 <strong>Episodios:</strong>
                                 <br />
-                                <br /> {/* 🔹 Espacios debajo del título */}
+                                <br />
                                 <div style={{ marginLeft: 10, whiteSpace: "pre-wrap" }}>
                                     {lineas.map((l, idx) => {
                                         const match = l.match(/(\d+)\s*Episodios?/i);
@@ -109,7 +109,7 @@ export default function AnimeDetalles({ showToast }) {
 
                                             return (
                                                 <div key={idx} style={{ marginBottom: 6 }}>
-                                                    {l}{"  "}{/* 🔹 Par de espacios antes del botón */}
+                                                    {l}{"  "}
                                                     <button
                                                         className="btn-add"
                                                         onClick={() => handleAddTemporada(a, nombreBloque, cantidad)}

@@ -12,14 +12,12 @@ function CarritoView({ showToast }) {
     const startIndex = (page - 1) * limit;
     const endIndex = startIndex + limit;
 
-    // 🔹 Orden de prioridad
     const ordenTipo = { juego: 1, serie: 2, anime: 3, animado: 4 };
 
     const itemsPagina = cartItems
         .slice(startIndex, endIndex)
         .sort((a, b) => (ordenTipo[a.tipo] ?? 99) - (ordenTipo[b.tipo] ?? 99));
 
-    // 🔹 Función para agrupar por tipo con encabezados
     const generarContenidoAgrupado = () => {
         const grupos = { juego: [], serie: [], anime: [], animado: [] };
 
@@ -132,7 +130,7 @@ function CarritoView({ showToast }) {
                                 style={{
                                     width: "80px",
                                     height: "100px",
-                                    objectFit: "fill", // 🔹 todas las imágenes mismo tamaño
+                                    objectFit: "fill",
                                     borderRadius: 4,
                                 }}
                             />

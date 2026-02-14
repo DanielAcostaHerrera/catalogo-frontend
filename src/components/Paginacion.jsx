@@ -3,17 +3,14 @@ import React, { useState } from "react";
 export default function Paginacion({ page, totalPages, onPageChange }) {
     const [inputPage, setInputPage] = useState("");
 
-    // Generar rango de páginas estilo Google con 10 números fijos
     const getPages = () => {
         const pages = [];
 
-        // Siempre incluir primera página
         pages.push(1);
 
         let start = Math.max(2, page - 4);
         let end = Math.min(totalPages - 1, page + 4);
 
-        // Ajustar para que siempre haya 10 números en total (incluyendo 1 y totalPages)
         const visibleCount = end - start + 1;
         if (visibleCount < 8) {
             const deficit = 8 - visibleCount;
@@ -28,7 +25,6 @@ export default function Paginacion({ page, totalPages, onPageChange }) {
             pages.push(i);
         }
 
-        // Siempre incluir última página si hay más de una
         if (totalPages > 1) {
             pages.push(totalPages);
         }
@@ -51,16 +47,14 @@ export default function Paginacion({ page, totalPages, onPageChange }) {
 
     return (
         <div style={{ textAlign: "center", marginTop: 20, width: "100%" }}>
-            {/* Contenedor de botones con flex-wrap y gap */}
             <div
                 style={{
                     display: "flex",
                     flexWrap: "wrap",
                     justifyContent: "center",
-                    gap: "8px", // espacio horizontal y vertical uniforme
+                    gap: "8px",
                 }}
             >
-                {/* Flecha izquierda */}
                 {page > 1 && (
                     <button
                         onClick={() => onPageChange(page - 1)}
@@ -78,7 +72,6 @@ export default function Paginacion({ page, totalPages, onPageChange }) {
                     </button>
                 )}
 
-                {/* Páginas con puntos suspensivos */}
                 {pages.map((p, idx) => {
                     const prev = pages[idx - 1];
                     const showEllipsis = prev && p - prev > 1;
@@ -106,7 +99,6 @@ export default function Paginacion({ page, totalPages, onPageChange }) {
                     );
                 })}
 
-                {/* Flecha derecha */}
                 {page < totalPages && (
                     <button
                         onClick={() => onPageChange(page + 1)}
@@ -125,7 +117,6 @@ export default function Paginacion({ page, totalPages, onPageChange }) {
                 )}
             </div>
 
-            {/* Info y salto directo */}
             <div style={{ marginTop: 12, color: "#f0f0f0" }}>
                 Página {page} de {totalPages}
             </div>
@@ -139,11 +130,9 @@ export default function Paginacion({ page, totalPages, onPageChange }) {
                     onChange={(e) => {
                         const value = e.target.value;
 
-                        // 🔹 Solo permitir dígitos
                         if (/^\d*$/.test(value)) {
                             const num = parseInt(value, 10);
 
-                            // 🔹 Permitir vacío (para borrar) o valores dentro del rango
                             if (value === "" || (num >= 1 && num <= totalPages)) {
                                 setInputPage(value);
                             }

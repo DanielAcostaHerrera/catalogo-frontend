@@ -13,7 +13,7 @@ export const GET_CATALOGO = gql`
         TamanoFormateado
         Precio
         AnnoAct
-        Requisitos   # 🔹 añadido
+        Requisitos
       }
       total
     }

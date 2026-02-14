@@ -37,7 +37,6 @@ export default function Header() {
                     position: "relative",
                 }}
             >
-                {/* Logo → lleva a / */}
                 <div className="logo-box">
                     <NavLink to="/" style={{ display: "inline-block" }}>
                         <img
@@ -49,7 +48,6 @@ export default function Header() {
                     </NavLink>
                 </div>
 
-                {/* Título */}
                 <div className="title-box">
                     <span
                         className="header-title"
@@ -63,9 +61,6 @@ export default function Header() {
                     </span>
                 </div>
 
-                {/* --- BLOQUE DERECHO: Candado + Hamburguesa --- */}
-
-                {/* Candado SIEMPRE visible (PC y móvil) */}
                 <button
                     onClick={() => {
                         if (auth.isLogged) auth.logout();
@@ -76,7 +71,6 @@ export default function Header() {
                     {auth.isLogged ? "🔓" : "🔐"}
                 </button>
 
-                {/* Botón sándwich (PC y móvil) */}
                 <button
                     className="hamburger-btn"
                     onClick={() => setMenuOpen(!menuOpen)}
@@ -84,7 +78,6 @@ export default function Header() {
                     ☰
                 </button>
 
-                {/* --- MENÚ MÓVIL --- */}
                 {menuOpen && (
                     <nav className="mobile-menu">
                         <NavLink

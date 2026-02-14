@@ -16,12 +16,10 @@ export default function EditarSerie() {
     const [Sinopsis, setSinopsis] = useState("");
     const [Episodios, setEpisodios] = useState("");
 
-    // Normalizar saltos de línea
     const normalizarTexto = (txt) => (txt ? txt.replace(/\\n/g, "\n") : "");
     const prepararTexto = (txt) =>
         txt.replace(/\r/g, "").replace(/\n/g, "\\n");
 
-    // Validar año
     const validarAnno = (valor) => {
         if (!/^\d{4}$/.test(valor)) return null;
         const year = Number(valor);
@@ -30,12 +28,10 @@ export default function EditarSerie() {
         return null;
     };
 
-    // Obtener datos de la serie
     const { loading, error, data } = useQuery(GET_SERIE, {
         variables: { id: Number(id) },
     });
 
-    // Inicializar campos
     useEffect(() => {
         if (data?.serie) {
             const s = data.serie;
@@ -53,7 +49,6 @@ export default function EditarSerie() {
     const s = data.serie;
     const portadaUrl = `https://catalogo-backend-f4sk.onrender.com/portadas/Portadas Series/${s.Portada}`;
 
-    // Construir payload
     const construirPayload = () => {
         const payload = { Id: s.Id };
 
@@ -88,13 +83,10 @@ export default function EditarSerie() {
     return (
         <div className="detalle-wrapper">
 
-            {/* TÍTULO ARRIBA, CENTRADO */}
             <h2 className="detalle-titulo">Editar {s.Titulo}</h2>
 
-            {/* BLOQUE SUPERIOR */}
             <div className="detalle-container">
 
-                {/* IZQUIERDA: PORTADA */}
                 <div className="detalle-portada">
                     <img
                         src={portadaUrl}
@@ -103,7 +95,6 @@ export default function EditarSerie() {
                     />
                 </div>
 
-                {/* DERECHA: CAMPOS */}
                 <div className="detalle-info">
 
                     <label>Título</label>
@@ -129,7 +120,6 @@ export default function EditarSerie() {
                 </div>
             </div>
 
-            {/* BLOQUE INFERIOR */}
             <div className="detalle-extra">
 
                 <div className="detalle-card">
@@ -155,7 +145,6 @@ export default function EditarSerie() {
                 </div>
             </div>
 
-            {/* GUARDAR */}
             <Mutation mutation={ACTUALIZAR_SERIE}>
                 {(actualizarSerie) => (
                     <button

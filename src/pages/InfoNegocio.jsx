@@ -41,7 +41,6 @@ export default function InfoNegocio() {
                 boxSizing: 'border-box'
             }}>
 
-                {/* CONTACTO */}
                 <h2 style={{ marginTop: 0, marginBottom: 10 }}>📍 Contacto</h2>
                 <div style={{ marginBottom: 20, display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <p style={{ margin: 0 }}>
@@ -68,7 +67,6 @@ export default function InfoNegocio() {
                     </a>
                 </div>
 
-                {/* PRECIOS */}
                 <h2 style={{ marginTop: 20, marginBottom: 10 }}>💰 Precios de juegos offline</h2>
                 <table style={{
                     width: '100%',
@@ -105,7 +103,6 @@ export default function InfoNegocio() {
                     📺 Todas las series cuestan <span translate="no">{data.series.precioPorCapitulo} CUP</span> por capítulo.
                 </p>
 
-                {/* OFERTAS */}
                 <h2 style={{ marginTop: 20, marginBottom: 10 }}>💿 Ofertas llenado de discos duros</h2>
                 <div style={{
                     display: 'grid',

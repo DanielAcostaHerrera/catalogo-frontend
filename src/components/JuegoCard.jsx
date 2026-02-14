@@ -9,7 +9,6 @@ export default function JuegoCard({ juego, showToast, from }) {
     const navigate = useNavigate();
     const location = useLocation();
 
-    // 🔹 URL para mostrar la portada en el card (solo vista previa en catálogo)
     const portadaUrl = `https://catalogo-backend-f4sk.onrender.com/portadas/Portadas Juegos/${juego.Portada}`;
 
     function handleEdit() {
@@ -76,7 +75,6 @@ export default function JuegoCard({ juego, showToast, from }) {
                     marginBottom: 8,
                 }}
             >
-                {/* 🔹 Al añadir al carrito, se guarda carpeta + nombre, igual que en series */}
                 <AddToCartButton
                     item={{
                         id: juego.Id,

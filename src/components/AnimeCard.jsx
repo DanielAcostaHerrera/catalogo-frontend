@@ -24,14 +24,13 @@ export default function AnimeCard({ anime, from, showToast, precioPorCapitulo })
             const cantidad = parseInt(match[1], 10);
             bloques.push({
                 cantidad,
-                descripcion: l.trim(), // usar el texto original como descripción
+                descripcion: l.trim(),
             });
         }
     });
 
     const totalEpisodios = bloques.reduce((acc, b) => acc + b.cantidad, 0);
 
-    // 🔹 Si el texto incluye "Serie entera", mostrar solo eso
     if (/serie entera/i.test(anime.Episodios)) {
         bloques = [{ descripcion: "Serie entera" }];
     }
@@ -92,7 +91,7 @@ export default function AnimeCard({ anime, from, showToast, precioPorCapitulo })
                         id: anime.Id,
                         tipo: "anime",
                         nombre: anime.Titulo,
-                        portada: anime.Portada, // solo nombre del archivo
+                        portada: anime.Portada,
                         precio: precioCalculado,
                         bloques,
                         Episodios: anime.Episodios,

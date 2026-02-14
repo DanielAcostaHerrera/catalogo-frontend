@@ -45,8 +45,6 @@ import "react-toastify/dist/ReactToastify.css";
 
 function AppContent() {
   const location = useLocation();
-
-  // Función global para mostrar toasts
   const showToast = (msg) => toast(msg);
 
   return (
@@ -61,7 +59,6 @@ function AppContent() {
     >
       <AuthProvider>
         <CartProvider>
-          {/* 🔹 Ocultar Header solo en la página de bienvenida */}
           {location.pathname !== "/" && <Header />}
 
           <main

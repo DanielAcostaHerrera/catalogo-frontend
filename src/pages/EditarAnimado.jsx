@@ -16,12 +16,10 @@ export default function EditarAnimado() {
     const [Sinopsis, setSinopsis] = useState("");
     const [Episodios, setEpisodios] = useState("");
 
-    // Normalizar saltos de línea
     const normalizarTexto = (txt) => (txt ? txt.replace(/\\n/g, "\n") : "");
     const prepararTexto = (txt) =>
         txt.replace(/\r/g, "").replace(/\n/g, "\\n");
 
-    // Validar año
     const validarAnno = (valor) => {
         if (!/^\d{4}$/.test(valor)) return null;
         const year = Number(valor);
@@ -30,12 +28,10 @@ export default function EditarAnimado() {
         return null;
     };
 
-    // Obtener datos del animado
     const { loading, error, data } = useQuery(GET_ANIMADO, {
         variables: { id: Number(id) },
     });
 
-    // Inicializar campos
     useEffect(() => {
         if (data?.animado) {
             const a = data.animado;
@@ -53,7 +49,6 @@ export default function EditarAnimado() {
     const a = data.animado;
     const portadaUrl = `https://catalogo-backend-f4sk.onrender.com/portadas/Portadas Animados/${a.Portada}`;
 
-    // Construir payload
     const construirPayload = () => {
         const payload = { Id: a.Id };
 
@@ -88,13 +83,10 @@ export default function EditarAnimado() {
     return (
         <div className="detalle-wrapper">
 
-            {/* TÍTULO ARRIBA, CENTRADO */}
             <h2 className="detalle-titulo">Editar {a.Titulo}</h2>
 
-            {/* BLOQUE SUPERIOR */}
             <div className="detalle-container">
 
-                {/* IZQUIERDA: PORTADA */}
                 <div className="detalle-portada">
                     <img
                         src={portadaUrl}
@@ -103,7 +95,6 @@ export default function EditarAnimado() {
                     />
                 </div>
 
-                {/* DERECHA: CAMPOS */}
                 <div className="detalle-info">
 
                     <label>Título</label>
@@ -129,7 +120,6 @@ export default function EditarAnimado() {
                 </div>
             </div>
 
-            {/* BLOQUE INFERIOR */}
             <div className="detalle-extra">
 
                 <div className="detalle-card">
@@ -155,7 +145,6 @@ export default function EditarAnimado() {
                 </div>
             </div>
 
-            {/* GUARDAR */}
             <Mutation mutation={ACTUALIZAR_ANIMADO}>
                 {(actualizarAnimado) => (
                     <button
