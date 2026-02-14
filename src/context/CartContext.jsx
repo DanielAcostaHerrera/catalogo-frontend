@@ -21,37 +21,33 @@ export function CartProvider({ children }) {
 
         if (item.tipo === "juego") {
             finalItem = normalizeGame(item);
-            const existeJuego = cartItems.some((g) => g.id === finalItem.id);
-            if (existeJuego) return { status: "duplicate" };
+            if (cartItems.some((g) => g.id === finalItem.id)) {
+                return { status: "duplicate" };
+            }
             setCartItems((prev) => [...prev, finalItem]);
             return { status: "added" };
         }
 
         if (item.tipo === "serie" || item.tipo === "anime" || item.tipo === "animado") {
             const existente = cartItems.find((i) => i.id === item.id);
-            const esSerieCompleta = item.bloques?.some((b) => /entera/i.test(b.descripcion));
 
-            if (esSerieCompleta) {
-                const yaCompleta = existente?.bloques?.some((b) => b.descripcion === "Serie entera");
-                if (yaCompleta) {
-                    return { status: "duplicate" };
-                }
-                setCartItems((prev) => {
-                    const sinPrevias = prev.filter((i) => i.id !== item.id);
-                    return [...sinPrevias, finalItem];
-                });
+            if (!existente) {
+                setCartItems((prev) => [...prev, item]);
                 return { status: "added" };
             } else {
-                if (existente) {
-                    const yaCompleta = existente.bloques?.some((b) => b.descripcion === "Serie entera");
-                    if (yaCompleta) {
+                if (item.bloques?.some((b) => b.descripcion === "Serie entera")) {
+                    if (existente.bloques?.some((b) => b.descripcion === "Serie entera"))
+                        return { status: "duplicate" };
+
+                    setCartItems((prev) => {
+                        const sinPrevias = prev.filter((i) => i.id !== item.id);
+                        return [...sinPrevias, finalItem];
+                    });
+                    return { status: "added" };
+                } else {
+                    if (existente.bloques?.some((b) => b.descripcion === item.bloques?.[0]?.descripcion)) {
                         return { status: "duplicate" };
                     }
-                    const nuevaDescripcion = item.bloques?.[0]?.descripcion;
-                    const yaTemporada = existente.bloques?.some(
-                        (b) => b.descripcion === nuevaDescripcion
-                    );
-                    if (yaTemporada) return { status: "duplicate" };
 
                     const nuevoItem = {
                         ...existente,
@@ -61,17 +57,8 @@ export function CartProvider({ children }) {
                     updateCartItem(item.id, nuevoItem);
                     return { status: "added" };
                 }
-
-                setCartItems((prev) => [...prev, finalItem]);
-                return { status: "added" };
             }
         }
-
-        const exists = cartItems.some((g) => g.id === finalItem.id);
-        if (exists) return { status: "duplicate" };
-
-        setCartItems((prev) => [...prev, finalItem]);
-        return { status: "added" };
     };
 
     const updateCartItem = (id, nuevoItem) => {
