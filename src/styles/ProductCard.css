@@ -1,0 +1,16 @@
+.ProductCardContainer {
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  overflow: hidden;
+  background-color: #1e1e1e;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.ProductCardImage {
+  object-fit: fill;
+  background-color: #000;
+  transition: transform 0.2s boxShadow 0.2s;
+  display: block;
+}

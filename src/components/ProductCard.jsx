@@ -19,31 +19,19 @@ export default function ProductCard({
   const auth = useAuth();
 
   return (
-    <div
-      style={{
-        border: "1px solid #2a2a2a",
-        borderRadius: 6,
-        overflow: "hidden",
-        backgroundColor: "#1e1e1e",
-      }}
-    >
+    <div className="ProductCardContainer">
       <Link
         to={navigateLink}
         state={navigateState}
         style={{ textDecoration: "none", color: "inherit" }}
       >
         <img
+          className="ProductCardImage"
           src={portadaUrl}
           alt={imageAlt}
-          style={{
-            width: "100%",
-            height: 180,
-            objectFit: "fill",
-            backgroundColor: "#000",
-            transition: "transform 0.2s, boxShadow 0.2s",
-            display: "block",
-          }}
           loading="lazy"
+          width={"100%"}
+          height={180}
         />
 
         <h3
