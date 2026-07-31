@@ -1,5 +1,4 @@
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import { useAuth } from "../AuthContext";
+import { Link, useNavigate } from "react-router-dom";
 import { Mutation } from "react-apollo";
 import { ELIMINAR_ANIMADO } from "../mutations";
 import AddToCartButton from "../components/AddToCartButton";
@@ -11,9 +10,7 @@ export default function AnimadoCard({
   showToast,
   precioPorCapitulo,
 }) {
-  const auth = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
 
   const portadaUrl = `https://catalogo-backend-f4sk.onrender.com/portadas/Portadas Animados/${animado.Portada}`;
 
@@ -45,7 +42,7 @@ export default function AnimadoCard({
 
   const precioCalculado = totalEpisodios * Number(precioPorCapitulo);
 
-  const renderAdminSection = (
+  const renderAdminSection = () => (
     <Mutation mutation={ELIMINAR_ANIMADO}>
       {(eliminarAnimado) => (
         <>

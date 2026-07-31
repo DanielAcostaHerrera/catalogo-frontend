@@ -1,4 +1,4 @@
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAuth } from "../AuthContext";
 import { Mutation } from "react-apollo";
 import { ELIMINAR_ANIMADO } from "../mutations";
@@ -13,9 +13,8 @@ export default function ProductCard({
   imageAlt,
   titulo,
   product,
-  handleEdit,
-  adminButtons,
   showToast,
+  adminButtons,
 }) {
   const auth = useAuth();
 
@@ -70,7 +69,7 @@ export default function ProductCard({
       >
         <AddToCartButton item={product} showToast={showToast} />
 
-        {auth.isLogged && <div className="admin-section">adminButtons</div>}
+        {auth.isLogged && <div className="admin-section">{adminButtons()}</div>}
       </div>
     </div>
   );
