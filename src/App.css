@@ -137,7 +137,9 @@ body {
   border-radius: 6px;
   cursor: pointer;
   font-weight: 600;
-  transition: background-color 0.2s, transform 0.2s;
+  transition:
+    background-color 0.2s,
+    transform 0.2s;
 }
 
 .btn-dark:hover {
@@ -188,7 +190,6 @@ body {
   border-radius: 6px;
   display: block;
 }
-
 
 .detalle-info {
   flex: 1;
@@ -252,7 +253,7 @@ body {
     margin-left: 0 !important;
   }
 
-  .detalle-extra>div {
+  .detalle-extra > div {
     margin-top: 10px !important;
   }
 
@@ -339,7 +340,9 @@ body {
   border-radius: 6px;
   cursor: pointer;
   font-weight: 600;
-  transition: background-color 0.2s, transform 0.2s;
+  transition:
+    background-color 0.2s,
+    transform 0.2s;
 }
 
 .btn-add:hover,
@@ -367,190 +370,101 @@ body {
   background-color: #3367d6;
 }
 
-/* --------------------------------------------------
-   HEADER (PC)
--------------------------------------------------- */
-@media (min-width: 951px) {
-  .site-header {
-    position: relative;
-    width: 100%;
-  }
+/*
+  HEADER 
+ */
 
-  .header-container {
-    position: relative;
-    width: 100%;
-  }
-
-  .logo-box {
-    position: absolute;
-    top: 0;
-    left: 0;
-    margin: 0;
-  }
-
-  .title-box {
-    position: absolute;
-    top: 13px;
-    left: 60px;
-    text-align: left;
-    margin: 0;
-  }
-
-  .header-title {
-    font-weight: 600;
-    color: #f0f0f0;
-    white-space: nowrap;
-  }
-
-  .hamburger-btn {
-    position: absolute;
-    right: 0px;
-    top: 12px;
-    width: 26px;
-    height: 26px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: transparent;
-    border: none;
-    color: #f0f0f0;
-    font-size: 22px;
-    line-height: 1;
-    cursor: pointer;
-    z-index: 10;
-  }
-
-  .desktop-nav {
-    display: none !important;
-  }
-
-  .mobile-menu {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    margin-top: 60px;
-    gap: 10px;
-    text-align: left;
-  }
-
-  .mobile-menu a,
-  .mobile-menu button {
-    width: 100%;
-    text-align: left;
-  }
-
-  .admin-lock-desktop {
-    display: block !important;
-    position: absolute;
-    right: 25px;
-    top: 0px;
-    background: transparent;
-    border: none;
-    color: #e6e6e6;
-    font-size: 20px;
-    cursor: pointer;
-  }
+.site-header {
+  position: sticky;
 }
 
-/* --------------------------------------------------
-   HEADER (MÓVIL)
--------------------------------------------------- */
-@media (max-width: 950px) {
-  .site-header {
-    position: static;
-  }
-
-  .header-container {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    position: relative;
-  }
-
-  .logo-box {
-    position: absolute;
-    transform: translateX(-100%);
-    top: 0;
-    left: calc(50% - 60px);
-  }
-
-  .title-box {
-    width: 100%;
-    text-align: center;
-    margin-bottom: 10px;
-  }
-
-  .header-title {
-    font-weight: 600;
-    color: #f0f0f0;
-    white-space: nowrap;
-  }
-
-  .hamburger-btn {
-    position: absolute;
-    right: 0px;
-    top: 12px;
-    width: 26px;
-    height: 26px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: transparent;
-    border: none;
-    color: #f0f0f0;
-    font-size: 22px;
-    line-height: 1;
-    cursor: pointer;
-    z-index: 10;
-  }
-
-  .desktop-nav {
-    display: none !important;
-  }
-
-  .mobile-menu {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    margin-top: 12px;
-    gap: 10px;
-    text-align: center;
-  }
-
-  .mobile-menu a,
-  .mobile-menu button {
-    width: 100%;
-    text-align: center;
-  }
-
-  .admin-lock-desktop {
-    display: block !important;
-    position: absolute;
-    right: 25px;
-    top: 0px;
-    background: transparent;
-    border: none;
-    color: #e6e6e6;
-    font-size: 20px;
-    cursor: pointer;
-  }
+.header-container {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: space-between;
 }
 
-/* --------------------------------------------------
-   Candado dentro del menú (PC y MÓVIL)
--------------------------------------------------- */
-.admin-lock-mobile {
+.left-contents {
+  display: flex;
+  gap: 0;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.header-title {
+  font-weight: 600;
+  color: #f0f0f0;
+  white-space: nowrap;
+}
+
+.right-contents {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 10px;
+}
+
+.hamburger-btn {
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: #f0f0f0;
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 10;
+  padding: 0 !important;
+}
+
+.admin-lock {
   background: transparent;
   border: none;
   color: #e6e6e6;
   font-size: 20px;
-  padding: 10px 14px;
-  width: 100%;
   cursor: pointer;
-  display: flex;
-  align-items: center;
+  padding: 0 !important;
 }
 
+.desktop-nav {
+  display: none !important;
+}
+
+.mobile-menu {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 10px;
+  gap: 10px;
+  text-align: left;
+}
+
+.mobile-menu a,
+.mobile-menu button {
+  width: 100%;
+  text-align: left;
+}
+
+.mobile-menu a:hover {
+  background-color: #555454;
+}
+
+.admin-lock-desktop {
+  display: block !important;
+  position: absolute;
+  right: 25px;
+  top: 0px;
+  background: transparent;
+  border: none;
+  color: #e6e6e6;
+  font-size: 20px;
+  cursor: pointer;
+}
 
 /* --------------------------------------------------
    SELECTOR DE LÍMITE (ÚLTIMOS ESTRENOS)
@@ -576,7 +490,9 @@ body {
   font-size: 14px;
   text-align: center;
   width: 80px;
-  transition: background-color 0.2s, transform 0.2s;
+  transition:
+    background-color 0.2s,
+    transform 0.2s;
 }
 
 .selector-limit input:focus {
@@ -699,7 +615,9 @@ body {
   border-radius: 6px;
   cursor: pointer;
   font-size: 16px;
-  transition: background 0.2s, transform 0.15s;
+  transition:
+    background 0.2s,
+    transform 0.15s;
 }
 
 .admin-edit-btn {
@@ -758,7 +676,9 @@ textarea.input-dark {
   border-radius: 4px;
   font-size: 15px;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.1s ease;
+  transition:
+    background-color 0.2s ease,
+    transform 0.1s ease;
 }
 
 .btn-guardar:hover {
