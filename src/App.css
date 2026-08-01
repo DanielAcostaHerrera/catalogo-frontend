@@ -554,6 +554,7 @@ body {
 .auth-input {
   width: 100%;
   padding: 10px 12px;
+  padding-right: 35px;
   border-radius: 6px;
   border: 1px solid #444;
   background: #1e1e1e;
@@ -561,11 +562,35 @@ body {
   font-size: 14px;
   outline: none;
   transition: border-color 0.2s;
+  box-sizing: border-box; 
 }
 
 .auth-input:focus {
   border-color: #3a7afe;
 }
+
+.auth-input-container {
+  position: relative;
+  width: 100%;
+}
+
+.auth-input-pass {
+  padding-right: 35px;
+  box-sizing: border-box;
+}
+
+/* 🔥 Icono de mostrar/ocultar contraseña */
+.auth-input-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #ccc;
+  font-size: 18px;
+  user-select: none;
+}
+
 
 .auth-error {
   color: #ff6b6b;

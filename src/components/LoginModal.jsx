@@ -35,9 +35,10 @@ export default function LoginModal({ onClose }) {
                     }}
                 />
 
-                <div style={{ position: "relative", width: "100%" }}>
+                {/* CONTENEDOR DEL INPUT DE CONTRASEÑA */}
+                <div className="auth-input-container">
                     <input
-                        className="auth-input"
+                        className="auth-input auth-input-pass"
                         type={showPass ? "text" : "password"}
                         placeholder="Contraseña"
                         value={pass}
@@ -45,21 +46,11 @@ export default function LoginModal({ onClose }) {
                         onKeyDown={(e) => {
                             if (e.key === "Enter") handleLogin();
                         }}
-                        style={{ paddingRight: 40 }}
                     />
 
                     <span
+                        className="auth-input-icon"
                         onClick={() => setShowPass(!showPass)}
-                        style={{
-                            position: "absolute",
-                            right: 10,
-                            top: "50%",
-                            transform: "translateY(-50%)",
-                            cursor: "pointer",
-                            color: "#ccc",
-                            fontSize: 18,
-                            userSelect: "none"
-                        }}
                     >
                         {showPass ? "👁️" : "🚫"}
                     </span>
