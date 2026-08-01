@@ -233,7 +233,7 @@ export default function CatalogoJuegos({ showToast }) {
                 </div>
 
                 <div>
-                    <label style={{ color: "#f0f0f0" }}>Tamaño mínimo</label>
+                    <label style={{ color: "#f0f0f0" }}>Tamaño mínimo (Gb)</label>
                     <div style={{ display: "flex", alignItems: "center" }}>
                         <input
                             type="text"
@@ -259,12 +259,11 @@ export default function CatalogoJuegos({ showToast }) {
                             onKeyDown={(e) => soloNumeros(e, true)}
                             className="filtro-input"
                         />
-                        <span className="filtro-sufijo">GB</span>
                     </div>
                 </div>
 
                 <div>
-                    <label style={{ color: "#f0f0f0" }}>Tamaño máximo</label>
+                    <label style={{ color: "#f0f0f0" }}>Tamaño máximo (Gb)</label>
                     <div style={{ display: "flex", alignItems: "center" }}>
                         <input
                             type="text"
@@ -290,12 +289,11 @@ export default function CatalogoJuegos({ showToast }) {
                             onKeyDown={(e) => soloNumeros(e, true)}
                             className="filtro-input"
                         />
-                        <span className="filtro-sufijo">GB</span>
                     </div>
                 </div>
 
                 <div>
-                    <label style={{ color: "#f0f0f0" }}>Precio mínimo</label>
+                    <label style={{ color: "#f0f0f0" }}>Precio mínimo (CUP)</label>
                     <div style={{ display: "flex", alignItems: "center" }}>
                         <input
                             type="text"
@@ -318,12 +316,11 @@ export default function CatalogoJuegos({ showToast }) {
                             onKeyDown={(e) => soloNumeros(e, false)}
                             className="filtro-input"
                         />
-                        <span className="filtro-sufijo">CUP</span>
                     </div>
                 </div>
 
                 <div>
-                    <label style={{ color: "#f0f0f0" }}>Precio máximo</label>
+                    <label style={{ color: "#f0f0f0" }}>Precio máximo (CUP)</label>
                     <div style={{ display: "flex", alignItems: "center" }}>
                         <input
                             type="text"
@@ -346,7 +343,6 @@ export default function CatalogoJuegos({ showToast }) {
                             onKeyDown={(e) => soloNumeros(e, false)}
                             className="filtro-input"
                         />
-                        <span className="filtro-sufijo">CUP</span>
                     </div>
                 </div>
             </div>
