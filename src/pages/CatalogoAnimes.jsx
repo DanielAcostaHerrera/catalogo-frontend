@@ -21,23 +21,18 @@ export default function CatalogoAnimes({ showToast }) {
     const [page, setPage] = useState(Number(searchParams.get("page")) || 1);
     const [limit] = useState(100);
 
-    const [nombre, setNombre] = useState(searchParams.get("nombre") || "");
-    const [nombreTemp, setNombreTemp] = useState(nombre);
+    // 🔥 FILTROS FINALES (los que realmente se aplican)
+    const [filtros, setFiltros] = useState({
+        nombre: searchParams.get("nombre") || "",
+    });
+
+    // 🔥 TEMPORALES (inputs sin tiempo real)
+    const [nombreTemp, setNombreTemp] = useState(filtros.nombre);
 
     const [openFiltros, setOpenFiltros] = useState(false);
     const [precios, setPrecios] = useState(null);
 
-    useEffect(() => {
-        const newPage = Number(searchParams.get("page")) || 1;
-        if (newPage !== page) setPage(newPage);
-
-        const newNombre = searchParams.get("nombre") || "";
-        if (newNombre !== nombre) {
-            setNombre(newNombre);
-            setNombreTemp(newNombre);
-        }
-    }, [searchParams]);
-
+    // 🔥 Cargar precios (solo una vez)
     useEffect(() => {
         fetch("https://catalogo-backend-f4sk.onrender.com/precios")
             .then(res => res.json())
@@ -45,9 +40,48 @@ export default function CatalogoAnimes({ showToast }) {
             .catch(err => console.error("Error cargando precios:", err));
     }, []);
 
-    const query = nombre ? GET_CATALOGO_ANIMES_FILTRADO : GET_CATALOGO_ANIMES;
-    const variables = { page, limit, titulo: nombre || null };
+    // 🔥 FUNCIÓN FINAL PARA APLICAR FILTROS
+    const aplicarFiltros = () => {
+        const p = new URLSearchParams();
 
+        // --- NOMBRE ---
+        if (nombreTemp.trim() !== "") {
+            p.set("nombre", nombreTemp.trim());
+        }
+
+        // --- PAGE ---
+        p.set("page", 1);
+        setPage(1);
+
+        // --- ACTUALIZAR FILTROS FINALES ---
+        setFiltros({
+            nombre: p.get("nombre") || "",
+        });
+
+        setSearchParams(p);
+        setOpenFiltros(false);
+    };
+
+    // 🔥 REINICIAR FILTROS
+    const reiniciarCatalogo = () => {
+        setFiltros({ nombre: "" });
+        setNombreTemp("");
+        setPage(1);
+        setSearchParams({ page: 1 });
+        setOpenFiltros(false);
+    };
+
+    // 🔥 DECIDIR QUERY SEGÚN FILTROS FINALES
+    const hayFiltros = filtros.nombre !== "";
+
+    const query = hayFiltros ? GET_CATALOGO_ANIMES_FILTRADO : GET_CATALOGO_ANIMES;
+    const variables = {
+        page,
+        limit,
+        titulo: filtros.nombre || null,
+    };
+
+    // 🔥 Apollo
     const { loading, error, data } = useQuery(query, { variables });
 
     if (!precios) return <p style={{ color: "#ccc" }}>Cargando precios…</p>;
@@ -66,28 +100,6 @@ export default function CatalogoAnimes({ showToast }) {
 
     const totalPages = Math.ceil(total / limit);
 
-    const actualizarFiltro = (valor) => {
-        setNombre(valor);
-        setPage(1);
-
-        const newParams = new URLSearchParams(searchParams);
-        if (valor) {
-            newParams.set("nombre", valor);
-        } else {
-            newParams.delete("nombre");
-        }
-        newParams.set("page", 1);
-
-        setSearchParams(newParams, { replace: true });
-    };
-
-    const reiniciarCatalogo = () => {
-        setNombre("");
-        setNombreTemp("");
-        setPage(1);
-        setSearchParams({});
-    };
-
     return (
         <div className="catalogo-container">
             <h2 style={{ color: "#f0f0f0", marginBottom: "20px" }}>
@@ -100,6 +112,17 @@ export default function CatalogoAnimes({ showToast }) {
                     <span className="btn-icon"><FilterListIcon /></span>
                     <span className="btn-text">Filtros</span>
                 </button>
+
+                {/* 🔥 BOTÓN LIMPIAR FILTROS (solo visible si hay filtro aplicado) */}
+                {hayFiltros && (
+                    <button
+                        className="btn-dark"
+                        onClick={reiniciarCatalogo}
+                    >
+                        <span className="btn-icon">✕</span>
+                        <span className="btn-text">Limpiar filtros</span>
+                    </button>
+                )}
 
                 <button
                     className="btn-dark"
@@ -133,7 +156,15 @@ export default function CatalogoAnimes({ showToast }) {
                 disableDiscovery={true}
                 disableSwipeToOpen={true}
             >
-                <div className="drawer-filtros-contenido">
+                <div
+                    className="drawer-filtros-contenido"
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            e.preventDefault();
+                            aplicarFiltros();
+                        }
+                    }}
+                >
                     <h3 className="drawer-filtros-titulo">Filtros</h3>
 
                     {/* Nombre */}
@@ -151,10 +182,7 @@ export default function CatalogoAnimes({ showToast }) {
                     <div className="drawer-filtros-botones">
                         <button
                             className="btn-dark"
-                            onClick={() => {
-                                actualizarFiltro(nombreTemp);
-                                setOpenFiltros(false);
-                            }}
+                            onClick={aplicarFiltros}
                         >
                             Aplicar filtros
                         </button>
@@ -162,8 +190,8 @@ export default function CatalogoAnimes({ showToast }) {
                         <button
                             className="btn-dark"
                             onClick={() => {
+                                setNombreTemp("");
                                 reiniciarCatalogo();
-                                setOpenFiltros(false);
                             }}
                         >
                             Limpiar filtros
@@ -206,4 +234,3 @@ export default function CatalogoAnimes({ showToast }) {
         </div>
     );
 }
-

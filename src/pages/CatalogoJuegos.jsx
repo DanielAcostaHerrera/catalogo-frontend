@@ -243,6 +243,18 @@ export default function CatalogoJuegos({ showToast }) {
                     <span className="btn-icon"><FilterListIcon /></span>
                 </button>
 
+                {hayFiltros  && (
+                    <button
+                        className="btn-dark"
+                        onClick={() => {
+                            reiniciarCatalogo();
+                        }}
+                    >
+                        <span className="btn-icon">✕</span>
+                        <span className="btn-text">Limpiar filtros</span>
+                    </button>
+                )}
+
                 <button className="btn-dark" onClick={() => navigate("/ultimos-estrenos-juegos")}>
                     <span className="btn-text">Últimos estrenos</span>
                     <span className="btn-icon"><UpdateIcon /></span>
@@ -270,7 +282,15 @@ export default function CatalogoJuegos({ showToast }) {
                 disableDiscovery={true}  
                 disableSwipeToOpen={true}            
             >
-                <div className="drawer-filtros-contenido">
+                <div 
+                    className="drawer-filtros-contenido"
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            e.preventDefault();
+                            aplicarFiltros();
+                        }
+                    }}
+                >
                     <h3 className="drawer-filtros-titulo">Filtros</h3>
 
                     {/* Nombre */}

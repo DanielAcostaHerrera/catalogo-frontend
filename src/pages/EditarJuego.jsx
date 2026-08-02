@@ -1,22 +1,28 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useQuery, useMutation } from "@apollo/client";
 import "../App.css";
-import { useState, useEffect } from "react";
+import { useReducer, useEffect } from "react";
 import { ACTUALIZAR_JUEGO } from "../mutations";
 import { GET_JUEGO } from "../graphql";
+
+// 🔥 REDUCER para manejar el formulario
+const formReducer = (state, action) => {
+    switch (action.type) {
+        case 'SET_FORM':
+            return { ...state, ...action.payload };
+        case 'CHANGE':
+            return { ...state, [action.field]: action.value };
+        case 'RESET':
+            return action.payload;
+        default:
+            return state;
+    }
+};
 
 export default function EditarJuego() {
     const { id } = useParams();
     const navigate = useNavigate();
     const location = useLocation();
-
-    const [Nombre, setNombre] = useState("");
-    const [Tamano, setTamano] = useState("");
-       const [AnnoAct, setAnnoAct] = useState("");
-    const [Sinopsis, setSinopsis] = useState("");
-    const [Requisitos, setRequisitos] = useState("");
 
     const soloCuatroDigitos = (e, valorActual) => {
         const allowed = ["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Tab"];
@@ -71,18 +77,37 @@ export default function EditarJuego() {
         return null;
     };
 
+    // ✅ PRIMERO: useQuery
     const { loading, error, data } = useQuery(GET_JUEGO, {
         variables: { id: Number(id) },
     });
 
+    // ✅ SEGUNDO: useMutation
+    const [actualizarJuego] = useMutation(ACTUALIZAR_JUEGO);
+
+    // 🔥 REDUCER EN LUGAR DE useState
+    const [form, dispatch] = useReducer(formReducer, {
+        Nombre: "",
+        Tamano: "",
+        AnnoAct: "",
+        Sinopsis: "",
+        Requisitos: "",
+    });
+
+    // ✅ Cargar datos cuando estén disponibles
     useEffect(() => {
         if (data?.juego) {
             const j = data.juego;
-            setNombre(j.Nombre);
-            setTamano(j.TamanoFormateado || "");
-            setAnnoAct(String(j.AnnoAct));
-            setSinopsis(normalizarTexto(j.Sinopsis));
-            setRequisitos(normalizarTexto(j.Requisitos));
+            dispatch({
+                type: 'SET_FORM',
+                payload: {
+                    Nombre: j.Nombre,
+                    Tamano: j.TamanoFormateado || "",
+                    AnnoAct: String(j.AnnoAct),
+                    Sinopsis: normalizarTexto(j.Sinopsis),
+                    Requisitos: normalizarTexto(j.Requisitos),
+                }
+            });
         }
     }, [data]);
 
@@ -92,23 +117,33 @@ export default function EditarJuego() {
     const j = data.juego;
     const portadaUrl = `https://catalogo-backend-f4sk.onrender.com/portadas/Portadas Juegos/${j.Portada}`;
 
+    // ✅ MANEJADOR DE CAMBIOS
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        dispatch({
+            type: 'CHANGE',
+            field: name,
+            value: value
+        });
+    };
+
     const construirPayload = () => {
         const payload = { Id: j.Id };
 
-        if (Nombre.trim() === "") {
+        if (form.Nombre.trim() === "") {
             alert("El nombre es obligatorio");
             return null;
         }
-        payload.Nombre = Nombre.trim();
+        payload.Nombre = form.Nombre.trim();
 
-        if (Tamano.trim().toLowerCase() === "variable") {
-            if (!Nombre.includes("[online]")) {
+        if (form.Tamano.trim().toLowerCase() === "variable") {
+            if (!form.Nombre.includes("[online]")) {
                 alert("Solo se puede declarar tamaño variable en juegos online");
                 return null;
             }
             payload.Tamano = j.Tamano;
         } else {
-            const tamanoParseado = parseTamano(Tamano);
+            const tamanoParseado = parseTamano(form.Tamano);
             if (tamanoParseado === null) {
                 alert("El tamaño debe ser un valor válido (ej: 500, 500 Mb, 2 Gb, Variable)");
                 return null;
@@ -116,10 +151,10 @@ export default function EditarJuego() {
             payload.Tamano = tamanoParseado;
         }
 
-        if (AnnoAct.trim() === "" || AnnoAct.trim() === "0") {
+        if (form.AnnoAct.trim() === "" || form.AnnoAct.trim() === "0") {
             payload.AnnoAct = 0;
         } else {
-            const annoValido = validarAnno(AnnoAct);
+            const annoValido = validarAnno(form.AnnoAct);
             if (annoValido === null) {
                 alert("El año debe ser un número válido entre 1970 y el actual o estar vacío");
                 return null;
@@ -127,25 +162,20 @@ export default function EditarJuego() {
             payload.AnnoAct = annoValido;
         }
 
-        if (Sinopsis.trim() !== "")
-            payload.Sinopsis = Sinopsis.replace(/\n/g, "\\n");
+        if (form.Sinopsis.trim() !== "")
+            payload.Sinopsis = form.Sinopsis.replace(/\n/g, "\\n");
 
-        if (Requisitos.trim() !== "")
-            payload.Requisitos = prepararRequisitos(Requisitos);
+        if (form.Requisitos.trim() !== "")
+            payload.Requisitos = prepararRequisitos(form.Requisitos);
 
         return payload;
     };
 
-    // 🔥 Apollo moderno — reemplazo de <Mutation>
-    const [actualizarJuego] = useMutation(ACTUALIZAR_JUEGO);
-
     return (
         <div className="detalle-wrapper">
-
             <h2 className="detalle-titulo">Editar {j.Nombre}</h2>
 
             <div className="detalle-container">
-
                 <div className="detalle-portada">
                     <img
                         src={portadaUrl}
@@ -155,40 +185,42 @@ export default function EditarJuego() {
                 </div>
 
                 <div className="detalle-info">
-
                     <label>Nombre</label>
                     <input
                         className="input-dark"
-                        value={Nombre}
-                        onChange={(e) => setNombre(e.target.value)}
+                        name="Nombre"
+                        value={form.Nombre}
+                        onChange={handleChange}
                     />
 
                     <label>Tamaño</label>
                     <input
                         className="input-dark"
-                        value={Tamano}
-                        onChange={(e) => setTamano(e.target.value)}
+                        name="Tamano"
+                        value={form.Tamano}
+                        onChange={handleChange}
                     />
 
                     <label>Año de actualización</label>
                     <input
                         className="input-dark"
-                        value={AnnoAct}
-                        onChange={(e) => setAnnoAct(e.target.value)}
-                        onKeyDown={(e) => soloCuatroDigitos(e, AnnoAct)}
+                        name="AnnoAct"
+                        value={form.AnnoAct}
+                        onChange={handleChange}
+                        onKeyDown={(e) => soloCuatroDigitos(e, form.AnnoAct)}
                     />
                 </div>
             </div>
 
             <div className="detalle-extra">
-
                 <div className="detalle-card">
                     <strong>Sinopsis:</strong>
                     <textarea
                         className="input-dark"
+                        name="Sinopsis"
                         rows={8}
-                        value={Sinopsis}
-                        onChange={(e) => setSinopsis(e.target.value)}
+                        value={form.Sinopsis}
+                        onChange={handleChange}
                         style={{ width: "100%", marginTop: 10 }}
                     />
                 </div>
@@ -197,9 +229,10 @@ export default function EditarJuego() {
                     <strong>Requisitos de Sistema:</strong>
                     <textarea
                         className="input-dark"
+                        name="Requisitos"
                         rows={12}
-                        value={Requisitos}
-                        onChange={(e) => setRequisitos(e.target.value)}
+                        value={form.Requisitos}
+                        onChange={handleChange}
                         style={{ width: "100%", marginTop: 10 }}
                     />
                 </div>

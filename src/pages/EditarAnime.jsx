@@ -1,22 +1,28 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useQuery, useMutation } from "@apollo/client";
 import "../App.css";
-import { useState, useEffect } from "react";
+import { useReducer, useEffect } from "react";
 import { ACTUALIZAR_ANIME } from "../mutations";
 import { GET_ANIME } from "../graphql";
+
+// 🔥 REDUCER para manejar el formulario (MISMO QUE ANIMADO)
+const formReducer = (state, action) => {
+    switch (action.type) {
+        case 'SET_FORM':
+            return { ...state, ...action.payload };
+        case 'CHANGE':
+            return { ...state, [action.field]: action.value };
+        case 'RESET':
+            return action.payload;
+        default:
+            return state;
+    }
+};
 
 export default function EditarAnime() {
     const { id } = useParams();
     const navigate = useNavigate();
     const location = useLocation();
-
-    const [Titulo, setTitulo] = useState("");
-    const [Anno, setAnno] = useState("");
-    const [Temporadas, setTemporadas] = useState("");
-    const [Sinopsis, setSinopsis] = useState("");
-    const [Episodios, setEpisodios] = useState("");
 
     const normalizarTexto = (txt) => (txt ? txt.replace(/\\n/g, "\n") : "");
     const prepararTexto = (txt) =>
@@ -30,18 +36,37 @@ export default function EditarAnime() {
         return null;
     };
 
+    // ✅ PRIMERO: useQuery
     const { loading, error, data } = useQuery(GET_ANIME, {
         variables: { id: Number(id) },
     });
 
+    // ✅ SEGUNDO: useMutation
+    const [actualizarAnime] = useMutation(ACTUALIZAR_ANIME);
+
+    // 🔥 REDUCER EN LUGAR DE useState
+    const [form, dispatch] = useReducer(formReducer, {
+        Titulo: "",
+        Anno: "",
+        Temporadas: "",
+        Sinopsis: "",
+        Episodios: "",
+    });
+
+    // ✅ Cargar datos cuando estén disponibles
     useEffect(() => {
         if (data?.anime) {
             const a = data.anime;
-            setTitulo(a.Titulo);
-            setAnno(String(a.Anno));
-            setTemporadas(String(a.Temporadas));
-            setSinopsis(normalizarTexto(a.Sinopsis));
-            setEpisodios(normalizarTexto(a.Episodios));
+            dispatch({
+                type: 'SET_FORM',
+                payload: {
+                    Titulo: a.Titulo,
+                    Anno: String(a.Anno),
+                    Temporadas: String(a.Temporadas),
+                    Sinopsis: normalizarTexto(a.Sinopsis),
+                    Episodios: normalizarTexto(a.Episodios),
+                }
+            });
         }
     }, [data]);
 
@@ -51,47 +76,52 @@ export default function EditarAnime() {
     const a = data.anime;
     const portadaUrl = `https://catalogo-backend-f4sk.onrender.com/portadas/Portadas Anime/${a.Portada}`;
 
+    // ✅ MANEJADOR DE CAMBIOS
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        dispatch({
+            type: 'CHANGE',
+            field: name,
+            value: value
+        });
+    };
+
     const construirPayload = () => {
         const payload = { Id: a.Id };
 
-        if (Titulo.trim() === "") {
+        if (form.Titulo.trim() === "") {
             alert("El título es obligatorio");
             return null;
         }
-        payload.Titulo = Titulo.trim();
+        payload.Titulo = form.Titulo.trim();
 
-        const annoValido = validarAnno(Anno);
+        const annoValido = validarAnno(form.Anno);
         if (annoValido === null) {
             alert("El año debe ser un número válido entre 1970 y el actual");
             return null;
         }
         payload.Anno = annoValido;
 
-        if (Temporadas.trim() === "" || isNaN(Number(Temporadas))) {
+        if (form.Temporadas.trim() === "" || isNaN(Number(form.Temporadas))) {
             alert("Las temporadas deben ser un número válido");
             return null;
         }
-        payload.Temporadas = Number(Temporadas);
+        payload.Temporadas = Number(form.Temporadas);
 
-        if (Sinopsis.trim() !== "")
-            payload.Sinopsis = prepararTexto(Sinopsis);
+        if (form.Sinopsis.trim() !== "")
+            payload.Sinopsis = prepararTexto(form.Sinopsis);
 
-        if (Episodios.trim() !== "")
-            payload.Episodios = prepararTexto(Episodios);
+        if (form.Episodios.trim() !== "")
+            payload.Episodios = prepararTexto(form.Episodios);
 
         return payload;
     };
 
-    // 🔥 Apollo moderno — reemplazo de <Mutation>
-    const [actualizarAnime] = useMutation(ACTUALIZAR_ANIME);
-
     return (
         <div className="detalle-wrapper">
-
             <h2 className="detalle-titulo">Editar {a.Titulo}</h2>
 
             <div className="detalle-container">
-
                 <div className="detalle-portada">
                     <img
                         src={portadaUrl}
@@ -101,39 +131,41 @@ export default function EditarAnime() {
                 </div>
 
                 <div className="detalle-info">
-
                     <label>Título</label>
                     <input
                         className="input-dark"
-                        value={Titulo}
-                        onChange={(e) => setTitulo(e.target.value)}
+                        name="Titulo"
+                        value={form.Titulo}
+                        onChange={handleChange}
                     />
 
                     <label>Año de estreno</label>
                     <input
                         className="input-dark"
-                        value={Anno}
-                        onChange={(e) => setAnno(e.target.value)}
+                        name="Anno"
+                        value={form.Anno}
+                        onChange={handleChange}
                     />
 
                     <label>Temporadas</label>
                     <input
                         className="input-dark"
-                        value={Temporadas}
-                        onChange={(e) => setTemporadas(e.target.value)}
+                        name="Temporadas"
+                        value={form.Temporadas}
+                        onChange={handleChange}
                     />
                 </div>
             </div>
 
             <div className="detalle-extra">
-
                 <div className="detalle-card">
                     <strong>Sinopsis:</strong>
                     <textarea
                         className="input-dark"
+                        name="Sinopsis"
                         rows={8}
-                        value={Sinopsis}
-                        onChange={(e) => setSinopsis(e.target.value)}
+                        value={form.Sinopsis}
+                        onChange={handleChange}
                         style={{
                             width: "100%",
                             marginTop: 10,
@@ -146,9 +178,10 @@ export default function EditarAnime() {
                     <strong>Episodios:</strong>
                     <textarea
                         className="input-dark"
+                        name="Episodios"
                         rows={12}
-                        value={Episodios}
-                        onChange={(e) => setEpisodios(e.target.value)}
+                        value={form.Episodios}
+                        onChange={handleChange}
                         style={{
                             width: "100%",
                             marginTop: 10,

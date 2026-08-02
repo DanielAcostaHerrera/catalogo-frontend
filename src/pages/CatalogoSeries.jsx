@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from "react"; // ← AÑADE useEffect
 import { useQuery } from "@apollo/client";
 import { GET_CATALOGO_SERIES, GET_CATALOGO_SERIES_FILTRADO } from "../graphql";
 import SerieCard from "../components/SerieCard";
@@ -21,23 +21,18 @@ export default function CatalogoSeries({ showToast }) {
     const [page, setPage] = useState(Number(searchParams.get("page")) || 1);
     const [limit] = useState(100);
 
-    const [nombre, setNombre] = useState(searchParams.get("nombre") || "");
-    const [nombreTemp, setNombreTemp] = useState(nombre);
+    // 🔥 FILTROS FINALES
+    const [filtros, setFiltros] = useState({
+        nombre: searchParams.get("nombre") || "",
+    });
+
+    // 🔥 TEMPORALES
+    const [nombreTemp, setNombreTemp] = useState(filtros.nombre);
 
     const [openFiltros, setOpenFiltros] = useState(false);
     const [precios, setPrecios] = useState(null);
 
-    useEffect(() => {
-        const newPage = Number(searchParams.get("page")) || 1;
-        if (newPage !== page) setPage(newPage);
-
-        const newNombre = searchParams.get("nombre") || "";
-        if (newNombre !== nombre) {
-            setNombre(newNombre);
-            setNombreTemp(newNombre);
-        }
-    }, [searchParams]);
-
+    // 🔥 Cargar precios con useEffect (NO con return condicional)
     useEffect(() => {
         fetch("https://catalogo-backend-f4sk.onrender.com/precios")
             .then(res => res.json())
@@ -45,12 +40,23 @@ export default function CatalogoSeries({ showToast }) {
             .catch(err => console.error("Error cargando precios:", err));
     }, []);
 
-    const query = nombre ? GET_CATALOGO_SERIES_FILTRADO : GET_CATALOGO_SERIES;
-    const variables = { page, limit, titulo: nombre || null };
+    // 🔥 DECIDIR QUERY
+    const hayFiltros = filtros.nombre !== "";
+    const query = hayFiltros ? GET_CATALOGO_SERIES_FILTRADO : GET_CATALOGO_SERIES;
+    const variables = {
+        page,
+        limit,
+        titulo: filtros.nombre || null,
+    };
 
+    // 🔥 Apollo (AHORA ANTES del if (!precios))
     const { loading, error, data } = useQuery(query, { variables });
 
-    if (!precios) return <p style={{ color: "#ccc" }}>Cargando precios…</p>;
+    // 🔥 Esperar a que carguen los precios
+    if (!precios) {
+        return <p style={{ color: "#ccc" }}>Cargando precios…</p>;
+    }
+
     if (loading) return <p style={{ color: "#ccc" }}>Cargando…</p>;
     if (error) return <p style={{ color: "red" }}>Error: {error.message}</p>;
 
@@ -66,26 +72,25 @@ export default function CatalogoSeries({ showToast }) {
 
     const totalPages = Math.ceil(total / limit);
 
-    const actualizarFiltro = (valor) => {
-        setNombre(valor);
-        setPage(1);
-
-        const newParams = new URLSearchParams(searchParams);
-        if (valor) {
-            newParams.set("nombre", valor);
-        } else {
-            newParams.delete("nombre");
+    // 🔥 FUNCIONES
+    const aplicarFiltros = () => {
+        const p = new URLSearchParams();
+        if (nombreTemp.trim() !== "") {
+            p.set("nombre", nombreTemp.trim());
         }
-        newParams.set("page", 1);
-
-        setSearchParams(newParams, { replace: true });
+        p.set("page", 1);
+        setPage(1);
+        setFiltros({ nombre: p.get("nombre") || "" });
+        setSearchParams(p);
+        setOpenFiltros(false);
     };
 
     const reiniciarCatalogo = () => {
-        setNombre("");
+        setFiltros({ nombre: "" });
         setNombreTemp("");
         setPage(1);
-        setSearchParams({});
+        setSearchParams({ page: 1 });
+        setOpenFiltros(false);
     };
 
     return (
@@ -100,6 +105,13 @@ export default function CatalogoSeries({ showToast }) {
                     <span className="btn-icon"><FilterListIcon /></span>
                     <span className="btn-text">Filtros</span>
                 </button>
+
+                {hayFiltros && (
+                    <button className="btn-dark" onClick={reiniciarCatalogo}>
+                        <span className="btn-icon">✕</span>
+                        <span className="btn-text">Limpiar filtros</span>
+                    </button>
+                )}
 
                 <button
                     className="btn-dark"
@@ -133,10 +145,17 @@ export default function CatalogoSeries({ showToast }) {
                 disableDiscovery={true}
                 disableSwipeToOpen={true}
             >
-                <div className="drawer-filtros-contenido">
+                <div
+                    className="drawer-filtros-contenido"
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            e.preventDefault();
+                            aplicarFiltros();
+                        }
+                    }}
+                >
                     <h3 className="drawer-filtros-titulo">Filtros</h3>
 
-                    {/* Nombre */}
                     <div className="filtro-nombre">
                         <label>Nombre</label>
                         <input
@@ -147,23 +166,15 @@ export default function CatalogoSeries({ showToast }) {
                         />
                     </div>
 
-                    {/* BOTONES */}
                     <div className="drawer-filtros-botones">
-                        <button
-                            className="btn-dark"
-                            onClick={() => {
-                                actualizarFiltro(nombreTemp);
-                                setOpenFiltros(false);
-                            }}
-                        >
+                        <button className="btn-dark" onClick={aplicarFiltros}>
                             Aplicar filtros
                         </button>
-
                         <button
                             className="btn-dark"
                             onClick={() => {
+                                setNombreTemp("");
                                 reiniciarCatalogo();
-                                setOpenFiltros(false);
                             }}
                         >
                             Limpiar filtros
@@ -198,7 +209,7 @@ export default function CatalogoSeries({ showToast }) {
                     setPage(p);
                     const params = {
                         ...Object.fromEntries(searchParams.entries()),
-                        page: p
+                        page: p,
                     };
                     setSearchParams(params);
                 }}
