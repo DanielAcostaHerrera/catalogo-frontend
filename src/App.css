@@ -764,3 +764,42 @@ textarea.input-dark {
     flex-direction: column;
   }
 }
+
+/* Botones superiores del catálogo */
+.catalogo-top-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+/* Botón oscuro general */
+.btn-dark {
+  display: inline-flex;
+  align-items: center;      
+  justify-content: center;
+  gap: 6px;                 
+  padding: 8px 14px;
+}
+
+/* Texto visible en PC */
+.btn-text {
+  display: inline-block;
+}
+
+/* Icono visible siempre */
+.btn-icon {
+  display: inline-flex;
+  align-items: center;      /* ← CENTRA EL ICONO */
+  justify-content: center;
+  font-size: 22px;
+}
+
+/* En móvil: ocultar texto */
+@media (max-width: 950px) {
+  .btn-text {
+    display: none;
+  }
+}
+
+
+

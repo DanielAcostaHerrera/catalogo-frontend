@@ -6,7 +6,10 @@ import Paginacion from "../components/Paginacion";
 import "../App.css";
 import { useLocation, useSearchParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthContext";
-import Drawer from "@mui/material/Drawer";
+import SwipeableDrawer from "@mui/material/SwipeableDrawer";
+import FilterListIcon from "@mui/icons-material/FilterList";
+import UpdateIcon from "@mui/icons-material/Update";
+import AddIcon from "@mui/icons-material/Add";
 
 export default function CatalogoJuegos({ showToast }) {
     const location = useLocation();
@@ -234,13 +237,15 @@ export default function CatalogoJuegos({ showToast }) {
             </h2>
 
             {/* BOTONES SUPERIORES */}
-            <div style={{ display: "flex", gap: 10, marginBottom: 15 }}>
+            <div className="catalogo-top-buttons">
                 <button className="btn-dark" onClick={() => setOpenFiltros(true)}>
-                    Filtros
+                    <span className="btn-text">Filtros</span>
+                    <span className="btn-icon"><FilterListIcon /></span>
                 </button>
 
                 <button className="btn-dark" onClick={() => navigate("/ultimos-estrenos-juegos")}>
-                    Últimos estrenos
+                    <span className="btn-text">Últimos estrenos</span>
+                    <span className="btn-icon"><UpdateIcon /></span>
                 </button>
 
                 {auth.isLogged && (
@@ -250,13 +255,20 @@ export default function CatalogoJuegos({ showToast }) {
                             navigate("/insertar-juego", { state: { from: location.pathname } })
                         }
                     >
-                        Añadir Juego
+                        <span className="btn-text">Añadir juego</span>
+                        <span className="btn-icon"><AddIcon /></span>
                     </button>
                 )}
             </div>
 
             {/* DRAWER DE FILTROS */}
-            <Drawer anchor="right" open={openFiltros} onClose={() => setOpenFiltros(false)}>
+            <SwipeableDrawer
+                anchor="right"
+                open={openFiltros}
+                onClose={() => setOpenFiltros(false)}
+                onOpen={() => setOpenFiltros(true)}
+                disableDiscovery={true}
+            >
                 <h3 className="drawer-filtros-titulo">Filtros</h3>
 
                 <div className="drawer-filtros-contenido">
@@ -355,8 +367,7 @@ export default function CatalogoJuegos({ showToast }) {
                         </button>
                     </div>
                 </div>
-            </Drawer>
-
+            </SwipeableDrawer>
 
             {/* GRID DE JUEGOS */}
             <div
