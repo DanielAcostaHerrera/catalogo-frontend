@@ -12,6 +12,10 @@
   },
   "dependencies": {
     "@apollo/client": "^3.14.1",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/icons-material": "^9.2.0",
+    "@mui/material": "^9.2.0",
     "graphql": "^16.14.2",
     "pinia": "^3.0.4",
     "react": "^19.2.0",

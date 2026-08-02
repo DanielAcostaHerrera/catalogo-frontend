@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useQuery } from "@apollo/client";
 import { GET_CATALOGO, GET_CATALOGO_FILTRADO } from "../graphql";
 import JuegoCard from "../components/JuegoCard";
@@ -6,6 +6,7 @@ import Paginacion from "../components/Paginacion";
 import "../App.css";
 import { useLocation, useSearchParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthContext";
+import Drawer from "@mui/material/Drawer";
 
 export default function CatalogoJuegos({ showToast }) {
     const location = useLocation();
@@ -16,9 +17,9 @@ export default function CatalogoJuegos({ showToast }) {
     const [page, setPage] = useState(Number(searchParams.get("page")) || 1);
     const [limit] = useState(100);
 
-    const [annoMinTemp, setAnnoMinTemp] = useState(searchParams.get("annoMin") || "");
-    const [annoMaxTemp, setAnnoMaxTemp] = useState(searchParams.get("annoMax") || "");
+    const [openFiltros, setOpenFiltros] = useState(false);
 
+    // 🔥 FILTROS FINALES (los que realmente se aplican)
     const [filtros, setFiltros] = useState({
         nombre: searchParams.get("nombre") || "",
         tamanoMin: searchParams.get("tamanoMin") || "",
@@ -29,118 +30,171 @@ export default function CatalogoJuegos({ showToast }) {
         precioMax: searchParams.get("precioMax") || "",
     });
 
-    useEffect(() => {
-        const newPage = Number(searchParams.get("page")) || 1;
-        if (newPage !== page) setPage(newPage);
+    // 🔥 TEMPORALES (inputs sin tiempo real)
+    const [nombreTemp, setNombreTemp] = useState(filtros.nombre);
+    const [tamanoMinTemp, setTamanoMinTemp] = useState(filtros.tamanoMin);
+    const [tamanoMaxTemp, setTamanoMaxTemp] = useState(filtros.tamanoMax);
+    const [precioMinTemp, setPrecioMinTemp] = useState(filtros.precioMin);
+    const [precioMaxTemp, setPrecioMaxTemp] = useState(filtros.precioMax);
+    const [annoMinTemp, setAnnoMinTemp] = useState(filtros.annoMin);
+    const [annoMaxTemp, setAnnoMaxTemp] = useState(filtros.annoMax);
 
-        const newAnnoMin = searchParams.get("annoMin") || "";
-        if (newAnnoMin !== annoMinTemp) setAnnoMinTemp(newAnnoMin);
-
-        const newAnnoMax = searchParams.get("annoMax") || "";
-        if (newAnnoMax !== annoMaxTemp) setAnnoMaxTemp(newAnnoMax);
-
-        const newFiltros = {
-            nombre: searchParams.get("nombre") || "",
-            tamanoMin: searchParams.get("tamanoMin") || "",
-            tamanoMax: searchParams.get("tamanoMax") || "",
-            annoMin: newAnnoMin,
-            annoMax: newAnnoMax,
-            precioMin: searchParams.get("precioMin") || "",
-            precioMax: searchParams.get("precioMax") || "",
-        };
-
-        if (JSON.stringify(newFiltros) !== JSON.stringify(filtros)) {
-            setFiltros(newFiltros);
-        }
-    }, [searchParams]);
-
-    const actualizarFiltro = (campo, valor) => {
-        const newFiltros = { ...filtros, [campo]: valor };
-        setFiltros(newFiltros);
-
-        setPage(1);
-
-        const newParams = new URLSearchParams(searchParams);
-        if (valor) {
-            newParams.set(campo, valor);
-        } else {
-            newParams.delete(campo);
-        }
-
-        newParams.set("page", 1);
-
-        const estabaVacio = !searchParams.get(campo);
-        if (estabaVacio && valor) {
-            setSearchParams(newParams);
-        } else {
-            setSearchParams(newParams, { replace: true });
-        }
-    };
-
+    // 🔥 VALIDACIONES DE TECLADO
     const soloAnios = (e) => {
         const allowed = ["Backspace", "Tab", "ArrowLeft", "ArrowRight", "Delete"];
-        if (!/[0-9]/.test(e.key) && !allowed.includes(e.key)) {
-            e.preventDefault();
-        }
-    };
-
-    const manejarAnno = (campo, valor, setTemp) => {
-        if (valor === "") {
-            setTemp("");
-            setFiltros((prev) => ({ ...prev, [campo]: "" }));
-            const p = new URLSearchParams(searchParams);
-            p.delete(campo);
-            p.set("page", 1);
-            setSearchParams(p, { replace: true });
-            return;
-        }
-
-        if (valor.length > 4) return;
-        setTemp(valor);
-
-        if (valor.length < 4) return;
-
-        const year = parseInt(valor);
-        const currentYear = new Date().getFullYear();
-        if (isNaN(year) || year < 1970 || year > currentYear) {
-            alert(`Debe ingresar un año válido entre 1970 y ${currentYear}`);
-            setTemp("");
-            setFiltros((prev) => ({ ...prev, [campo]: "" }));
-            const newParams = new URLSearchParams(searchParams);
-            newParams.delete(campo);
-            newParams.set("page", 1);
-            setSearchParams(newParams, { replace: true });
-            return;
-        }
-
-        const yearStr = year.toString();
-        setFiltros((prev) => ({ ...prev, [campo]: yearStr }));
-        setPage(1);
-
-        const newParams = new URLSearchParams(searchParams);
-        newParams.set(campo, yearStr);
-        newParams.set("page", 1);
-        setSearchParams(newParams, { replace: true });
+        if (!/[0-9]/.test(e.key) && !allowed.includes(e.key)) e.preventDefault();
     };
 
     const soloNumeros = (e, permitirDecimal = false) => {
         const allowed = ["Backspace", "Tab", "ArrowLeft", "ArrowRight", "Delete"];
         if (permitirDecimal) allowed.push(".");
-        if (!/[0-9]/.test(e.key) && !allowed.includes(e.key)) {
-            e.preventDefault();
-        }
+        if (!/[0-9]/.test(e.key) && !allowed.includes(e.key)) e.preventDefault();
     };
 
-    const query =
+    // 🔥 FUNCIÓN FINAL PARA APLICAR FILTROS
+    const aplicarFiltros = () => {
+        const p = new URLSearchParams();
+
+        // --- NOMBRE ---
+        if (nombreTemp.trim() !== "") {
+            p.set("nombre", nombreTemp.trim());
+        }
+
+        // --- AÑOS ---
+        const currentYear = new Date().getFullYear();
+
+        if (annoMinTemp !== "") {
+            const y = parseInt(annoMinTemp);
+            if (isNaN(y) || y < 1970 || y > currentYear) {
+                alert(`Año mínimo inválido. Debe estar entre 1970 y ${currentYear}`);
+                return;
+            }
+            p.set("annoMin", y.toString());
+        }
+
+        if (annoMaxTemp !== "") {
+            const y = parseInt(annoMaxTemp);
+            if (isNaN(y) || y < 1970 || y > currentYear) {
+                alert(`Año máximo inválido. Debe estar entre 1970 y ${currentYear}`);
+                return;
+            }
+            p.set("annoMax", y.toString());
+        }
+
+        if (annoMinTemp !== "" && annoMaxTemp !== "") {
+            if (parseInt(annoMinTemp) > parseInt(annoMaxTemp)) {
+                alert("El año mínimo no puede ser mayor que el año máximo");
+                return;
+            }
+        }
+
+        // --- TAMAÑOS ---
+        if (tamanoMinTemp !== "") {
+            const min = parseFloat(tamanoMinTemp);
+            if (isNaN(min) || min < 0) {
+                alert("Tamaño mínimo inválido");
+                return;
+            }
+            p.set("tamanoMin", min.toString());
+        }
+
+        if (tamanoMaxTemp !== "") {
+            const max = parseFloat(tamanoMaxTemp);
+            if (isNaN(max) || max < 0) {
+                alert("Tamaño máximo inválido");
+                return;
+            }
+            p.set("tamanoMax", max.toString());
+        }
+
+        if (tamanoMinTemp !== "" && tamanoMaxTemp !== "") {
+            if (parseFloat(tamanoMinTemp) > parseFloat(tamanoMaxTemp)) {
+                alert("El tamaño mínimo no puede ser mayor que el tamaño máximo");
+                return;
+            }
+        }
+
+        // --- PRECIOS ---
+        if (precioMinTemp !== "") {
+            const min = parseInt(precioMinTemp);
+            if (isNaN(min) || min < 0) {
+                alert("Precio mínimo inválido");
+                return;
+            }
+            p.set("precioMin", min.toString());
+        }
+
+        if (precioMaxTemp !== "") {
+            const max = parseInt(precioMaxTemp);
+            if (isNaN(max) || max < 0) {
+                alert("Precio máximo inválido");
+                return;
+            }
+            p.set("precioMax", max.toString());
+        }
+
+        if (precioMinTemp !== "" && precioMaxTemp !== "") {
+            if (parseInt(precioMinTemp) > parseInt(precioMaxTemp)) {
+                alert("El precio mínimo no puede ser mayor que el precio máximo");
+                return;
+            }
+        }
+
+        // --- PAGE ---
+        p.set("page", 1);
+        setPage(1);
+
+        // --- ACTUALIZAR FILTROS FINALES ---
+        setFiltros({
+            nombre: p.get("nombre") || "",
+            tamanoMin: p.get("tamanoMin") || "",
+            tamanoMax: p.get("tamanoMax") || "",
+            annoMin: p.get("annoMin") || "",
+            annoMax: p.get("annoMax") || "",
+            precioMin: p.get("precioMin") || "",
+            precioMax: p.get("precioMax") || "",
+        });
+
+        setSearchParams(p);
+        setOpenFiltros(false);
+    };
+
+    // 🔥 REINICIAR FILTROS
+    const reiniciarCatalogo = () => {
+        setFiltros({
+            nombre: "",
+            tamanoMin: "",
+            tamanoMax: "",
+            annoMin: "",
+            annoMax: "",
+            precioMin: "",
+            precioMax: "",
+        });
+
+        setNombreTemp("");
+        setTamanoMinTemp("");
+        setTamanoMaxTemp("");
+        setPrecioMinTemp("");
+        setPrecioMaxTemp("");
+        setAnnoMinTemp("");
+        setAnnoMaxTemp("");
+
+        setPage(1);
+        setSearchParams({ page: 1 });
+        setOpenFiltros(false);
+    };
+
+    // 🔥 DECIDIR QUERY SEGÚN FILTROS FINALES
+    const hayFiltros =
         filtros.nombre ||
         filtros.tamanoMin ||
         filtros.tamanoMax ||
         filtros.annoMin ||
         filtros.annoMax ||
         filtros.precioMin ||
-        filtros.precioMax
-            ? GET_CATALOGO_FILTRADO
-            : GET_CATALOGO;
+        filtros.precioMax;
+
+    const query = hayFiltros ? GET_CATALOGO_FILTRADO : GET_CATALOGO;
 
     const variables = {
         page,
@@ -154,25 +208,7 @@ export default function CatalogoJuegos({ showToast }) {
         precioMax: filtros.precioMax !== "" ? parseInt(filtros.precioMax) : undefined,
     };
 
-    const reiniciarCatalogo = () => {
-        setFiltros({
-            nombre: "",
-            tamanoMin: "",
-            tamanoMax: "",
-            annoMin: "",
-            annoMax: "",
-            precioMin: "",
-            precioMax: "",
-        });
-
-        setAnnoMinTemp("");
-        setAnnoMaxTemp("");
-        setPage(1);
-
-        setSearchParams({ page: 1 });
-    };
-
-    // 🔥 Apollo moderno
+    // 🔥 Apollo
     const { loading, error, data } = useQuery(query, { variables });
 
     if (loading) return <p style={{ color: "#ccc" }}>Cargando…</p>;
@@ -190,17 +226,20 @@ export default function CatalogoJuegos({ showToast }) {
 
     const totalPages = Math.ceil(total / limit);
 
+
     return (
         <div className="catalogo-container">
             <h2 style={{ color: "#f0f0f0", marginBottom: "20px" }}>
                 Catálogo de Juegos
             </h2>
 
+            {/* BOTONES SUPERIORES */}
             <div style={{ display: "flex", gap: 10, marginBottom: 15 }}>
-                <button
-                    className="btn-dark"
-                    onClick={() => navigate("/ultimos-estrenos-juegos")}
-                >
+                <button className="btn-dark" onClick={() => setOpenFiltros(true)}>
+                    Filtros
+                </button>
+
+                <button className="btn-dark" onClick={() => navigate("/ultimos-estrenos-juegos")}>
                     Últimos estrenos
                 </button>
 
@@ -216,147 +255,110 @@ export default function CatalogoJuegos({ showToast }) {
                 )}
             </div>
 
-            <div className="filtros-grid">
+            {/* DRAWER DE FILTROS */}
+            <Drawer anchor="right" open={openFiltros} onClose={() => setOpenFiltros(false)}>
+                <h3 className="drawer-filtros-titulo">Filtros</h3>
 
-                <div className="filtro-nombre">
-                    <label style={{ color: "#f0f0f0" }}>Nombre</label>
-                    <input
-                        type="text"
-                        value={filtros.nombre}
-                        onChange={(e) => actualizarFiltro("nombre", e.target.value)}
-                        className="filtro-input"
-                    />
+                <div className="drawer-filtros-contenido">
+
+                    {/* Nombre */}
+                    <div className="filtro-nombre">
+                        <label>Nombre</label>
+                        <input
+                            type="text"
+                            value={nombreTemp}
+                            onChange={(e) => setNombreTemp(e.target.value)}
+                            className="filtro-input"
+                        />
+                    </div>
+
+                    {/* Año mínimo */}
+                    <div>
+                        <label>Año mínimo</label>
+                        <input
+                            type="text"
+                            value={annoMinTemp}
+                            onChange={(e) => setAnnoMinTemp(e.target.value)}
+                            onKeyDown={soloAnios}
+                            className="filtro-input"
+                        />
+                    </div>
+
+                    {/* Año máximo */}
+                    <div>
+                        <label>Año máximo</label>
+                        <input
+                            type="text"
+                            value={annoMaxTemp}
+                            onChange={(e) => setAnnoMaxTemp(e.target.value)}
+                            onKeyDown={soloAnios}
+                            className="filtro-input"
+                        />
+                    </div>
+
+                    {/* Tamaño mínimo */}
+                    <div>
+                        <label>Tamaño mínimo (Gb)</label>
+                        <input
+                            type="text"
+                            value={tamanoMinTemp}
+                            onChange={(e) => setTamanoMinTemp(e.target.value.replace(",", "."))}
+                            onKeyDown={(e) => soloNumeros(e, true)}
+                            className="filtro-input"
+                        />
+                    </div>
+
+                    {/* Tamaño máximo */}
+                    <div>
+                        <label>Tamaño máximo (Gb)</label>
+                        <input
+                            type="text"
+                            value={tamanoMaxTemp}
+                            onChange={(e) => setTamanoMaxTemp(e.target.value.replace(",", "."))}
+                            onKeyDown={(e) => soloNumeros(e, true)}
+                            className="filtro-input"
+                        />
+                    </div>
+
+                    {/* Precio mínimo */}
+                    <div>
+                        <label>Precio mínimo (CUP)</label>
+                        <input
+                            type="text"
+                            value={precioMinTemp}
+                            onChange={(e) => setPrecioMinTemp(e.target.value)}
+                            onKeyDown={(e) => soloNumeros(e, false)}
+                            className="filtro-input"
+                        />
+                    </div>
+
+                    {/* Precio máximo */}
+                    <div>
+                        <label>Precio máximo (CUP)</label>
+                        <input
+                            type="text"
+                            value={precioMaxTemp}
+                            onChange={(e) => setPrecioMaxTemp(e.target.value)}
+                            onKeyDown={(e) => soloNumeros(e, false)}
+                            className="filtro-input"
+                        />
+                    </div>
+
+                    {/* BOTONES */}
+                    <div className="drawer-filtros-botones">
+                        <button className="btn-dark" onClick={aplicarFiltros}>
+                            Aplicar filtros
+                        </button>
+
+                        <button className="btn-dark" onClick={reiniciarCatalogo}>
+                            Limpiar filtros
+                        </button>
+                    </div>
                 </div>
+            </Drawer>
 
-                <div>
-                    <label style={{ color: "#f0f0f0" }}>Año mínimo</label>
-                    <input
-                        type="text"
-                        value={annoMinTemp}
-                        onChange={(e) => manejarAnno("annoMin", e.target.value, setAnnoMinTemp)}
-                        onKeyDown={soloAnios}
-                        className="filtro-input"
-                    />
-                </div>
 
-                <div>
-                    <label style={{ color: "#f0f0f0" }}>Año máximo</label>
-                    <input
-                        type="text"
-                        value={annoMaxTemp}
-                        onChange={(e) => manejarAnno("annoMax", e.target.value, setAnnoMaxTemp)}
-                        onKeyDown={soloAnios}
-                        className="filtro-input"
-                    />
-                </div>
-
-                <div>
-                    <label style={{ color: "#f0f0f0" }}>Tamaño mínimo (Gb)</label>
-                    <input
-                        type="text"
-                        value={filtros.tamanoMin}
-                        onChange={(e) => actualizarFiltro("tamanoMin", e.target.value.replace(",", "."))}
-                        onBlur={() => {
-                            if (filtros.tamanoMin !== "" && filtros.tamanoMax !== "") {
-                                const minVal = parseFloat(filtros.tamanoMin);
-                                const maxVal = parseFloat(filtros.tamanoMax);
-                                if (minVal > maxVal) {
-                                    alert("El tamaño mínimo debe ser menor o igual al tamaño máximo");
-                                    setFiltros((prev) => ({ ...prev, tamanoMin: "" }));
-                                    const p = new URLSearchParams(searchParams);
-                                    p.delete("tamanoMin");
-                                    p.set("page", 1);
-                                    setSearchParams(p, { replace: true });
-                                }
-                            }
-                        }}
-                        onKeyDown={(e) => soloNumeros(e, true)}
-                        className="filtro-input"
-                    />
-                </div>
-
-                <div>
-                    <label style={{ color: "#f0f0f0" }}>Tamaño máximo (Gb)</label>
-                    <input
-                        type="text"
-                        value={filtros.tamanoMax}
-                        onChange={(e) => actualizarFiltro("tamanoMax", e.target.value.replace(",", "."))}
-                        onBlur={() => {
-                            if (filtros.tamanoMin !== "" && filtros.tamanoMax !== "") {
-                                const minVal = parseFloat(filtros.tamanoMin);
-                                const maxVal = parseFloat(filtros.tamanoMax);
-                                if (maxVal < minVal) {
-                                    alert("El tamaño máximo debe ser mayor o igual al tamaño mínimo");
-                                    setFiltros((prev) => ({ ...prev, tamanoMax: "" }));
-                                    const p = new URLSearchParams(searchParams);
-                                    p.delete("tamanoMax");
-                                    p.set("page", 1);
-                                    setSearchParams(p, { replace: true });
-                                }
-                            }
-                        }}
-                        onKeyDown={(e) => soloNumeros(e, true)}
-                        className="filtro-input"
-                    />
-                </div>
-
-                <div>
-                    <label style={{ color: "#f0f0f0" }}>Precio mínimo (CUP)</label>
-                    <input
-                        type="text"
-                        value={filtros.precioMin}
-                        onChange={(e) => actualizarFiltro("precioMin", e.target.value)}
-                        onBlur={() => {
-                            if (filtros.precioMin !== "" && filtros.precioMax !== "") {
-                                const minVal = parseInt(filtros.precioMin);
-                                const maxVal = parseInt(filtros.precioMax);
-                                if (minVal > maxVal) {
-                                    alert("El precio mínimo debe ser menor o igual al precio máximo");
-                                    setFiltros((prev) => ({ ...prev, precioMin: "" }));
-                                    const p = new URLSearchParams(searchParams);
-                                    p.delete("precioMin");
-                                    p.set("page", 1);
-                                    setSearchParams(p, { replace: true });
-                                }
-                            }
-                        }}
-                        onKeyDown={(e) => soloNumeros(e, false)}
-                        className="filtro-input"
-                    />
-                </div>
-
-                <div>
-                    <label style={{ color: "#f0f0f0" }}>Precio máximo (CUP)</label>
-                    <input
-                        type="text"
-                        value={filtros.precioMax}
-                        onChange={(e) => actualizarFiltro("precioMax", e.target.value)}
-                        onBlur={() => {
-                            if (filtros.precioMin !== "" && filtros.precioMax !== "") {
-                                const minVal = parseInt(filtros.precioMin);
-                                const maxVal = parseInt(filtros.precioMax);
-                                if (maxVal < minVal) {
-                                    alert("El precio máximo debe ser mayor o igual al precio mínimo");
-                                    setFiltros((prev) => ({ ...prev, precioMax: "" }));
-                                    const p = new URLSearchParams(searchParams);
-                                    p.delete("precioMax");
-                                    p.set("page", 1);
-                                    setSearchParams(p, { replace: true });
-                                }
-                            }
-                        }}
-                        onKeyDown={(e) => soloNumeros(e, false)}
-                        className="filtro-input"
-                    />
-                </div>
-            </div>
-
-            <div style={{ marginBottom: "20px" }}>
-                <button className="btn-dark" onClick={reiniciarCatalogo}>
-                    Limpiar Filtros
-                </button>
-            </div>
-
+            {/* GRID DE JUEGOS */}
             <div
                 style={{
                     display: "grid",
@@ -374,6 +376,7 @@ export default function CatalogoJuegos({ showToast }) {
                 ))}
             </div>
 
+            {/* PAGINACIÓN */}
             <Paginacion
                 page={page}
                 totalPages={totalPages}
@@ -389,4 +392,3 @@ export default function CatalogoJuegos({ showToast }) {
         </div>
     );
 }
-
