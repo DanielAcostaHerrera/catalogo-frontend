@@ -690,7 +690,9 @@ textarea.input-dark {
   resize: vertical;
 }
 
-/* ====== Botón oscuro genérico (Guardar Cambios, etc.) ====== */
+/* --------------------------------------------------
+   Botón oscuro genérico (Guardar Cambios, etc.)
+-------------------------------------------------- */
 
 .btn-guardar {
   margin-top: 20px;
@@ -715,7 +717,9 @@ textarea.input-dark {
   transform: translateY(0);
 }
 
-/* ===== Drawer de filtros (barra lateral derecha) ===== */
+/* --------------------------------------------------
+  Drawer de filtros (barra lateral derecha)
+-------------------------------------------------- */
 
 /* 🔥 Por defecto (móvil) */
 .MuiDrawer-paper {
@@ -833,6 +837,59 @@ textarea.input-dark {
     display: none;
   }
 }
+
+/* --------------------------------------------------
+  Detalles Series
+-------------------------------------------------- */
+
+/* 🔥 Contenedor de episodios */
+.episodios-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* 🔥 Cada fila de episodio (PC) */
+.episodio-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 0;
+  border-bottom: 1px solid #333;
+}
+
+/* 🔥 Texto del episodio */
+.episodio-texto {
+  flex: 1;
+}
+
+/* 🔥 Botón de añadir (PC) */
+.episodio-btn {
+  flex-shrink: 0;
+}
+
+/* 🔥 En móvil: botón debajo del texto */
+@media (max-width: 950px) {
+  .episodio-item {
+    flex-direction: column;       /* ← Pone el botón DEBAJO del texto */
+    align-items: stretch;         /* ← Estira al ancho completo */
+    gap: 6px;
+    padding: 8px 0;
+    text-align: center;           /* ← Centra el texto */
+  }
+
+  .episodio-texto {
+    text-align: center;           /* ← Centra el texto */
+  }
+
+  .episodio-btn {
+    width: 100%;                  /* ← Botón ocupa todo el ancho */
+    justify-content: center;      /* ← Centra el contenido del botón */
+  }
+}
+
+
 
 
 

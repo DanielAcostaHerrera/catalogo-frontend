@@ -102,7 +102,7 @@ export default function AnimeDetalles({ showToast }) {
                     <strong>Episodios:</strong>
                     <br />
                     <br />
-                    <div style={{ marginLeft: 10, whiteSpace: "pre-wrap" }}>
+                    <div className="episodios-container">
                         {lineas.map((l, idx) => {
                             const match = l.match(/(\d+)\s*Episodios?/i);
                             if (match) {
@@ -111,10 +111,10 @@ export default function AnimeDetalles({ showToast }) {
                                     l.replace(/-\s*\d+\s*Episodios?/i, "").trim() + " (entera)";
 
                                 return (
-                                    <div key={idx} style={{ marginBottom: 6 }}>
-                                        {l}{"  "}
+                                    <div key={idx} className="episodio-item">
+                                        <span className="episodio-texto">{l}</span>
                                         <button
-                                            className="btn-add"
+                                            className="btn-add episodio-btn"
                                             onClick={() => handleAddTemporada(a, nombreBloque, cantidad)}
                                         >
                                             🛒 Añadir
