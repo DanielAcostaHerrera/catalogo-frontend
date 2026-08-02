@@ -267,7 +267,8 @@ export default function CatalogoJuegos({ showToast }) {
                 open={openFiltros}
                 onClose={() => setOpenFiltros(false)}
                 onOpen={() => setOpenFiltros(true)}
-                disableDiscovery={true}              
+                disableDiscovery={true}  
+                disableSwipeToOpen={true}            
             >
                 <div className="drawer-filtros-contenido">
                     <h3 className="drawer-filtros-titulo">Filtros</h3>
