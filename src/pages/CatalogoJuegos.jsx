@@ -267,7 +267,7 @@ export default function CatalogoJuegos({ showToast }) {
                 open={openFiltros}
                 onClose={() => setOpenFiltros(false)}
                 onOpen={() => setOpenFiltros(true)}
-                disableDiscovery={true}
+                disableDiscovery={true}              
             >
                 <div className="drawer-filtros-contenido">
                     <h3 className="drawer-filtros-titulo">Filtros</h3>
@@ -284,7 +284,7 @@ export default function CatalogoJuegos({ showToast }) {
                     </div>
 
                     {/* Año mínimo */}
-                    <div>
+                    <div className="filtro-nombre">
                         <label>Año mínimo</label>
                         <input
                             type="text"
@@ -296,7 +296,7 @@ export default function CatalogoJuegos({ showToast }) {
                     </div>
 
                     {/* Año máximo */}
-                    <div>
+                    <div className="filtro-nombre">
                         <label>Año máximo</label>
                         <input
                             type="text"
@@ -308,7 +308,7 @@ export default function CatalogoJuegos({ showToast }) {
                     </div>
 
                     {/* Tamaño mínimo */}
-                    <div>
+                    <div className="filtro-nombre">
                         <label>Tamaño mínimo (Gb)</label>
                         <input
                             type="text"
@@ -320,7 +320,7 @@ export default function CatalogoJuegos({ showToast }) {
                     </div>
 
                     {/* Tamaño máximo */}
-                    <div>
+                    <div className="filtro-nombre">
                         <label>Tamaño máximo (Gb)</label>
                         <input
                             type="text"
@@ -332,7 +332,7 @@ export default function CatalogoJuegos({ showToast }) {
                     </div>
 
                     {/* Precio mínimo */}
-                    <div>
+                    <div className="filtro-nombre">
                         <label>Precio mínimo (CUP)</label>
                         <input
                             type="text"
@@ -344,7 +344,7 @@ export default function CatalogoJuegos({ showToast }) {
                     </div>
 
                     {/* Precio máximo */}
-                    <div>
+                    <div className="filtro-nombre">
                         <label>Precio máximo (CUP)</label>
                         <input
                             type="text"

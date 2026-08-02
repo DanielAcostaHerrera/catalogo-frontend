@@ -715,21 +715,17 @@ textarea.input-dark {
   transform: translateY(0);
 }
 
-/* 🔥 Drawer oscuro como toda la página */
-.MuiDrawer-paper {
-  background-color: #1e1e1e !important;
-  color: #f0f0f0 !important;
-  border-left: 1px solid #333 !important;
-}
-
 /* ===== Drawer de filtros (barra lateral derecha) ===== */
 
 .MuiDrawer-paper {
   background-color: #1e1e1e !important;
   color: #f0f0f0 !important;
   border-left: 1px solid #333 !important;
-  padding: 20px !important;        /* ← MÁRGENES A LOS LADOS */
+  padding: 0 !important;        /* ← MÁRGENES A LOS LADOS */
   box-sizing: border-box !important;
+  width: max-content !important;
+  max-width: 70vw !important;
+  min-width: 70vw !important;
 }
 
 .drawer-filtros-titulo {
@@ -743,6 +739,7 @@ textarea.input-dark {
 .drawer-filtros-contenido {
   display: flex;
   flex-direction: column;
+  padding: 20px;
   gap: 20px;
 }
 
