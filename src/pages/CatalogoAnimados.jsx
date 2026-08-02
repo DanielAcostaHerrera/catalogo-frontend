@@ -7,6 +7,11 @@ import "../App.css";
 import { useLocation, useSearchParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthContext";
 
+import SwipeableDrawer from "@mui/material/SwipeableDrawer";
+import FilterListIcon from "@mui/icons-material/FilterList";
+import UpdateIcon from "@mui/icons-material/Update";
+import AddIcon from "@mui/icons-material/Add";
+
 export default function CatalogoAnimados({ showToast }) {
     const location = useLocation();
     const [searchParams, setSearchParams] = useSearchParams();
@@ -15,7 +20,11 @@ export default function CatalogoAnimados({ showToast }) {
 
     const [page, setPage] = useState(Number(searchParams.get("page")) || 1);
     const [limit] = useState(100);
+
     const [nombre, setNombre] = useState(searchParams.get("nombre") || "");
+    const [nombreTemp, setNombreTemp] = useState(nombre);
+
+    const [openFiltros, setOpenFiltros] = useState(false);
     const [precios, setPrecios] = useState(null);
 
     useEffect(() => {
@@ -23,7 +32,10 @@ export default function CatalogoAnimados({ showToast }) {
         if (newPage !== page) setPage(newPage);
 
         const newNombre = searchParams.get("nombre") || "";
-        if (newNombre !== nombre) setNombre(newNombre);
+        if (newNombre !== nombre) {
+            setNombre(newNombre);
+            setNombreTemp(newNombre);
+        }
     }, [searchParams]);
 
     useEffect(() => {
@@ -36,10 +48,8 @@ export default function CatalogoAnimados({ showToast }) {
     const query = nombre ? GET_CATALOGO_ANIMADOS_FILTRADO : GET_CATALOGO_ANIMADOS;
     const variables = { page, limit, titulo: nombre || null };
 
-    // 🔥 Hook SIEMPRE debe ejecutarse antes de cualquier return condicional
     const { loading, error, data } = useQuery(query, { variables });
 
-    // 🔥 Ahora los returns condicionales están DESPUÉS del hook
     if (!precios) return <p style={{ color: "#ccc" }}>Cargando precios…</p>;
     if (loading) return <p style={{ color: "#ccc" }}>Cargando…</p>;
     if (error) return <p style={{ color: "red" }}>Error: {error.message}</p>;
@@ -59,6 +69,7 @@ export default function CatalogoAnimados({ showToast }) {
     const actualizarFiltro = (valor) => {
         setNombre(valor);
         setPage(1);
+
         const newParams = new URLSearchParams(searchParams);
         if (valor) {
             newParams.set("nombre", valor);
@@ -66,11 +77,13 @@ export default function CatalogoAnimados({ showToast }) {
             newParams.delete("nombre");
         }
         newParams.set("page", 1);
+
         setSearchParams(newParams, { replace: true });
     };
 
     const reiniciarCatalogo = () => {
         setNombre("");
+        setNombreTemp("");
         setPage(1);
         setSearchParams({});
     };
@@ -81,12 +94,19 @@ export default function CatalogoAnimados({ showToast }) {
                 Catálogo de Animados
             </h2>
 
-            <div style={{ display: "flex", gap: 10, marginBottom: 15 }}>
+            {/* BOTONES SUPERIORES */}
+            <div className="catalogo-top-buttons">
+                <button className="btn-dark" onClick={() => setOpenFiltros(true)}>
+                    <span className="btn-icon"><FilterListIcon /></span>
+                    <span className="btn-text">Filtros</span>
+                </button>
+
                 <button
                     className="btn-dark"
                     onClick={() => navigate("/ultimos-estrenos-animados")}
                 >
-                    Últimos estrenos
+                    <span className="btn-icon"><UpdateIcon /></span>
+                    <span className="btn-text">Últimos estrenos</span>
                 </button>
 
                 {auth.isLogged && (
@@ -98,29 +118,60 @@ export default function CatalogoAnimados({ showToast }) {
                             })
                         }
                     >
-                        Añadir Animado
+                        <span className="btn-icon"><AddIcon /></span>
+                        <span className="btn-text">Añadir Animado</span>
                     </button>
                 )}
             </div>
 
-            <div className="filtros-grid">
-                <div className="filtro-nombre">
-                    <label style={{ color: "#f0f0f0" }}>Nombre</label>
-                    <input
-                        type="text"
-                        value={nombre}
-                        onChange={(e) => actualizarFiltro(e.target.value)}
-                        className="filtro-input"
-                    />
+            {/* SWIPEABLE DRAWER DE FILTROS */}
+            <SwipeableDrawer
+                anchor="right"
+                open={openFiltros}
+                onClose={() => setOpenFiltros(false)}
+                onOpen={() => setOpenFiltros(true)}
+                disableDiscovery={true}
+            >
+                <div className="drawer-filtros-contenido">
+                    <h3 className="drawer-filtros-titulo">Filtros</h3>
+
+                    {/* Nombre */}
+                    <div className="filtro-nombre">
+                        <label>Nombre</label>
+                        <input
+                            type="text"
+                            value={nombreTemp}
+                            onChange={(e) => setNombreTemp(e.target.value)}
+                            className="filtro-input"
+                        />
+                    </div>
+
+                    {/* BOTONES */}
+                    <div className="drawer-filtros-botones">
+                        <button
+                            className="btn-dark"
+                            onClick={() => {
+                                actualizarFiltro(nombreTemp);
+                                setOpenFiltros(false);
+                            }}
+                        >
+                            Aplicar filtros
+                        </button>
+
+                        <button
+                            className="btn-dark"
+                            onClick={() => {
+                                reiniciarCatalogo();
+                                setOpenFiltros(false);
+                            }}
+                        >
+                            Limpiar filtros
+                        </button>
+                    </div>
                 </div>
-            </div>
+            </SwipeableDrawer>
 
-            <div style={{ marginBottom: "20px" }}>
-                <button className="btn-dark" onClick={reiniciarCatalogo}>
-                    Limpiar Filtros
-                </button>
-            </div>
-
+            {/* GRID DE ANIMADOS */}
             <div
                 style={{
                     display: "grid",
@@ -154,4 +205,6 @@ export default function CatalogoAnimados({ showToast }) {
         </div>
     );
 }
+
+
 
