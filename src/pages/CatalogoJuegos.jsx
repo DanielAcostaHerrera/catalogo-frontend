@@ -261,7 +261,7 @@ export default function CatalogoJuegos({ showToast }) {
                 )}
             </div>
 
-            {/* DRAWER DE FILTROS */}
+            {/* SWIPEABLE DRAWER DE FILTROS */}
             <SwipeableDrawer
                 anchor="right"
                 open={openFiltros}
@@ -269,9 +269,8 @@ export default function CatalogoJuegos({ showToast }) {
                 onOpen={() => setOpenFiltros(true)}
                 disableDiscovery={true}
             >
-                <h3 className="drawer-filtros-titulo">Filtros</h3>
-
                 <div className="drawer-filtros-contenido">
+                    <h3 className="drawer-filtros-titulo">Filtros</h3>
 
                     {/* Nombre */}
                     <div className="filtro-nombre">
@@ -368,6 +367,7 @@ export default function CatalogoJuegos({ showToast }) {
                     </div>
                 </div>
             </SwipeableDrawer>
+
 
             {/* GRID DE JUEGOS */}
             <div
