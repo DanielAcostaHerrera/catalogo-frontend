@@ -717,15 +717,25 @@ textarea.input-dark {
 
 /* ===== Drawer de filtros (barra lateral derecha) ===== */
 
+/* 🔥 Por defecto (móvil) */
 .MuiDrawer-paper {
   background-color: #1e1e1e !important;
   color: #f0f0f0 !important;
   border-left: 1px solid #333 !important;
-  padding: 0 !important;        /* ← MÁRGENES A LOS LADOS */
+  padding: 0 !important;
   box-sizing: border-box !important;
   width: max-content !important;
   max-width: 70vw !important;
   min-width: 70vw !important;
+}
+
+/* 🔥 PC (pantallas grandes) */
+@media (min-width: 951px) {
+  .MuiDrawer-paper {
+    width: max-content !important;    /* ← Se ajusta al contenido */
+    max-width: 25vw !important;       /* ← Límite máximo en PC */
+    min-width: max-content !important; /* ← Se ajusta al contenido */
+  }
 }
 
 .drawer-filtros-titulo {
@@ -743,22 +753,48 @@ textarea.input-dark {
   gap: 20px;
 }
 
-/* Labels dentro del Drawer */
+/* 🔥 Labels dentro del Drawer (encima del input) */
 .drawer-filtros-contenido label {
   color: #f0f0f0;
+  display: block;               /* ← Ocupa toda la línea */
+  margin-bottom: 4px;           /* ← Separación con el input */
 }
 
-/* Contenedor de botones dentro del Drawer */
+/* 🔥 Inputs dentro del Drawer (debajo del label) */
+.drawer-filtros-contenido input {
+  width: 100% !important;       /* ← Ocupan todo el ancho del drawer */
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  display: block !important;    /* ← Fuerza que estén debajo */
+}
+
+/* 🔥 Contenedor de botones dentro del Drawer */
 .drawer-filtros-botones {
   display: flex;
   flex-direction: row;
   gap: 10px;
+  width: 100% !important;
+  margin-top: 4px;
 }
 
-/* En móvil: botones uno debajo del otro */
+/* 🔥 Cada botón ocupa la mitad del ancho disponible */
+.drawer-filtros-botones .btn-dark {
+  flex: 1 !important;
+  width: auto !important;
+  min-width: 0 !important;
+  white-space: nowrap !important;   /* ← Evita que el texto se rompa */
+}
+
+/* 🔥 En móvil: botones uno debajo del otro y al 100% */
 @media (max-width: 950px) {
   .drawer-filtros-botones {
     flex-direction: column;
+    width: 100% !important;
+  }
+
+  .drawer-filtros-botones .btn-dark {
+    width: 100% !important;
+    flex: none !important;
   }
 }
 
@@ -786,12 +822,12 @@ textarea.input-dark {
 /* Icono visible siempre */
 .btn-icon {
   display: inline-flex;
-  align-items: center;      /* ← CENTRA EL ICONO */
+  align-items: center;
   justify-content: center;
   font-size: 22px;
 }
 
-/* En móvil: ocultar texto */
+/* En móvil: ocultar texto del botón */
 @media (max-width: 950px) {
   .btn-text {
     display: none;
