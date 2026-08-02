@@ -1,12 +1,11 @@
-import { useNavigate, useLocation } from "react-router-dom";
-import { Mutation } from "react-apollo";
+import { useNavigate } from "react-router-dom";
+import { useMutation } from "@apollo/client";
 import "../App.css";
 import { useState } from "react";
 import { CREAR_ANIME } from "../mutations";
 
 export default function InsertarAnime() {
     const navigate = useNavigate();
-    const location = useLocation();
 
     const [Titulo, setTitulo] = useState("");
     const [Anno, setAnno] = useState("");
@@ -95,6 +94,9 @@ export default function InsertarAnime() {
         return payload;
     };
 
+    // 🔥 Apollo moderno — reemplazo de <Mutation>
+    const [crearAnime] = useMutation(CREAR_ANIME);
+
     return (
         <div className="detalle-wrapper">
 
@@ -170,35 +172,31 @@ export default function InsertarAnime() {
                 </div>
             </div>
 
-            <Mutation mutation={CREAR_ANIME}>
-                {(crearAnime) => (
-                    <button
-                        className="btn-guardar"
-                        onClick={async () => {
-                            const payload = construirPayload();
-                            if (!payload) return;
+            <button
+                className="btn-guardar"
+                onClick={async () => {
+                    const payload = construirPayload();
+                    if (!payload) return;
 
-                            try {
-                                const res = await crearAnime({
-                                    variables: { data: payload },
-                                });
+                    try {
+                        const res = await crearAnime({
+                            variables: { data: payload },
+                        });
 
-                                if (res.data.crearAnime) {
-                                    alert("Anime añadido correctamente");
-                                    navigate("/catalogo-animes");
-                                } else {
-                                    alert("No se pudo añadir el anime");
-                                }
-                            } catch (err) {
-                                console.error(err);
-                                alert("Error añadiendo el anime");
-                            }
-                        }}
-                    >
-                        Añadir Anime
-                    </button>
-                )}
-            </Mutation>
+                        if (res.data.crearAnime) {
+                            alert("Anime añadido correctamente");
+                            navigate("/catalogo-animes");
+                        } else {
+                            alert("No se pudo añadir el anime");
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        alert("Error añadiendo el anime");
+                    }
+                }}
+            >
+                Añadir Anime
+            </button>
         </div>
     );
 }

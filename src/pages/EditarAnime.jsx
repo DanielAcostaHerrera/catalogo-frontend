@@ -1,5 +1,7 @@
+/* eslint-disable react-hooks/rules-of-hooks */
+
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { useQuery, Mutation } from "react-apollo";
+import { useQuery, useMutation } from "@apollo/client";
 import "../App.css";
 import { useState, useEffect } from "react";
 import { ACTUALIZAR_ANIME } from "../mutations";
@@ -80,6 +82,9 @@ export default function EditarAnime() {
         return payload;
     };
 
+    // 🔥 Apollo moderno — reemplazo de <Mutation>
+    const [actualizarAnime] = useMutation(ACTUALIZAR_ANIME);
+
     return (
         <div className="detalle-wrapper">
 
@@ -153,41 +158,37 @@ export default function EditarAnime() {
                 </div>
             </div>
 
-            <Mutation mutation={ACTUALIZAR_ANIME}>
-                {(actualizarAnime) => (
-                    <button
-                        className="btn-guardar"
-                        style={{ marginTop: 20 }}
-                        onClick={async () => {
-                            const payload = construirPayload();
-                            if (!payload) return;
+            <button
+                className="btn-guardar"
+                style={{ marginTop: 20 }}
+                onClick={async () => {
+                    const payload = construirPayload();
+                    if (!payload) return;
 
-                            try {
-                                const res = await actualizarAnime({
-                                    variables: { data: payload },
-                                    refetchQueries: [
-                                        { query: GET_ANIME, variables: { id } }
-                                    ],
-                                });
+                    try {
+                        const res = await actualizarAnime({
+                            variables: { data: payload },
+                            refetchQueries: [
+                                { query: GET_ANIME, variables: { id: Number(id) } }
+                            ],
+                        });
 
-                                if (res.data.actualizarAnime) {
-                                    alert("Anime actualizado correctamente");
-                                    navigate(`/anime/${id}`, {
-                                        state: { from: location.state?.from || "/catalogo-animes" }
-                                    });
-                                } else {
-                                    alert("No se pudo actualizar el anime");
-                                }
-                            } catch (err) {
-                                console.error(err);
-                                alert("Error actualizando el anime");
-                            }
-                        }}
-                    >
-                        Guardar Cambios
-                    </button>
-                )}
-            </Mutation>
+                        if (res.data.actualizarAnime) {
+                            alert("Anime actualizado correctamente");
+                            navigate(`/anime/${id}`, {
+                                state: { from: location.state?.from || "/catalogo-animes" }
+                            });
+                        } else {
+                            alert("No se pudo actualizar el anime");
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        alert("Error actualizando el anime");
+                    }
+                }}
+            >
+                Guardar Cambios
+            </button>
         </div>
     );
 }

@@ -11,16 +11,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "apollo-cache-inmemory": "^1.6.6",
-    "apollo-client": "^2.6.10",
-    "apollo-link": "^1.2.14",
-    "apollo-link-http": "^1.5.17",
-    "graphql": "^15.10.1",
-    "graphql-tag": "^2.12.6",
+    "@apollo/client": "^3.14.1",
+    "graphql": "^16.14.2",
     "pinia": "^3.0.4",
+    "primeicons": "^8.0.0",
     "primereact": "^11.0.0",
     "react": "^19.2.0",
-    "react-apollo": "^3.1.5",
     "react-dom": "^19.2.0",
     "react-router-dom": "^7.12.0",
     "react-toastify": "^11.0.5"

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Query } from "react-apollo";
+import { useQuery } from "@apollo/client";
 import { GET_CATALOGO, GET_CATALOGO_FILTRADO } from "../graphql";
 import JuegoCard from "../components/JuegoCard";
 import Paginacion from "../components/Paginacion";
@@ -133,12 +133,12 @@ export default function CatalogoJuegos({ showToast }) {
 
     const query =
         filtros.nombre ||
-            filtros.tamanoMin ||
-            filtros.tamanoMax ||
-            filtros.annoMin ||
-            filtros.annoMax ||
-            filtros.precioMin ||
-            filtros.precioMax
+        filtros.tamanoMin ||
+        filtros.tamanoMax ||
+        filtros.annoMin ||
+        filtros.annoMax ||
+        filtros.precioMin ||
+        filtros.precioMax
             ? GET_CATALOGO_FILTRADO
             : GET_CATALOGO;
 
@@ -171,6 +171,24 @@ export default function CatalogoJuegos({ showToast }) {
 
         setSearchParams({ page: 1 });
     };
+
+    // 🔥 Apollo moderno
+    const { loading, error, data } = useQuery(query, { variables });
+
+    if (loading) return <p style={{ color: "#ccc" }}>Cargando…</p>;
+    if (error) return <p style={{ color: "red" }}>Error: {error.message}</p>;
+
+    const juegos =
+        data?.catalogo?.juegos ||
+        data?.catalogoFiltrado?.juegos ||
+        [];
+
+    const total =
+        data?.catalogo?.total ||
+        data?.catalogoFiltrado?.total ||
+        0;
+
+    const totalPages = Math.ceil(total / limit);
 
     return (
         <div className="catalogo-container">
@@ -234,172 +252,141 @@ export default function CatalogoJuegos({ showToast }) {
 
                 <div>
                     <label style={{ color: "#f0f0f0" }}>Tamaño mínimo (Gb)</label>
-                    <div style={{ display: "flex", alignItems: "center" }}>
-                        <input
-                            type="text"
-                            value={filtros.tamanoMin}
-                            onChange={(e) => {
-                                const next = e.target.value.replace(",", ".");
-                                actualizarFiltro("tamanoMin", next);
-                            }}
-                            onBlur={() => {
-                                if (filtros.tamanoMin !== "" && filtros.tamanoMax !== "") {
-                                    const minVal = parseFloat(filtros.tamanoMin);
-                                    const maxVal = parseFloat(filtros.tamanoMax);
-                                    if (minVal > maxVal) {
-                                        alert("El tamaño mínimo debe ser menor o igual al tamaño máximo");
-                                        setFiltros((prev) => ({ ...prev, tamanoMin: "" }));
-                                        const p = new URLSearchParams(searchParams);
-                                        p.delete("tamanoMin");
-                                        p.set("page", 1);
-                                        setSearchParams(p, { replace: true });
-                                    }
+                    <input
+                        type="text"
+                        value={filtros.tamanoMin}
+                        onChange={(e) => actualizarFiltro("tamanoMin", e.target.value.replace(",", "."))}
+                        onBlur={() => {
+                            if (filtros.tamanoMin !== "" && filtros.tamanoMax !== "") {
+                                const minVal = parseFloat(filtros.tamanoMin);
+                                const maxVal = parseFloat(filtros.tamanoMax);
+                                if (minVal > maxVal) {
+                                    alert("El tamaño mínimo debe ser menor o igual al tamaño máximo");
+                                    setFiltros((prev) => ({ ...prev, tamanoMin: "" }));
+                                    const p = new URLSearchParams(searchParams);
+                                    p.delete("tamanoMin");
+                                    p.set("page", 1);
+                                    setSearchParams(p, { replace: true });
                                 }
-                            }}
-                            onKeyDown={(e) => soloNumeros(e, true)}
-                            className="filtro-input"
-                        />
-                    </div>
+                            }
+                        }}
+                        onKeyDown={(e) => soloNumeros(e, true)}
+                        className="filtro-input"
+                    />
                 </div>
 
                 <div>
                     <label style={{ color: "#f0f0f0" }}>Tamaño máximo (Gb)</label>
-                    <div style={{ display: "flex", alignItems: "center" }}>
-                        <input
-                            type="text"
-                            value={filtros.tamanoMax}
-                            onChange={(e) => {
-                                const next = e.target.value.replace(",", ".");
-                                actualizarFiltro("tamanoMax", next);
-                            }}
-                            onBlur={() => {
-                                if (filtros.tamanoMin !== "" && filtros.tamanoMax !== "") {
-                                    const minVal = parseFloat(filtros.tamanoMin);
-                                    const maxVal = parseFloat(filtros.tamanoMax);
-                                    if (maxVal < minVal) {
-                                        alert("El tamaño máximo debe ser mayor o igual al tamaño mínimo");
-                                        setFiltros((prev) => ({ ...prev, tamanoMax: "" }));
-                                        const p = new URLSearchParams(searchParams);
-                                        p.delete("tamanoMax");
-                                        p.set("page", 1);
-                                        setSearchParams(p, { replace: true });
-                                    }
+                    <input
+                        type="text"
+                        value={filtros.tamanoMax}
+                        onChange={(e) => actualizarFiltro("tamanoMax", e.target.value.replace(",", "."))}
+                        onBlur={() => {
+                            if (filtros.tamanoMin !== "" && filtros.tamanoMax !== "") {
+                                const minVal = parseFloat(filtros.tamanoMin);
+                                const maxVal = parseFloat(filtros.tamanoMax);
+                                if (maxVal < minVal) {
+                                    alert("El tamaño máximo debe ser mayor o igual al tamaño mínimo");
+                                    setFiltros((prev) => ({ ...prev, tamanoMax: "" }));
+                                    const p = new URLSearchParams(searchParams);
+                                    p.delete("tamanoMax");
+                                    p.set("page", 1);
+                                    setSearchParams(p, { replace: true });
                                 }
-                            }}
-                            onKeyDown={(e) => soloNumeros(e, true)}
-                            className="filtro-input"
-                        />
-                    </div>
+                            }
+                        }}
+                        onKeyDown={(e) => soloNumeros(e, true)}
+                        className="filtro-input"
+                    />
                 </div>
 
                 <div>
                     <label style={{ color: "#f0f0f0" }}>Precio mínimo (CUP)</label>
-                    <div style={{ display: "flex", alignItems: "center" }}>
-                        <input
-                            type="text"
-                            value={filtros.precioMin}
-                            onChange={(e) => actualizarFiltro("precioMin", e.target.value)}
-                            onBlur={() => {
-                                if (filtros.precioMin !== "" && filtros.precioMax !== "") {
-                                    const minVal = parseInt(filtros.precioMin);
-                                    const maxVal = parseInt(filtros.precioMax);
-                                    if (minVal > maxVal) {
-                                        alert("El precio mínimo debe ser menor o igual al precio máximo");
-                                        setFiltros((prev) => ({ ...prev, precioMin: "" }));
-                                        const p = new URLSearchParams(searchParams);
-                                        p.delete("precioMin");
-                                        p.set("page", 1);
-                                        setSearchParams(p, { replace: true });
-                                    }
+                    <input
+                        type="text"
+                        value={filtros.precioMin}
+                        onChange={(e) => actualizarFiltro("precioMin", e.target.value)}
+                        onBlur={() => {
+                            if (filtros.precioMin !== "" && filtros.precioMax !== "") {
+                                const minVal = parseInt(filtros.precioMin);
+                                const maxVal = parseInt(filtros.precioMax);
+                                if (minVal > maxVal) {
+                                    alert("El precio mínimo debe ser menor o igual al precio máximo");
+                                    setFiltros((prev) => ({ ...prev, precioMin: "" }));
+                                    const p = new URLSearchParams(searchParams);
+                                    p.delete("precioMin");
+                                    p.set("page", 1);
+                                    setSearchParams(p, { replace: true });
                                 }
-                            }}
-                            onKeyDown={(e) => soloNumeros(e, false)}
-                            className="filtro-input"
-                        />
-                    </div>
+                            }
+                        }}
+                        onKeyDown={(e) => soloNumeros(e, false)}
+                        className="filtro-input"
+                    />
                 </div>
 
                 <div>
                     <label style={{ color: "#f0f0f0" }}>Precio máximo (CUP)</label>
-                    <div style={{ display: "flex", alignItems: "center" }}>
-                        <input
-                            type="text"
-                            value={filtros.precioMax}
-                            onChange={(e) => actualizarFiltro("precioMax", e.target.value)}
-                            onBlur={() => {
-                                if (filtros.precioMin !== "" && filtros.precioMax !== "") {
-                                    const minVal = parseInt(filtros.precioMin);
-                                    const maxVal = parseInt(filtros.precioMax);
-                                    if (maxVal < minVal) {
-                                        alert("El precio máximo debe ser mayor o igual al precio mínimo");
-                                        setFiltros((prev) => ({ ...prev, precioMax: "" }));
-                                        const p = new URLSearchParams(searchParams);
-                                        p.delete("precioMax");
-                                        p.set("page", 1);
-                                        setSearchParams(p, { replace: true });
-                                    }
+                    <input
+                        type="text"
+                        value={filtros.precioMax}
+                        onChange={(e) => actualizarFiltro("precioMax", e.target.value)}
+                        onBlur={() => {
+                            if (filtros.precioMin !== "" && filtros.precioMax !== "") {
+                                const minVal = parseInt(filtros.precioMin);
+                                const maxVal = parseInt(filtros.precioMax);
+                                if (maxVal < minVal) {
+                                    alert("El precio máximo debe ser mayor o igual al precio mínimo");
+                                    setFiltros((prev) => ({ ...prev, precioMax: "" }));
+                                    const p = new URLSearchParams(searchParams);
+                                    p.delete("precioMax");
+                                    p.set("page", 1);
+                                    setSearchParams(p, { replace: true });
                                 }
-                            }}
-                            onKeyDown={(e) => soloNumeros(e, false)}
-                            className="filtro-input"
-                        />
-                    </div>
+                            }
+                        }}
+                        onKeyDown={(e) => soloNumeros(e, false)}
+                        className="filtro-input"
+                    />
                 </div>
             </div>
 
             <div style={{ marginBottom: "20px" }}>
-                <button
-                    className="btn-dark"
-                    onClick={reiniciarCatalogo}
-                >
+                <button className="btn-dark" onClick={reiniciarCatalogo}>
                     Limpiar Filtros
                 </button>
             </div>
 
-            <Query query={query} variables={variables}>
-                {({ loading, error, data }) => {
-                    if (loading) return <p style={{ color: "#ccc" }}>Cargando…</p>;
-                    if (error) return <p style={{ color: "red" }}>Error: {error.message}</p>;
-
-                    const juegos = data?.catalogo?.juegos || data?.catalogoFiltrado?.juegos || [];
-                    const total = data?.catalogo?.total || data?.catalogoFiltrado?.total || 0;
-                    const totalPages = Math.ceil(total / limit);
-
-                    return (
-                        <>
-                            <div
-                                style={{
-                                    display: "grid",
-                                    gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
-                                    gap: "20px",
-                                }}
-                            >
-                                {juegos.map((j) => (
-                                    <JuegoCard
-                                        key={j.Id}
-                                        juego={j}
-                                        showToast={showToast}
-                                        from={location.pathname + location.search}
-                                    />
-                                ))}
-                            </div>
-
-                            <Paginacion
-                                page={page}
-                                totalPages={totalPages}
-                                onPageChange={(p) => {
-                                    setPage(p);
-                                    const params = {
-                                        ...Object.fromEntries(searchParams.entries()),
-                                        page: p,
-                                    };
-                                    setSearchParams(params);
-                                }}
-                            />
-                        </>
-                    );
+            <div
+                style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
+                    gap: "20px",
                 }}
-            </Query>
+            >
+                {juegos.map((j) => (
+                    <JuegoCard
+                        key={j.Id}
+                        juego={j}
+                        showToast={showToast}
+                        from={location.pathname + location.search}
+                    />
+                ))}
+            </div>
+
+            <Paginacion
+                page={page}
+                totalPages={totalPages}
+                onPageChange={(p) => {
+                    setPage(p);
+                    const params = {
+                        ...Object.fromEntries(searchParams.entries()),
+                        page: p,
+                    };
+                    setSearchParams(params);
+                }}
+            />
         </div>
     );
 }
+

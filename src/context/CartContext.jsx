@@ -104,24 +104,6 @@ export function useCart() {
     return ctx;
 }
 
-function normalizeSerie(j) {
-    const id = j.Id ?? j.id;
-    const nombre = j.Nombre ?? j.nombre;
-    const precio = j.Precio ?? j.precio ?? 0;
-    const portada = j.Portada ?? j.portada;
-    const episodios = j.Episodios ?? j.episodios;
-    let bloques = j.Bloques ?? j.bloques;
-
-    bloques = (bloques || []).map((b) => {
-        if (/serie entera/i.test(b.descripcion) || b.temporada === "entera") {
-            return { descripcion: "Serie entera" };
-        }
-        return { descripcion: b.descripcion };
-    });
-
-    return { id, tipo: "serie", nombre, precio: Number(precio), portada, bloques, episodios };
-}
-
 function normalizeGame(j) {
     const id = j.Id ?? j.id;
     const nombre = j.Nombre ?? j.nombre;

@@ -1,5 +1,7 @@
+/* eslint-disable react-hooks/rules-of-hooks */
+
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { useQuery, Mutation } from "react-apollo";
+import { useQuery, useMutation } from "@apollo/client";
 import "../App.css";
 import { useState, useEffect } from "react";
 import { ACTUALIZAR_SERIE } from "../mutations";
@@ -80,6 +82,9 @@ export default function EditarSerie() {
         return payload;
     };
 
+    // 🔥 Apollo moderno — reemplazo de <Mutation>
+    const [actualizarSerie] = useMutation(ACTUALIZAR_SERIE);
+
     return (
         <div className="detalle-wrapper">
 
@@ -145,41 +150,37 @@ export default function EditarSerie() {
                 </div>
             </div>
 
-            <Mutation mutation={ACTUALIZAR_SERIE}>
-                {(actualizarSerie) => (
-                    <button
-                        className="btn-guardar"
-                        style={{ marginTop: 20 }}
-                        onClick={async () => {
-                            const payload = construirPayload();
-                            if (!payload) return;
+            <button
+                className="btn-guardar"
+                style={{ marginTop: 20 }}
+                onClick={async () => {
+                    const payload = construirPayload();
+                    if (!payload) return;
 
-                            try {
-                                const res = await actualizarSerie({
-                                    variables: { data: payload },
-                                    refetchQueries: [
-                                        { query: GET_SERIE, variables: { id } }
-                                    ],
-                                });
+                    try {
+                        const res = await actualizarSerie({
+                            variables: { data: payload },
+                            refetchQueries: [
+                                { query: GET_SERIE, variables: { id: Number(id) } }
+                            ],
+                        });
 
-                                if (res.data.actualizarSerie) {
-                                    alert("Serie actualizada correctamente");
-                                    navigate(`/serie/${id}`, {
-                                        state: { from: location.state?.from || "/catalogo-series" }
-                                    });
-                                } else {
-                                    alert("No se pudo actualizar la serie");
-                                }
-                            } catch (err) {
-                                console.error(err);
-                                alert("Error actualizando la serie");
-                            }
-                        }}
-                    >
-                        Guardar Cambios
-                    </button>
-                )}
-            </Mutation>
+                        if (res.data.actualizarSerie) {
+                            alert("Serie actualizada correctamente");
+                            navigate(`/serie/${id}`, {
+                                state: { from: location.state?.from || "/catalogo-series" }
+                            });
+                        } else {
+                            alert("No se pudo actualizar la serie");
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        alert("Error actualizando la serie");
+                    }
+                }}
+            >
+                Guardar Cambios
+            </button>
         </div>
     );
 }

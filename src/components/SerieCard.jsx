@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { Mutation } from "react-apollo";
+import { useMutation } from "@apollo/client";
 import { ELIMINAR_SERIE } from "../mutations";
 import AddToCartButton from "../components/AddToCartButton";
 import ProductCard from "./ProductCard";
@@ -42,41 +42,41 @@ export default function SerieCard({
 
   const precioCalculado = totalEpisodios * Number(precioPorCapitulo);
 
+  // 🔥 Apollo moderno: reemplazo de <Mutation>
+  const [eliminarSerie] = useMutation(ELIMINAR_SERIE);
+
   const renderAdminSection = () => (
-    <Mutation mutation={ELIMINAR_SERIE}>
-      {(eliminarSerie) => (
-        <>
-          <button onClick={handleEdit} className="admin-edit-btn">
-            ✏️
-          </button>
+    <>
+      <button onClick={handleEdit} className="admin-edit-btn">
+        ✏️
+      </button>
 
-          <button
-            onClick={async () => {
-              if (!window.confirm(`¿Eliminar "${serie.Titulo}" del catálogo?`))
-                return;
+      <button
+        onClick={async () => {
+          if (!window.confirm(`¿Eliminar "${serie.Titulo}" del catálogo?`))
+            return;
 
-              try {
-                const res = await eliminarSerie({
-                  variables: { id: serie.Id },
-                });
-                if (res.data.eliminarSerie) {
-                  alert("Serie eliminada correctamente");
-                  window.location.reload();
-                } else {
-                  alert("No se pudo eliminar la serie");
-                }
-              } catch (err) {
-                console.error(err);
-                alert("Error eliminando la serie");
-              }
-            }}
-            className="admin-delete-btn"
-          >
-            🗑️
-          </button>
-        </>
-      )}
-    </Mutation>
+          try {
+            const res = await eliminarSerie({
+              variables: { id: serie.Id },
+            });
+
+            if (res.data.eliminarSerie) {
+              alert("Serie eliminada correctamente");
+              window.location.reload();
+            } else {
+              alert("No se pudo eliminar la serie");
+            }
+          } catch (err) {
+            console.error(err);
+            alert("Error eliminando la serie");
+          }
+        }}
+        className="admin-delete-btn"
+      >
+        🗑️
+      </button>
+    </>
   );
 
   const product = {
@@ -102,3 +102,4 @@ export default function SerieCard({
     />
   );
 }
+

@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/react-hooks";
+import { useQuery } from "@apollo/client";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
     GET_ULTIMOS_ESTRENOS,
@@ -12,21 +12,25 @@ export default function Bienvenida() {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const { data: juegosData, loading: juegosLoading, error: juegosError } = useQuery(GET_ULTIMOS_ESTRENOS, {
-        variables: { limit: 25 },
-    });
+    const { data: juegosData, loading: juegosLoading, error: juegosError } = useQuery(
+        GET_ULTIMOS_ESTRENOS,
+        { variables: { limit: 25 } }
+    );
 
-    const { data: seriesData, loading: seriesLoading, error: seriesError } = useQuery(GET_ULTIMOS_ESTRENOS_SERIES, {
-        variables: { limit: 25 },
-    });
+    const { data: seriesData, loading: seriesLoading, error: seriesError } = useQuery(
+        GET_ULTIMOS_ESTRENOS_SERIES,
+        { variables: { limit: 25 } }
+    );
 
-    const { data: animadosData, loading: animadosLoading, error: animadosError } = useQuery(GET_ULTIMOS_ESTRENOS_ANIMADOS, {
-        variables: { limit: 25 },
-    });
+    const { data: animadosData, loading: animadosLoading, error: animadosError } = useQuery(
+        GET_ULTIMOS_ESTRENOS_ANIMADOS,
+        { variables: { limit: 25 } }
+    );
 
-    const { data: animesData, loading: animesLoading, error: animesError } = useQuery(GET_ULTIMOS_ESTRENOS_ANIMES, {
-        variables: { limit: 25 },
-    });
+    const { data: animesData, loading: animesLoading, error: animesError } = useQuery(
+        GET_ULTIMOS_ESTRENOS_ANIMES,
+        { variables: { limit: 25 } }
+    );
 
     if (juegosLoading || seriesLoading || animadosLoading || animesLoading)
         return <p style={{ color: "#ccc" }}>Cargando…</p>;

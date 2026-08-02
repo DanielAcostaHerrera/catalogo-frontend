@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Query } from "react-apollo";
+import { useQuery } from "@apollo/client";
 import { GET_CATALOGO_SERIES, GET_CATALOGO_SERIES_FILTRADO } from "../graphql";
 import SerieCard from "../components/SerieCard";
 import Paginacion from "../components/Paginacion";
@@ -33,7 +33,28 @@ export default function CatalogoSeries({ showToast }) {
             .catch(err => console.error("Error cargando precios:", err));
     }, []);
 
+    const query = nombre ? GET_CATALOGO_SERIES_FILTRADO : GET_CATALOGO_SERIES;
+    const variables = { page, limit, titulo: nombre || null };
+
+    // 🔥 Hook SIEMPRE debe ejecutarse antes de cualquier return condicional
+    const { loading, error, data } = useQuery(query, { variables });
+
+    // 🔥 Returns condicionales DESPUÉS del hook
     if (!precios) return <p style={{ color: "#ccc" }}>Cargando precios…</p>;
+    if (loading) return <p style={{ color: "#ccc" }}>Cargando…</p>;
+    if (error) return <p style={{ color: "red" }}>Error: {error.message}</p>;
+
+    const series =
+        data?.catalogoSeries?.series ||
+        data?.catalogoSeriesFiltrado?.series ||
+        [];
+
+    const total =
+        data?.catalogoSeries?.total ||
+        data?.catalogoSeriesFiltrado?.total ||
+        0;
+
+    const totalPages = Math.ceil(total / limit);
 
     const actualizarFiltro = (valor) => {
         setNombre(valor);
@@ -53,9 +74,6 @@ export default function CatalogoSeries({ showToast }) {
         setPage(1);
         setSearchParams({});
     };
-
-    const query = nombre ? GET_CATALOGO_SERIES_FILTRADO : GET_CATALOGO_SERIES;
-    const variables = { page, limit, titulo: nombre || null };
 
     return (
         <div className="catalogo-container">
@@ -103,57 +121,37 @@ export default function CatalogoSeries({ showToast }) {
                 </button>
             </div>
 
-            <Query query={query} variables={variables}>
-                {({ loading, error, data }) => {
-                    if (loading) return <p style={{ color: "#ccc" }}>Cargando…</p>;
-                    if (error) return <p style={{ color: "red" }}>Error: {error.message}</p>;
-
-                    const series =
-                        data?.catalogoSeries?.series ||
-                        data?.catalogoSeriesFiltrado?.series ||
-                        [];
-                    const total =
-                        data?.catalogoSeries?.total ||
-                        data?.catalogoSeriesFiltrado?.total ||
-                        0;
-                    const totalPages = Math.ceil(total / limit);
-
-                    return (
-                        <>
-                            <div
-                                style={{
-                                    display: "grid",
-                                    gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
-                                    gap: "20px",
-                                }}
-                            >
-                                {series.map((s) => (
-                                    <SerieCard
-                                        key={s.Id}
-                                        serie={s}
-                                        from={location.pathname + location.search}
-                                        showToast={showToast}
-                                        precioPorCapitulo={Number(precios.series.precioPorCapitulo)}
-                                    />
-                                ))}
-                            </div>
-
-                            <Paginacion
-                                page={page}
-                                totalPages={totalPages}
-                                onPageChange={(p) => {
-                                    setPage(p);
-                                    const params = {
-                                        ...Object.fromEntries(searchParams.entries()),
-                                        page: p
-                                    };
-                                    setSearchParams(params);
-                                }}
-                            />
-                        </>
-                    );
+            <div
+                style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
+                    gap: "20px",
                 }}
-            </Query>
+            >
+                {series.map((s) => (
+                    <SerieCard
+                        key={s.Id}
+                        serie={s}
+                        from={location.pathname + location.search}
+                        showToast={showToast}
+                        precioPorCapitulo={Number(precios.series.precioPorCapitulo)}
+                    />
+                ))}
+            </div>
+
+            <Paginacion
+                page={page}
+                totalPages={totalPages}
+                onPageChange={(p) => {
+                    setPage(p);
+                    const params = {
+                        ...Object.fromEntries(searchParams.entries()),
+                        page: p
+                    };
+                    setSearchParams(params);
+                }}
+            />
         </div>
     );
 }
+

@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { Mutation } from "react-apollo";
+import { useMutation } from "@apollo/client";
 import { ELIMINAR_ANIMADO } from "../mutations";
 import AddToCartButton from "../components/AddToCartButton";
 import ProductCard from "./ProductCard";
@@ -42,43 +42,41 @@ export default function AnimadoCard({
 
   const precioCalculado = totalEpisodios * Number(precioPorCapitulo);
 
+  // 🔥 Apollo moderno: reemplazo de <Mutation>
+  const [eliminarAnimado] = useMutation(ELIMINAR_ANIMADO);
+
   const renderAdminSection = () => (
-    <Mutation mutation={ELIMINAR_ANIMADO}>
-      {(eliminarAnimado) => (
-        <>
-          <button onClick={handleEdit} className="admin-edit-btn">
-            ✏️
-          </button>
+    <>
+      <button onClick={handleEdit} className="admin-edit-btn">
+        ✏️
+      </button>
 
-          <button
-            onClick={async () => {
-              if (
-                !window.confirm(`¿Eliminar "${animado.Titulo}" del catálogo?`)
-              )
-                return;
+      <button
+        onClick={async () => {
+          if (!window.confirm(`¿Eliminar "${animado.Titulo}" del catálogo?`))
+            return;
 
-              try {
-                const res = await eliminarAnimado({
-                  variables: { id: animado.Id },
-                });
-                if (res.data.eliminarAnimado) {
-                  alert("Animado eliminado correctamente");
-                  window.location.reload();
-                } else {
-                  alert("No se pudo eliminar el animado");
-                }
-              } catch (err) {
-                console.error(err);
-                alert("Error eliminando el animado");
-              }
-            }}
-            className="admin-delete-btn"
-          >
-            🗑️
-          </button>
-        </>
-      )}
-    </Mutation>
+          try {
+            const res = await eliminarAnimado({
+              variables: { id: animado.Id },
+            });
+
+            if (res.data.eliminarAnimado) {
+              alert("Animado eliminado correctamente");
+              window.location.reload();
+            } else {
+              alert("No se pudo eliminar el animado");
+            }
+          } catch (err) {
+            console.error(err);
+            alert("Error eliminando el animado");
+          }
+        }}
+        className="admin-delete-btn"
+      >
+        🗑️
+      </button>
+    </>
   );
 
   const product = {
@@ -105,3 +103,4 @@ export default function AnimadoCard({
     />
   );
 }
+

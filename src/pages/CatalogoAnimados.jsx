@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Query } from "react-apollo";
+import { useQuery } from "@apollo/client";
 import { GET_CATALOGO_ANIMADOS, GET_CATALOGO_ANIMADOS_FILTRADO } from "../graphql";
 import AnimadoCard from "../components/AnimadoCard";
 import Paginacion from "../components/Paginacion";
@@ -33,7 +33,28 @@ export default function CatalogoAnimados({ showToast }) {
             .catch(err => console.error("Error cargando precios:", err));
     }, []);
 
+    const query = nombre ? GET_CATALOGO_ANIMADOS_FILTRADO : GET_CATALOGO_ANIMADOS;
+    const variables = { page, limit, titulo: nombre || null };
+
+    // 🔥 Hook SIEMPRE debe ejecutarse antes de cualquier return condicional
+    const { loading, error, data } = useQuery(query, { variables });
+
+    // 🔥 Ahora los returns condicionales están DESPUÉS del hook
     if (!precios) return <p style={{ color: "#ccc" }}>Cargando precios…</p>;
+    if (loading) return <p style={{ color: "#ccc" }}>Cargando…</p>;
+    if (error) return <p style={{ color: "red" }}>Error: {error.message}</p>;
+
+    const animados =
+        data?.catalogoAnimados?.series ||
+        data?.catalogoAnimadosFiltrado?.series ||
+        [];
+
+    const total =
+        data?.catalogoAnimados?.total ||
+        data?.catalogoAnimadosFiltrado?.total ||
+        0;
+
+    const totalPages = Math.ceil(total / limit);
 
     const actualizarFiltro = (valor) => {
         setNombre(valor);
@@ -53,9 +74,6 @@ export default function CatalogoAnimados({ showToast }) {
         setPage(1);
         setSearchParams({});
     };
-
-    const query = nombre ? GET_CATALOGO_ANIMADOS_FILTRADO : GET_CATALOGO_ANIMADOS;
-    const variables = { page, limit, titulo: nombre || null };
 
     return (
         <div className="catalogo-container">
@@ -103,57 +121,37 @@ export default function CatalogoAnimados({ showToast }) {
                 </button>
             </div>
 
-            <Query query={query} variables={variables}>
-                {({ loading, error, data }) => {
-                    if (loading) return <p style={{ color: "#ccc" }}>Cargando…</p>;
-                    if (error) return <p style={{ color: "red" }}>Error: {error.message}</p>;
-
-                    const animados =
-                        data?.catalogoAnimados?.series ||
-                        data?.catalogoAnimadosFiltrado?.series ||
-                        [];
-                    const total =
-                        data?.catalogoAnimados?.total ||
-                        data?.catalogoAnimadosFiltrado?.total ||
-                        0;
-                    const totalPages = Math.ceil(total / limit);
-
-                    return (
-                        <>
-                            <div
-                                style={{
-                                    display: "grid",
-                                    gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
-                                    gap: "20px",
-                                }}
-                            >
-                                {animados.map((a) => (
-                                    <AnimadoCard
-                                        key={a.Id}
-                                        animado={a}
-                                        from={location.pathname + location.search}
-                                        showToast={showToast}
-                                        precioPorCapitulo={Number(precios.series.precioPorCapitulo)}
-                                    />
-                                ))}
-                            </div>
-
-                            <Paginacion
-                                page={page}
-                                totalPages={totalPages}
-                                onPageChange={(p) => {
-                                    setPage(p);
-                                    const params = {
-                                        ...Object.fromEntries(searchParams.entries()),
-                                        page: p
-                                    };
-                                    setSearchParams(params);
-                                }}
-                            />
-                        </>
-                    );
+            <div
+                style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
+                    gap: "20px",
                 }}
-            </Query>
+            >
+                {animados.map((a) => (
+                    <AnimadoCard
+                        key={a.Id}
+                        animado={a}
+                        from={location.pathname + location.search}
+                        showToast={showToast}
+                        precioPorCapitulo={Number(precios.series.precioPorCapitulo)}
+                    />
+                ))}
+            </div>
+
+            <Paginacion
+                page={page}
+                totalPages={totalPages}
+                onPageChange={(p) => {
+                    setPage(p);
+                    const params = {
+                        ...Object.fromEntries(searchParams.entries()),
+                        page: p
+                    };
+                    setSearchParams(params);
+                }}
+            />
         </div>
     );
 }
+

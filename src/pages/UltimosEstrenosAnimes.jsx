@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Query } from "react-apollo";
+import { useQuery } from "@apollo/client";
 import { GET_ULTIMOS_ESTRENOS_ANIMES } from "../graphql";
 import AnimeCard from "../components/AnimeCard";
 import Paginacion from "../components/Paginacion";
@@ -43,6 +43,23 @@ export default function UltimosEstrenosAnimes({ showToast }) {
 
     const PAGE_SIZE = 100;
 
+    // 🔥 Apollo moderno — reemplazo de <Query>
+    const { loading, error, data } = useQuery(GET_ULTIMOS_ESTRENOS_ANIMES, {
+        variables,
+        fetchPolicy: "network-only",
+    });
+
+    if (loading) return <p style={{ color: "#ccc" }}>Cargando…</p>;
+    if (error) return <p style={{ color: "red" }}>Error: {error.message}</p>;
+
+    const animes = data?.ultimosEstrenosAnimes?.animes || [];
+
+    const totalPages = Math.max(1, Math.ceil(limit / PAGE_SIZE));
+
+    const startIndex = (page - 1) * PAGE_SIZE;
+    const endIndex = startIndex + PAGE_SIZE;
+    const animesPagina = animes.slice(startIndex, endIndex);
+
     return (
         <div className="catalogo-container">
             <h2 style={{ color: "#f0f0f0", marginBottom: "20px" }}>
@@ -63,51 +80,32 @@ export default function UltimosEstrenosAnimes({ showToast }) {
                 />
             </div>
 
-            <Query query={GET_ULTIMOS_ESTRENOS_ANIMES} variables={variables}>
-                {({ loading, error, data }) => {
-                    if (loading) return <p style={{ color: "#ccc" }}>Cargando…</p>;
-                    if (error) return <p style={{ color: "red" }}>Error: {error.message}</p>;
-
-                    const animes = data?.ultimosEstrenosAnimes?.animes || [];
-
-                    const totalPages = Math.max(1, Math.ceil(limit / PAGE_SIZE));
-
-                    const startIndex = (page - 1) * PAGE_SIZE;
-                    const endIndex = startIndex + PAGE_SIZE;
-                    const animesPagina = animes.slice(startIndex, endIndex);
-
-                    return (
-                        <>
-                            <div
-                                style={{
-                                    display: "grid",
-                                    gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
-                                    gap: "20px",
-                                }}
-                            >
-                                {animesPagina.map((a) => (
-                                    <AnimeCard
-                                        key={a.Id}
-                                        anime={a}
-                                        showToast={showToast}
-                                        from={location.pathname + location.search}
-                                    />
-                                ))}
-                            </div>
-
-                            <Paginacion
-                                page={page}
-                                totalPages={totalPages}
-                                onPageChange={(p) => {
-                                    setPage(p);
-                                    const params = { page: p, limit };
-                                    setSearchParams(params);
-                                }}
-                            />
-                        </>
-                    );
+            <div
+                style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
+                    gap: "20px",
                 }}
-            </Query>
+            >
+                {animesPagina.map((a) => (
+                    <AnimeCard
+                        key={a.Id}
+                        anime={a}
+                        showToast={showToast}
+                        from={location.pathname + location.search}
+                    />
+                ))}
+            </div>
+
+            <Paginacion
+                page={page}
+                totalPages={totalPages}
+                onPageChange={(p) => {
+                    setPage(p);
+                    const params = { page: p, limit };
+                    setSearchParams(params);
+                }}
+            />
         </div>
     );
 }

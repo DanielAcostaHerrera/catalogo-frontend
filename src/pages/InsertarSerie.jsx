@@ -1,12 +1,11 @@
-import { useNavigate, useLocation } from "react-router-dom";
-import { Mutation } from "react-apollo";
+import { useNavigate } from "react-router-dom";
+import { useMutation } from "@apollo/client";
 import "../App.css";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { CREAR_SERIE } from "../mutations";
 
 export default function InsertarSerie() {
     const navigate = useNavigate();
-    const location = useLocation();
 
     const [Titulo, setTitulo] = useState("");
     const [Anno, setAnno] = useState("");
@@ -14,18 +13,6 @@ export default function InsertarSerie() {
     const [Portada, setPortada] = useState("");
     const [Sinopsis, setSinopsis] = useState("");
     const [Episodios, setEpisodios] = useState("");
-
-    useEffect(() => {
-        const n = Number(Temporadas);
-        if (!n || n <= 0) return;
-
-        let texto = "";
-        for (let i = 1; i <= n; i++) {
-            texto += `Temporada ${i} - X episodios\n`;
-        }
-
-        setEpisodios(texto.trim());
-    }, [Temporadas]);
 
     const soloCuatroDigitos = (e, valorActual) => {
         const allowed = ["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Tab"];
@@ -107,6 +94,8 @@ export default function InsertarSerie() {
         return payload;
     };
 
+    const [crearSerie] = useMutation(CREAR_SERIE);
+
     return (
         <div className="detalle-wrapper">
 
@@ -158,7 +147,11 @@ export default function InsertarSerie() {
                         rows={8}
                         value={Sinopsis}
                         onChange={(e) => setSinopsis(e.target.value)}
-                        style={{ width: "100%", marginTop: 10 }}
+                        style={{
+                            width: "100%",
+                            marginTop: 10,
+                            whiteSpace: "pre-wrap"
+                        }}
                     />
                 </div>
 
@@ -169,40 +162,41 @@ export default function InsertarSerie() {
                         rows={12}
                         value={Episodios}
                         onChange={(e) => setEpisodios(e.target.value)}
-                        style={{ width: "100%", marginTop: 10 }}
+                        style={{
+                            width: "100%",
+                            marginTop: 10,
+                            whiteSpace: "pre-wrap"
+                        }}
                     />
                 </div>
             </div>
 
-            <Mutation mutation={CREAR_SERIE}>
-                {(crearSerie) => (
-                    <button
-                        className="btn-guardar"
-                        onClick={async () => {
-                            const payload = construirPayload();
-                            if (!payload) return;
+            <button
+                className="btn-guardar"
+                onClick={async () => {
+                    const payload = construirPayload();
+                    if (!payload) return;
 
-                            try {
-                                const res = await crearSerie({
-                                    variables: { data: payload },
-                                });
+                    try {
+                        const res = await crearSerie({
+                            variables: { data: payload },
+                        });
 
-                                if (res.data.crearSerie) {
-                                    alert("Serie añadida correctamente");
-                                    navigate("/catalogo-series");
-                                } else {
-                                    alert("No se pudo añadir la serie");
-                                }
-                            } catch (err) {
-                                console.error(err);
-                                alert("Error añadiendo la serie");
-                            }
-                        }}
-                    >
-                        Añadir Serie
-                    </button>
-                )}
-            </Mutation>
+                        if (res.data.crearSerie) {
+                            alert("Serie añadida correctamente");
+                            navigate("/catalogo-series");
+                        } else {
+                            alert("No se pudo añadir la serie");
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        alert("Error añadiendo la serie");
+                    }
+                }}
+            >
+                Añadir Serie
+            </button>
         </div>
     );
 }
+

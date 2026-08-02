@@ -1,13 +1,11 @@
 import { useNavigate } from "react-router-dom";
-import { Mutation } from "react-apollo";
+import { useMutation } from "@apollo/client";
 import "../App.css";
 import { useState } from "react";
 import { CREAR_JUEGO } from "../mutations";
-import { useLocation } from "react-router-dom";
 
 export default function InsertarJuego() {
     const navigate = useNavigate();
-    const location = useLocation();
 
     const [Nombre, setNombre] = useState("");
     const [Tamano, setTamano] = useState("");
@@ -125,6 +123,9 @@ export default function InsertarJuego() {
         return payload;
     };
 
+    // 🔥 Apollo moderno — reemplazo de <Mutation>
+    const [crearJuego] = useMutation(CREAR_JUEGO);
+
     return (
         <div className="detalle-wrapper">
 
@@ -192,35 +193,31 @@ export default function InsertarJuego() {
                 </div>
             </div>
 
-            <Mutation mutation={CREAR_JUEGO}>
-                {(crearJuego) => (
-                    <button
-                        className="btn-guardar"
-                        onClick={async () => {
-                            const payload = construirPayload();
-                            if (!payload) return;
+            <button
+                className="btn-guardar"
+                onClick={async () => {
+                    const payload = construirPayload();
+                    if (!payload) return;
 
-                            try {
-                                const res = await crearJuego({
-                                    variables: { data: payload },
-                                });
+                    try {
+                        const res = await crearJuego({
+                            variables: { data: payload },
+                        });
 
-                                if (res.data.crearJuego) {
-                                    alert("Juego añadido correctamente");
-                                    navigate("/catalogo-juegos");
-                                } else {
-                                    alert("No se pudo añadir el juego");
-                                }
-                            } catch (err) {
-                                console.error(err);
-                                alert("Error añadiendo el juego");
-                            }
-                        }}
-                    >
-                        Añadir Juego
-                    </button>
-                )}
-            </Mutation>
+                        if (res.data.crearJuego) {
+                            alert("Juego añadido correctamente");
+                            navigate("/catalogo-juegos");
+                        } else {
+                            alert("No se pudo añadir el juego");
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        alert("Error añadiendo el juego");
+                    }
+                }}
+            >
+                Añadir Juego
+            </button>
         </div>
     );
 }

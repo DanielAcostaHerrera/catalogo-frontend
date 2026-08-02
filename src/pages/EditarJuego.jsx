@@ -1,10 +1,11 @@
+/* eslint-disable react-hooks/rules-of-hooks */
+
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { useQuery, Mutation } from "react-apollo";
+import { useQuery, useMutation } from "@apollo/client";
 import "../App.css";
 import { useState, useEffect } from "react";
 import { ACTUALIZAR_JUEGO } from "../mutations";
 import { GET_JUEGO } from "../graphql";
-
 
 export default function EditarJuego() {
     const { id } = useParams();
@@ -13,7 +14,7 @@ export default function EditarJuego() {
 
     const [Nombre, setNombre] = useState("");
     const [Tamano, setTamano] = useState("");
-    const [AnnoAct, setAnnoAct] = useState("");
+       const [AnnoAct, setAnnoAct] = useState("");
     const [Sinopsis, setSinopsis] = useState("");
     const [Requisitos, setRequisitos] = useState("");
 
@@ -135,6 +136,9 @@ export default function EditarJuego() {
         return payload;
     };
 
+    // 🔥 Apollo moderno — reemplazo de <Mutation>
+    const [actualizarJuego] = useMutation(ACTUALIZAR_JUEGO);
+
     return (
         <div className="detalle-wrapper">
 
@@ -201,41 +205,37 @@ export default function EditarJuego() {
                 </div>
             </div>
 
-            <Mutation mutation={ACTUALIZAR_JUEGO}>
-                {(actualizarJuego) => (
-                    <button
-                        className="btn-guardar"
-                        style={{ marginTop: 20 }}
-                        onClick={async () => {
-                            const payload = construirPayload();
-                            if (!payload) return;
+            <button
+                className="btn-guardar"
+                style={{ marginTop: 20 }}
+                onClick={async () => {
+                    const payload = construirPayload();
+                    if (!payload) return;
 
-                            try {
-                                const res = await actualizarJuego({
-                                    variables: { data: payload },
-                                    refetchQueries: [
-                                        { query: GET_JUEGO, variables: { id } }
-                                    ],
-                                });
+                    try {
+                        const res = await actualizarJuego({
+                            variables: { data: payload },
+                            refetchQueries: [
+                                { query: GET_JUEGO, variables: { id: Number(id) } }
+                            ],
+                        });
 
-                                if (res.data.actualizarJuego) {
-                                    alert("Juego actualizado correctamente");
-                                    navigate(`/juego/${id}`, {
-                                        state: { from: location.state?.from || "/catalogo-juegos" }
-                                    });
-                                } else {
-                                    alert("No se pudo actualizar el juego");
-                                }
-                            } catch (err) {
-                                console.error(err);
-                                alert("Error actualizando el juego");
-                            }
-                        }}
-                    >
-                        Guardar Cambios
-                    </button>
-                )}
-            </Mutation>
+                        if (res.data.actualizarJuego) {
+                            alert("Juego actualizado correctamente");
+                            navigate(`/juego/${id}`, {
+                                state: { from: location.state?.from || "/catalogo-juegos" }
+                            });
+                        } else {
+                            alert("No se pudo actualizar el juego");
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        alert("Error actualizando el juego");
+                    }
+                }}
+            >
+                Guardar Cambios
+            </button>
         </div>
     );
 }

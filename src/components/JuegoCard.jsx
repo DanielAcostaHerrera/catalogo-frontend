@@ -1,6 +1,6 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import AddToCartButton from "../components/AddToCartButton";
-import { Mutation } from "react-apollo";
+import { useMutation } from "@apollo/client";
 import { ELIMINAR_JUEGO } from "../mutations";
 import ProductCard from "./ProductCard";
 
@@ -16,42 +16,41 @@ export default function JuegoCard({ juego, showToast, from }) {
     });
   }
 
+  // 🔥 Apollo moderno: reemplazo de <Mutation>
+  const [eliminarJuego] = useMutation(ELIMINAR_JUEGO);
+
   const renderAdminSection = () => (
-    <Mutation mutation={ELIMINAR_JUEGO}>
-      {(eliminarJuego) => (
-        <>
-          <button onClick={handleEdit} className="admin-edit-btn">
-            ✏️
-          </button>
+    <>
+      <button onClick={handleEdit} className="admin-edit-btn">
+        ✏️
+      </button>
 
-          <button
-            onClick={async () => {
-              if (!window.confirm(`¿Eliminar "${juego.Nombre}" del catálogo?`))
-                return;
+      <button
+        onClick={async () => {
+          if (!window.confirm(`¿Eliminar "${juego.Nombre}" del catálogo?`))
+            return;
 
-              try {
-                const res = await eliminarJuego({
-                  variables: { id: juego.Id },
-                });
+          try {
+            const res = await eliminarJuego({
+              variables: { id: juego.Id },
+            });
 
-                if (res.data.eliminarJuego) {
-                  alert("Juego eliminado correctamente");
-                  window.location.reload();
-                } else {
-                  alert("No se pudo eliminar el juego");
-                }
-              } catch (err) {
-                console.error(err);
-                alert("Error eliminando el juego");
-              }
-            }}
-            className="admin-delete-btn"
-          >
-            🗑️
-          </button>
-        </>
-      )}
-    </Mutation>
+            if (res.data.eliminarJuego) {
+              alert("Juego eliminado correctamente");
+              window.location.reload();
+            } else {
+              alert("No se pudo eliminar el juego");
+            }
+          } catch (err) {
+            console.error(err);
+            alert("Error eliminando el juego");
+          }
+        }}
+        className="admin-delete-btn"
+      >
+        🗑️
+      </button>
+    </>
   );
 
   const product = {
@@ -76,3 +75,4 @@ export default function JuegoCard({ juego, showToast, from }) {
     />
   );
 }
+

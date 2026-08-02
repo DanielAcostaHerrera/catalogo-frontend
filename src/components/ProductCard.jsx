@@ -1,7 +1,5 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../AuthContext";
-import { Mutation } from "react-apollo";
-import { ELIMINAR_ANIMADO } from "../mutations";
 import AddToCartButton from "../components/AddToCartButton";
 
 import "../styles/ProductCard.css";

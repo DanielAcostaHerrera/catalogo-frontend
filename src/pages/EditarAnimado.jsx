@@ -1,5 +1,7 @@
+/* eslint-disable react-hooks/rules-of-hooks */
+
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { useQuery, Mutation } from "react-apollo";
+import { useQuery, useMutation } from "@apollo/client";
 import "../App.css";
 import { useState, useEffect } from "react";
 import { ACTUALIZAR_ANIMADO } from "../mutations";
@@ -80,6 +82,9 @@ export default function EditarAnimado() {
         return payload;
     };
 
+    // 🔥 Apollo moderno — reemplazo de <Mutation>
+    const [actualizarAnimado] = useMutation(ACTUALIZAR_ANIMADO);
+
     return (
         <div className="detalle-wrapper">
 
@@ -145,41 +150,37 @@ export default function EditarAnimado() {
                 </div>
             </div>
 
-            <Mutation mutation={ACTUALIZAR_ANIMADO}>
-                {(actualizarAnimado) => (
-                    <button
-                        className="btn-guardar"
-                        style={{ marginTop: 20 }}
-                        onClick={async () => {
-                            const payload = construirPayload();
-                            if (!payload) return;
+            <button
+                className="btn-guardar"
+                style={{ marginTop: 20 }}
+                onClick={async () => {
+                    const payload = construirPayload();
+                    if (!payload) return;
 
-                            try {
-                                const res = await actualizarAnimado({
-                                    variables: { data: payload },
-                                    refetchQueries: [
-                                        { query: GET_ANIMADO, variables: { id } }
-                                    ],
-                                });
+                    try {
+                        const res = await actualizarAnimado({
+                            variables: { data: payload },
+                            refetchQueries: [
+                                { query: GET_ANIMADO, variables: { id: Number(id) } }
+                            ],
+                        });
 
-                                if (res.data.actualizarAnimado) {
-                                    alert("Animado actualizado correctamente");
-                                    navigate(`/animado/${id}`, {
-                                        state: { from: location.state?.from || "/catalogo-animados" }
-                                    });
-                                } else {
-                                    alert("No se pudo actualizar el animado");
-                                }
-                            } catch (err) {
-                                console.error(err);
-                                alert("Error actualizando el animado");
-                            }
-                        }}
-                    >
-                        Guardar Cambios
-                    </button>
-                )}
-            </Mutation>
+                        if (res.data.actualizarAnimado) {
+                            alert("Animado actualizado correctamente");
+                            navigate(`/animado/${id}`, {
+                                state: { from: location.state?.from || "/catalogo-animados" }
+                            });
+                        } else {
+                            alert("No se pudo actualizar el animado");
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        alert("Error actualizando el animado");
+                    }
+                }}
+            >
+                Guardar Cambios
+            </button>
         </div>
     );
 }

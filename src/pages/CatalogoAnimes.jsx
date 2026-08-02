@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Query } from "react-apollo";
+import { useQuery } from "@apollo/client";
 import { GET_CATALOGO_ANIMES, GET_CATALOGO_ANIMES_FILTRADO } from "../graphql";
 import AnimeCard from "../components/AnimeCard";
 import Paginacion from "../components/Paginacion";
@@ -33,7 +33,28 @@ export default function CatalogoAnimes({ showToast }) {
             .catch(err => console.error("Error cargando precios:", err));
     }, []);
 
+    const query = nombre ? GET_CATALOGO_ANIMES_FILTRADO : GET_CATALOGO_ANIMES;
+    const variables = { page, limit, titulo: nombre || null };
+
+    // 🔥 Hook SIEMPRE debe ejecutarse antes de cualquier return condicional
+    const { loading, error, data } = useQuery(query, { variables });
+
+    // 🔥 Returns condicionales DESPUÉS del hook
     if (!precios) return <p style={{ color: "#ccc" }}>Cargando precios…</p>;
+    if (loading) return <p style={{ color: "#ccc" }}>Cargando…</p>;
+    if (error) return <p style={{ color: "red" }}>Error: {error.message}</p>;
+
+    const animes =
+        data?.catalogoAnimes?.animes ||
+        data?.catalogoAnimesFiltrado?.animes ||
+        [];
+
+    const total =
+        data?.catalogoAnimes?.total ||
+        data?.catalogoAnimesFiltrado?.total ||
+        0;
+
+    const totalPages = Math.ceil(total / limit);
 
     const actualizarFiltro = (valor) => {
         setNombre(valor);
@@ -53,9 +74,6 @@ export default function CatalogoAnimes({ showToast }) {
         setPage(1);
         setSearchParams({});
     };
-
-    const query = nombre ? GET_CATALOGO_ANIMES_FILTRADO : GET_CATALOGO_ANIMES;
-    const variables = { page, limit, titulo: nombre || null };
 
     return (
         <div className="catalogo-container">
@@ -103,57 +121,37 @@ export default function CatalogoAnimes({ showToast }) {
                 </button>
             </div>
 
-            <Query query={query} variables={variables}>
-                {({ loading, error, data }) => {
-                    if (loading) return <p style={{ color: "#ccc" }}>Cargando…</p>;
-                    if (error) return <p style={{ color: "red" }}>Error: {error.message}</p>;
-
-                    const animes =
-                        data?.catalogoAnimes?.animes ||
-                        data?.catalogoAnimesFiltrado?.animes ||
-                        [];
-                    const total =
-                        data?.catalogoAnimes?.total ||
-                        data?.catalogoAnimesFiltrado?.total ||
-                        0;
-                    const totalPages = Math.ceil(total / limit);
-
-                    return (
-                        <>
-                            <div
-                                style={{
-                                    display: "grid",
-                                    gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
-                                    gap: "20px",
-                                }}
-                            >
-                                {animes.map((a) => (
-                                    <AnimeCard
-                                        key={a.Id}
-                                        anime={a}
-                                        from={location.pathname + location.search}
-                                        showToast={showToast}
-                                        precioPorCapitulo={Number(precios.series.precioPorCapitulo)}
-                                    />
-                                ))}
-                            </div>
-
-                            <Paginacion
-                                page={page}
-                                totalPages={totalPages}
-                                onPageChange={(p) => {
-                                    setPage(p);
-                                    const params = {
-                                        ...Object.fromEntries(searchParams.entries()),
-                                        page: p
-                                    };
-                                    setSearchParams(params);
-                                }}
-                            />
-                        </>
-                    );
+            <div
+                style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
+                    gap: "20px",
                 }}
-            </Query>
+            >
+                {animes.map((a) => (
+                    <AnimeCard
+                        key={a.Id}
+                        anime={a}
+                        from={location.pathname + location.search}
+                        showToast={showToast}
+                        precioPorCapitulo={Number(precios.series.precioPorCapitulo)}
+                    />
+                ))}
+            </div>
+
+            <Paginacion
+                page={page}
+                totalPages={totalPages}
+                onPageChange={(p) => {
+                    setPage(p);
+                    const params = {
+                        ...Object.fromEntries(searchParams.entries()),
+                        page: p
+                    };
+                    setSearchParams(params);
+                }}
+            />
         </div>
     );
 }
+
