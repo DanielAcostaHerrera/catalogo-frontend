@@ -15,12 +15,11 @@ export default function JuegoCard({ juego, showToast, from }) {
       state: { from: location.pathname },
     });
   }
-
-  // 🔥 Apollo moderno: reemplazo de <Mutation>
+  
   const [eliminarJuego] = useMutation(ELIMINAR_JUEGO);
 
   const renderAdminSection = () => (
-    <>
+    <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
       <button onClick={handleEdit} className="admin-edit-btn">
         ✏️
       </button>
@@ -50,7 +49,7 @@ export default function JuegoCard({ juego, showToast, from }) {
       >
         🗑️
       </button>
-    </>
+    </div>
   );
 
   const product = {

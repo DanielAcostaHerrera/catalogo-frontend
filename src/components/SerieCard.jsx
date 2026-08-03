@@ -42,11 +42,10 @@ export default function SerieCard({
 
   const precioCalculado = totalEpisodios * Number(precioPorCapitulo);
 
-  // 🔥 Apollo moderno: reemplazo de <Mutation>
   const [eliminarSerie] = useMutation(ELIMINAR_SERIE);
 
   const renderAdminSection = () => (
-    <>
+    <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
       <button onClick={handleEdit} className="admin-edit-btn">
         ✏️
       </button>
@@ -76,7 +75,7 @@ export default function SerieCard({
       >
         🗑️
       </button>
-    </>
+    </div>
   );
 
   const product = {

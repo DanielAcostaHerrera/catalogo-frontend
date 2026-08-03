@@ -42,11 +42,10 @@ export default function AnimeCard({
 
   const precioCalculado = totalEpisodios * Number(precioPorCapitulo);
 
-  // 🔥 Apollo moderno: reemplazo de <Mutation>
   const [eliminarAnime] = useMutation(ELIMINAR_ANIME);
 
   const renderAdminSection = () => (
-    <>
+    <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
       <button onClick={handleEdit} className="admin-edit-btn">
         ✏️
       </button>
@@ -76,7 +75,7 @@ export default function AnimeCard({
       >
         🗑️
       </button>
-    </>
+    </div>
   );
 
   const product = {
