@@ -21,18 +21,15 @@ export default function CatalogoSeries({ showToast }) {
     const [page, setPage] = useState(Number(searchParams.get("page")) || 1);
     const [limit] = useState(100);
 
-    // 🔥 FILTROS FINALES
     const [filtros, setFiltros] = useState({
         nombre: searchParams.get("nombre") || "",
     });
 
-    // 🔥 TEMPORALES
     const [nombreTemp, setNombreTemp] = useState(filtros.nombre);
 
     const [openFiltros, setOpenFiltros] = useState(false);
     const [precios, setPrecios] = useState(null);
 
-    // 🔥 Cargar precios con useEffect (NO con return condicional)
     useEffect(() => {
         fetch("https://catalogo-backend-f4sk.onrender.com/precios")
             .then(res => res.json())
@@ -40,7 +37,6 @@ export default function CatalogoSeries({ showToast }) {
             .catch(err => console.error("Error cargando precios:", err));
     }, []);
 
-    // 🔥 DECIDIR QUERY
     const hayFiltros = filtros.nombre !== "";
     const query = hayFiltros ? GET_CATALOGO_SERIES_FILTRADO : GET_CATALOGO_SERIES;
     const variables = {
@@ -49,7 +45,6 @@ export default function CatalogoSeries({ showToast }) {
         titulo: filtros.nombre || null,
     };
 
-    // 🔥 Apollo (AHORA ANTES del if (!precios))
     const { loading, error, data } = useQuery(query, { variables });
 
     // 🔥 Esperar a que carguen los precios
@@ -72,7 +67,6 @@ export default function CatalogoSeries({ showToast }) {
 
     const totalPages = Math.ceil(total / limit);
 
-    // 🔥 FUNCIONES
     const aplicarFiltros = () => {
         const p = new URLSearchParams();
         if (nombreTemp.trim() !== "") {
@@ -136,7 +130,6 @@ export default function CatalogoSeries({ showToast }) {
                 )}
             </div>
 
-            {/* SWIPEABLE DRAWER DE FILTROS */}
             <SwipeableDrawer
                 anchor="right"
                 open={openFiltros}
@@ -183,7 +176,6 @@ export default function CatalogoSeries({ showToast }) {
                 </div>
             </SwipeableDrawer>
 
-            {/* GRID DE SERIES */}
             <div
                 style={{
                     display: "grid",

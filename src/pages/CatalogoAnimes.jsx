@@ -21,18 +21,15 @@ export default function CatalogoAnimes({ showToast }) {
     const [page, setPage] = useState(Number(searchParams.get("page")) || 1);
     const [limit] = useState(100);
 
-    // 🔥 FILTROS FINALES (los que realmente se aplican)
     const [filtros, setFiltros] = useState({
         nombre: searchParams.get("nombre") || "",
     });
 
-    // 🔥 TEMPORALES (inputs sin tiempo real)
     const [nombreTemp, setNombreTemp] = useState(filtros.nombre);
 
     const [openFiltros, setOpenFiltros] = useState(false);
     const [precios, setPrecios] = useState(null);
 
-    // 🔥 Cargar precios (solo una vez)
     useEffect(() => {
         fetch("https://catalogo-backend-f4sk.onrender.com/precios")
             .then(res => res.json())
@@ -40,20 +37,16 @@ export default function CatalogoAnimes({ showToast }) {
             .catch(err => console.error("Error cargando precios:", err));
     }, []);
 
-    // 🔥 FUNCIÓN FINAL PARA APLICAR FILTROS
     const aplicarFiltros = () => {
         const p = new URLSearchParams();
 
-        // --- NOMBRE ---
         if (nombreTemp.trim() !== "") {
             p.set("nombre", nombreTemp.trim());
         }
 
-        // --- PAGE ---
         p.set("page", 1);
         setPage(1);
 
-        // --- ACTUALIZAR FILTROS FINALES ---
         setFiltros({
             nombre: p.get("nombre") || "",
         });
@@ -62,7 +55,6 @@ export default function CatalogoAnimes({ showToast }) {
         setOpenFiltros(false);
     };
 
-    // 🔥 REINICIAR FILTROS
     const reiniciarCatalogo = () => {
         setFiltros({ nombre: "" });
         setNombreTemp("");
@@ -71,7 +63,6 @@ export default function CatalogoAnimes({ showToast }) {
         setOpenFiltros(false);
     };
 
-    // 🔥 DECIDIR QUERY SEGÚN FILTROS FINALES
     const hayFiltros = filtros.nombre !== "";
 
     const query = hayFiltros ? GET_CATALOGO_ANIMES_FILTRADO : GET_CATALOGO_ANIMES;
@@ -81,7 +72,6 @@ export default function CatalogoAnimes({ showToast }) {
         titulo: filtros.nombre || null,
     };
 
-    // 🔥 Apollo
     const { loading, error, data } = useQuery(query, { variables });
 
     if (!precios) return <p style={{ color: "#ccc" }}>Cargando precios…</p>;
@@ -106,14 +96,12 @@ export default function CatalogoAnimes({ showToast }) {
                 Catálogo de Animes
             </h2>
 
-            {/* BOTONES SUPERIORES */}
             <div className="catalogo-top-buttons">
                 <button className="btn-dark" onClick={() => setOpenFiltros(true)}>
                     <span className="btn-icon"><FilterListIcon /></span>
                     <span className="btn-text">Filtros</span>
                 </button>
 
-                {/* 🔥 BOTÓN LIMPIAR FILTROS (solo visible si hay filtro aplicado) */}
                 {hayFiltros && (
                     <button
                         className="btn-dark"
@@ -147,7 +135,6 @@ export default function CatalogoAnimes({ showToast }) {
                 )}
             </div>
 
-            {/* SWIPEABLE DRAWER DE FILTROS */}
             <SwipeableDrawer
                 anchor="right"
                 open={openFiltros}
@@ -167,7 +154,6 @@ export default function CatalogoAnimes({ showToast }) {
                 >
                     <h3 className="drawer-filtros-titulo">Filtros</h3>
 
-                    {/* Nombre */}
                     <div className="filtro-nombre">
                         <label>Nombre</label>
                         <input
@@ -178,7 +164,6 @@ export default function CatalogoAnimes({ showToast }) {
                         />
                     </div>
 
-                    {/* BOTONES */}
                     <div className="drawer-filtros-botones">
                         <button
                             className="btn-dark"

@@ -5,7 +5,6 @@ import { useReducer, useEffect } from "react";
 import { ACTUALIZAR_SERIE } from "../mutations";
 import { GET_SERIE } from "../graphql";
 
-// 🔥 REDUCER para manejar el formulario
 const formReducer = (state, action) => {
     switch (action.type) {
         case 'SET_FORM':
@@ -36,15 +35,12 @@ export default function EditarSerie() {
         return null;
     };
 
-    // ✅ PRIMERO: useQuery
     const { loading, error, data } = useQuery(GET_SERIE, {
         variables: { id: Number(id) },
     });
 
-    // ✅ SEGUNDO: useMutation
     const [actualizarSerie] = useMutation(ACTUALIZAR_SERIE);
 
-    // 🔥 REDUCER EN LUGAR DE useState
     const [form, dispatch] = useReducer(formReducer, {
         Titulo: "",
         Anno: "",
@@ -53,7 +49,6 @@ export default function EditarSerie() {
         Episodios: "",
     });
 
-    // ✅ Cargar datos cuando estén disponibles
     useEffect(() => {
         if (data?.serie) {
             const s = data.serie;
@@ -76,7 +71,6 @@ export default function EditarSerie() {
     const s = data.serie;
     const portadaUrl = `https://catalogo-backend-f4sk.onrender.com/portadas/Portadas Series/${s.Portada}`;
 
-    // ✅ MANEJADOR DE CAMBIOS
     const handleChange = (e) => {
         const { name, value } = e.target;
         dispatch({

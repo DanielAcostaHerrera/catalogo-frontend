@@ -5,7 +5,6 @@ import { useReducer, useEffect } from "react";
 import { ACTUALIZAR_JUEGO } from "../mutations";
 import { GET_JUEGO } from "../graphql";
 
-// 🔥 REDUCER para manejar el formulario
 const formReducer = (state, action) => {
     switch (action.type) {
         case 'SET_FORM':
@@ -77,15 +76,12 @@ export default function EditarJuego() {
         return null;
     };
 
-    // ✅ PRIMERO: useQuery
     const { loading, error, data } = useQuery(GET_JUEGO, {
         variables: { id: Number(id) },
     });
 
-    // ✅ SEGUNDO: useMutation
     const [actualizarJuego] = useMutation(ACTUALIZAR_JUEGO);
 
-    // 🔥 REDUCER EN LUGAR DE useState
     const [form, dispatch] = useReducer(formReducer, {
         Nombre: "",
         Tamano: "",
@@ -94,7 +90,6 @@ export default function EditarJuego() {
         Requisitos: "",
     });
 
-    // ✅ Cargar datos cuando estén disponibles
     useEffect(() => {
         if (data?.juego) {
             const j = data.juego;
@@ -117,7 +112,6 @@ export default function EditarJuego() {
     const j = data.juego;
     const portadaUrl = `https://catalogo-backend-f4sk.onrender.com/portadas/Portadas Juegos/${j.Portada}`;
 
-    // ✅ MANEJADOR DE CAMBIOS
     const handleChange = (e) => {
         const { name, value } = e.target;
         dispatch({

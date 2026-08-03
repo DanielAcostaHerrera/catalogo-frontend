@@ -5,7 +5,6 @@ import { useReducer, useEffect } from "react";
 import { ACTUALIZAR_ANIMADO } from "../mutations";
 import { GET_ANIMADO } from "../graphql";
 
-// 🔥 REDUCER para manejar el formulario
 const formReducer = (state, action) => {
     switch (action.type) {
         case 'SET_FORM':
@@ -42,7 +41,6 @@ export default function EditarAnimado() {
 
     const [actualizarAnimado] = useMutation(ACTUALIZAR_ANIMADO);
 
-    // 🔥 REDUCER EN LUGAR DE useState
     const [form, dispatch] = useReducer(formReducer, {
         Titulo: "",
         Anno: "",
@@ -51,7 +49,6 @@ export default function EditarAnimado() {
         Episodios: "",
     });
 
-    // ✅ Cargar datos cuando estén disponibles
     useEffect(() => {
         if (data?.animado) {
             const a = data.animado;
@@ -74,7 +71,6 @@ export default function EditarAnimado() {
     const a = data.animado;
     const portadaUrl = `https://catalogo-backend-f4sk.onrender.com/portadas/Portadas Animados/${a.Portada}`;
 
-    // ✅ MANEJADOR DE CAMBIOS
     const handleChange = (e) => {
         const { name, value } = e.target;
         dispatch({

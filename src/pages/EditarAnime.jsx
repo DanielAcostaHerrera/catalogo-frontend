@@ -5,7 +5,6 @@ import { useReducer, useEffect } from "react";
 import { ACTUALIZAR_ANIME } from "../mutations";
 import { GET_ANIME } from "../graphql";
 
-// 🔥 REDUCER para manejar el formulario (MISMO QUE ANIMADO)
 const formReducer = (state, action) => {
     switch (action.type) {
         case 'SET_FORM':
@@ -36,15 +35,12 @@ export default function EditarAnime() {
         return null;
     };
 
-    // ✅ PRIMERO: useQuery
     const { loading, error, data } = useQuery(GET_ANIME, {
         variables: { id: Number(id) },
     });
 
-    // ✅ SEGUNDO: useMutation
     const [actualizarAnime] = useMutation(ACTUALIZAR_ANIME);
 
-    // 🔥 REDUCER EN LUGAR DE useState
     const [form, dispatch] = useReducer(formReducer, {
         Titulo: "",
         Anno: "",
@@ -53,7 +49,6 @@ export default function EditarAnime() {
         Episodios: "",
     });
 
-    // ✅ Cargar datos cuando estén disponibles
     useEffect(() => {
         if (data?.anime) {
             const a = data.anime;
@@ -76,7 +71,6 @@ export default function EditarAnime() {
     const a = data.anime;
     const portadaUrl = `https://catalogo-backend-f4sk.onrender.com/portadas/Portadas Anime/${a.Portada}`;
 
-    // ✅ MANEJADOR DE CAMBIOS
     const handleChange = (e) => {
         const { name, value } = e.target;
         dispatch({

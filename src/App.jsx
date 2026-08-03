@@ -37,7 +37,7 @@ import CarritoView from "./pages/CarritoView";
 import Bienvenida from "./pages/Bienvenida";
 
 import { CartProvider } from "./context/CartContext";
-import { AuthProvider } from "./AuthContext";
+import { AuthProvider } from "./AuthProvider";
 
 /* 🔹 Toastify */
 import { ToastContainer, toast } from "react-toastify";

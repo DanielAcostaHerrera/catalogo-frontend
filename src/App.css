@@ -736,9 +736,9 @@ textarea.input-dark {
 /* 🔥 PC (pantallas grandes) */
 @media (min-width: 951px) {
   .MuiDrawer-paper {
-    width: max-content !important;    /* ← Se ajusta al contenido */
-    max-width: 25vw !important;       /* ← Límite máximo en PC */
-    min-width: max-content !important; /* ← Se ajusta al contenido */
+    width: max-content !important;    
+    max-width: 25vw !important;       
+    min-width: max-content !important; 
   }
 }
 
@@ -760,16 +760,21 @@ textarea.input-dark {
 /* 🔥 Labels dentro del Drawer (encima del input) */
 .drawer-filtros-contenido label {
   color: #f0f0f0;
-  display: block;               /* ← Ocupa toda la línea */
-  margin-bottom: 4px;           /* ← Separación con el input */
+  display: block;               
+  margin-bottom: 4px;           
 }
 
 /* 🔥 Inputs dentro del Drawer (debajo del label) */
 .drawer-filtros-contenido input {
-  width: 100% !important;       /* ← Ocupan todo el ancho del drawer */
+  width: 100% !important;       
   max-width: 100% !important;
   box-sizing: border-box !important;
-  display: block !important;    /* ← Fuerza que estén debajo */
+  display: block !important;  
+  border: 1px solid #444;
+  background-color: #111;
+  color: #f0f0f0;
+  font-size: 14px;
+  box-sizing: border-box; 
 }
 
 /* 🔥 Contenedor de botones dentro del Drawer */
@@ -786,7 +791,7 @@ textarea.input-dark {
   flex: 1 !important;
   width: auto !important;
   min-width: 0 !important;
-  white-space: nowrap !important;   /* ← Evita que el texto se rompa */
+  white-space: nowrap !important;  
 }
 
 /* 🔥 En móvil: botones uno debajo del otro y al 100% */
@@ -872,20 +877,20 @@ textarea.input-dark {
 /* 🔥 En móvil: botón debajo del texto */
 @media (max-width: 950px) {
   .episodio-item {
-    flex-direction: column;       /* ← Pone el botón DEBAJO del texto */
-    align-items: stretch;         /* ← Estira al ancho completo */
+    flex-direction: column;       
+    align-items: stretch;         
     gap: 6px;
     padding: 8px 0;
-    text-align: center;           /* ← Centra el texto */
+    text-align: center;           
   }
 
   .episodio-texto {
-    text-align: center;           /* ← Centra el texto */
+    text-align: center;           
   }
 
   .episodio-btn {
-    width: 100%;                  /* ← Botón ocupa todo el ancho */
-    justify-content: center;      /* ← Centra el contenido del botón */
+    width: 100%;                  
+    justify-content: center;      
   }
 }
 

@@ -22,7 +22,6 @@ export default function CatalogoJuegos({ showToast }) {
 
     const [openFiltros, setOpenFiltros] = useState(false);
 
-    // 🔥 FILTROS FINALES (los que realmente se aplican)
     const [filtros, setFiltros] = useState({
         nombre: searchParams.get("nombre") || "",
         tamanoMin: searchParams.get("tamanoMin") || "",
@@ -33,7 +32,6 @@ export default function CatalogoJuegos({ showToast }) {
         precioMax: searchParams.get("precioMax") || "",
     });
 
-    // 🔥 TEMPORALES (inputs sin tiempo real)
     const [nombreTemp, setNombreTemp] = useState(filtros.nombre);
     const [tamanoMinTemp, setTamanoMinTemp] = useState(filtros.tamanoMin);
     const [tamanoMaxTemp, setTamanoMaxTemp] = useState(filtros.tamanoMax);
@@ -42,7 +40,6 @@ export default function CatalogoJuegos({ showToast }) {
     const [annoMinTemp, setAnnoMinTemp] = useState(filtros.annoMin);
     const [annoMaxTemp, setAnnoMaxTemp] = useState(filtros.annoMax);
 
-    // 🔥 VALIDACIONES DE TECLADO
     const soloAnios = (e) => {
         const allowed = ["Backspace", "Tab", "ArrowLeft", "ArrowRight", "Delete"];
         if (!/[0-9]/.test(e.key) && !allowed.includes(e.key)) e.preventDefault();
@@ -54,16 +51,13 @@ export default function CatalogoJuegos({ showToast }) {
         if (!/[0-9]/.test(e.key) && !allowed.includes(e.key)) e.preventDefault();
     };
 
-    // 🔥 FUNCIÓN FINAL PARA APLICAR FILTROS
     const aplicarFiltros = () => {
         const p = new URLSearchParams();
 
-        // --- NOMBRE ---
         if (nombreTemp.trim() !== "") {
             p.set("nombre", nombreTemp.trim());
         }
 
-        // --- AÑOS ---
         const currentYear = new Date().getFullYear();
 
         if (annoMinTemp !== "") {
@@ -91,7 +85,6 @@ export default function CatalogoJuegos({ showToast }) {
             }
         }
 
-        // --- TAMAÑOS ---
         if (tamanoMinTemp !== "") {
             const min = parseFloat(tamanoMinTemp);
             if (isNaN(min) || min < 0) {
@@ -117,7 +110,6 @@ export default function CatalogoJuegos({ showToast }) {
             }
         }
 
-        // --- PRECIOS ---
         if (precioMinTemp !== "") {
             const min = parseInt(precioMinTemp);
             if (isNaN(min) || min < 0) {
@@ -143,11 +135,9 @@ export default function CatalogoJuegos({ showToast }) {
             }
         }
 
-        // --- PAGE ---
         p.set("page", 1);
         setPage(1);
 
-        // --- ACTUALIZAR FILTROS FINALES ---
         setFiltros({
             nombre: p.get("nombre") || "",
             tamanoMin: p.get("tamanoMin") || "",
@@ -162,7 +152,6 @@ export default function CatalogoJuegos({ showToast }) {
         setOpenFiltros(false);
     };
 
-    // 🔥 REINICIAR FILTROS
     const reiniciarCatalogo = () => {
         setFiltros({
             nombre: "",
@@ -187,7 +176,6 @@ export default function CatalogoJuegos({ showToast }) {
         setOpenFiltros(false);
     };
 
-    // 🔥 DECIDIR QUERY SEGÚN FILTROS FINALES
     const hayFiltros =
         filtros.nombre ||
         filtros.tamanoMin ||
@@ -211,7 +199,6 @@ export default function CatalogoJuegos({ showToast }) {
         precioMax: filtros.precioMax !== "" ? parseInt(filtros.precioMax) : undefined,
     };
 
-    // 🔥 Apollo
     const { loading, error, data } = useQuery(query, { variables });
 
     if (loading) return <p style={{ color: "#ccc" }}>Cargando…</p>;
@@ -236,7 +223,6 @@ export default function CatalogoJuegos({ showToast }) {
                 Catálogo de Juegos
             </h2>
 
-            {/* BOTONES SUPERIORES */}
             <div className="catalogo-top-buttons">
                 <button className="btn-dark" onClick={() => setOpenFiltros(true)}>
                     <span className="btn-text">Filtros</span>
@@ -273,7 +259,6 @@ export default function CatalogoJuegos({ showToast }) {
                 )}
             </div>
 
-            {/* SWIPEABLE DRAWER DE FILTROS */}
             <SwipeableDrawer
                 anchor="right"
                 open={openFiltros}
@@ -304,7 +289,6 @@ export default function CatalogoJuegos({ showToast }) {
                         />
                     </div>
 
-                    {/* Año mínimo */}
                     <div className="filtro-nombre">
                         <label>Año mínimo</label>
                         <input
@@ -316,7 +300,6 @@ export default function CatalogoJuegos({ showToast }) {
                         />
                     </div>
 
-                    {/* Año máximo */}
                     <div className="filtro-nombre">
                         <label>Año máximo</label>
                         <input
@@ -328,7 +311,6 @@ export default function CatalogoJuegos({ showToast }) {
                         />
                     </div>
 
-                    {/* Tamaño mínimo */}
                     <div className="filtro-nombre">
                         <label>Tamaño mínimo (Gb)</label>
                         <input
@@ -340,7 +322,6 @@ export default function CatalogoJuegos({ showToast }) {
                         />
                     </div>
 
-                    {/* Tamaño máximo */}
                     <div className="filtro-nombre">
                         <label>Tamaño máximo (Gb)</label>
                         <input
@@ -352,7 +333,6 @@ export default function CatalogoJuegos({ showToast }) {
                         />
                     </div>
 
-                    {/* Precio mínimo */}
                     <div className="filtro-nombre">
                         <label>Precio mínimo (CUP)</label>
                         <input
@@ -364,7 +344,6 @@ export default function CatalogoJuegos({ showToast }) {
                         />
                     </div>
 
-                    {/* Precio máximo */}
                     <div className="filtro-nombre">
                         <label>Precio máximo (CUP)</label>
                         <input
@@ -376,7 +355,6 @@ export default function CatalogoJuegos({ showToast }) {
                         />
                     </div>
 
-                    {/* BOTONES */}
                     <div className="drawer-filtros-botones">
                         <button className="btn-dark" onClick={aplicarFiltros}>
                             Aplicar filtros
@@ -389,8 +367,6 @@ export default function CatalogoJuegos({ showToast }) {
                 </div>
             </SwipeableDrawer>
 
-
-            {/* GRID DE JUEGOS */}
             <div
                 style={{
                     display: "grid",
@@ -408,7 +384,6 @@ export default function CatalogoJuegos({ showToast }) {
                 ))}
             </div>
 
-            {/* PAGINACIÓN */}
             <Paginacion
                 page={page}
                 totalPages={totalPages}

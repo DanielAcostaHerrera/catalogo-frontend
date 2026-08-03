@@ -123,7 +123,6 @@ export default function InsertarJuego() {
         return payload;
     };
 
-    // 🔥 Apollo moderno — reemplazo de <Mutation>
     const [crearJuego] = useMutation(CREAR_JUEGO);
 
     return (
