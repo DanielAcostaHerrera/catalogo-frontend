@@ -36,8 +36,8 @@ import InfoNegocio from "./pages/InfoNegocio";
 import CarritoView from "./pages/CarritoView";
 import Bienvenida from "./pages/Bienvenida";
 
-import { CartProvider } from "./context/CartContext";
-import { AuthProvider } from "./AuthProvider";
+import { CartProvider } from "./context/CartProvider";
+import { AuthProvider } from "./context/AuthProvider";
 
 /* 🔹 Toastify */
 import { ToastContainer, toast } from "react-toastify";

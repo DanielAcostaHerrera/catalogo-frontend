@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useState } from "react";
-import { useAuth } from "../AuthContext";
+import { useAuth } from "../context/AuthContext";
 import LoginModal from "../components/LoginModal";
 
 export default function Header() {

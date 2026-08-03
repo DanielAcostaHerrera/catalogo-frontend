@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useAuth } from "../AuthContext";
+import { useAuth } from "../context/AuthContext";
 import AddToCartButton from "../components/AddToCartButton";
 
 import "../styles/ProductCard.css";

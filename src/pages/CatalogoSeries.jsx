@@ -5,7 +5,7 @@ import SerieCard from "../components/SerieCard";
 import Paginacion from "../components/Paginacion";
 import "../App.css";
 import { useLocation, useSearchParams, useNavigate } from "react-router-dom";
-import { useAuth } from "../AuthContext";
+import { useAuth } from "../context/AuthContext";
 
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import FilterListIcon from "@mui/icons-material/FilterList";

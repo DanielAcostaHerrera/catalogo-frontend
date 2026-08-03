@@ -1,0 +1,108 @@
+import { useState, useEffect, useMemo } from "react";
+import { CartContext } from "./CartContext";
+
+function normalizeGame(j) {
+    const id = j.Id ?? j.id;
+    const nombre = j.Nombre ?? j.nombre;
+    const precio = j.Precio ?? j.precio ?? 0;
+    const tamanoFormateado = j.TamanoFormateado ?? j.tamanoFormateado;
+    const portada = j.Portada ?? j.portada;
+
+    return { id, tipo: "juego", nombre, precio: Number(precio), tamanoFormateado, portada };
+}
+
+export function CartProvider({ children }) {
+    const [cartItems, setCartItems] = useState(() => {
+        try {
+            const raw = localStorage.getItem("pph_cart");
+            return raw ? JSON.parse(raw) : [];
+        } catch {
+            return [];
+        }
+    });
+
+    useEffect(() => {
+        localStorage.setItem("pph_cart", JSON.stringify(cartItems));
+    }, [cartItems]);
+
+    const addToCart = (item) => {
+        let finalItem = item;
+
+        if (item.tipo === "juego") {
+            finalItem = normalizeGame(item);
+            if (cartItems.some((g) => g.id === finalItem.id)) {
+                return { status: "duplicate" };
+            }
+            setCartItems((prev) => [...prev, finalItem]);
+            return { status: "added" };
+        }
+
+        if (item.tipo === "serie" || item.tipo === "anime" || item.tipo === "animado") {
+            const existente = cartItems.find((i) => i.id === item.id);
+
+            if (!existente) {
+                setCartItems((prev) => [...prev, item]);
+                return { status: "added" };
+            } else {
+                if (item.bloques?.some((b) => b.descripcion === "Serie entera")) {
+                    if (existente.bloques?.some((b) => b.descripcion === "Serie entera"))
+                        return { status: "duplicate" };
+
+                    setCartItems((prev) => {
+                        const sinPrevias = prev.filter((i) => i.id !== item.id);
+                        return [...sinPrevias, finalItem];
+                    });
+                    return { status: "added" };
+                } else {
+                    if (existente.bloques?.some((b) => b.descripcion === item.bloques?.[0]?.descripcion)) {
+                        return { status: "duplicate" };
+                    }
+
+                    const nuevoItem = {
+                        ...existente,
+                        bloques: [...existente.bloques, ...item.bloques],
+                        precio: Number(existente.precio) + Number(item.precio),
+                    };
+                    updateCartItem(item.id, nuevoItem);
+                    return { status: "added" };
+                }
+            }
+        }
+    };
+
+    const updateCartItem = (id, nuevoItem) => {
+        setCartItems((prev) =>
+            prev.map((i) => (i.id === id ? nuevoItem : i))
+        );
+    };
+
+    const removeFromCart = (id) => {
+        setCartItems((prev) => prev.filter((g) => g.id !== id));
+    };
+
+    const clearCart = () => {
+        setCartItems([]);
+    };
+
+    const totals = useMemo(() => {
+        const price = cartItems.reduce((acc, g) => acc + (Number(g.precio) || 0), 0);
+
+        const size = cartItems.reduce((acc, g) => {
+            if (!g.tamanoFormateado) return acc;
+            const str = String(g.tamanoFormateado).toLowerCase();
+            const m = str.match(/([\d.,]+)\s*(gb|mb)/);
+            if (!m) return acc;
+            const num = parseFloat(m[1].replace(",", "."));
+            const unit = m[2];
+            if (unit === "mb") {
+                return acc + num / 1024;
+            }
+            return acc + num;
+        }, 0);
+
+        return { price, size };
+    }, [cartItems]);
+
+    const value = { cartItems, addToCart, updateCartItem, removeFromCart, clearCart, totals };
+    return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
+}
