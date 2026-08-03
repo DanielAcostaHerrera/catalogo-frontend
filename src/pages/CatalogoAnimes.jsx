@@ -72,7 +72,10 @@ export default function CatalogoAnimes({ showToast }) {
         titulo: filtros.nombre || null,
     };
 
-    const { loading, error, data } = useQuery(query, { variables });
+        const { loading, error, data } = useQuery(query, {
+            variables,
+            fetchPolicy: "network-only",
+        });
 
     if (!precios) return <p style={{ color: "#ccc" }}>Cargando precios…</p>;
     if (loading) return <p style={{ color: "#ccc" }}>Cargando…</p>;

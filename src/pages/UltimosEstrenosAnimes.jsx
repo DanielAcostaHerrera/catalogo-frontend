@@ -43,7 +43,6 @@ export default function UltimosEstrenosAnimes({ showToast }) {
 
     const PAGE_SIZE = 100;
 
-    // 🔥 Apollo moderno — reemplazo de <Query>
     const { loading, error, data } = useQuery(GET_ULTIMOS_ESTRENOS_ANIMES, {
         variables,
         fetchPolicy: "network-only",

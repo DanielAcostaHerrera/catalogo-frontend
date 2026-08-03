@@ -45,7 +45,10 @@ export default function CatalogoSeries({ showToast }) {
         titulo: filtros.nombre || null,
     };
 
-    const { loading, error, data } = useQuery(query, { variables });
+        const { loading, error, data } = useQuery(query, {
+            variables,
+            fetchPolicy: "network-only",
+        });
 
     // 🔥 Esperar a que carguen los precios
     if (!precios) {

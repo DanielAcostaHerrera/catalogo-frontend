@@ -60,7 +60,6 @@ export default function SerieDetalles({ showToast }) {
         showToast("Temporada añadida correctamente");
     };
 
-    // 🔥 Apollo moderno
     const { loading, error, data } = useQuery(GET_SERIE, {
         variables: { id: Number(id) },
         fetchPolicy: "network-only",

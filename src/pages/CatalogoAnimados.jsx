@@ -72,8 +72,10 @@ export default function CatalogoAnimados({ showToast }) {
         titulo: filtros.nombre || null,
     };
 
-    // 🔥 Apollo
-    const { loading, error, data } = useQuery(query, { variables });
+        const { loading, error, data } = useQuery(query, {
+            variables,
+            fetchPolicy: "network-only",
+        });
 
     if (!precios) return <p style={{ color: "#ccc" }}>Cargando precios…</p>;
     if (loading) return <p style={{ color: "#ccc" }}>Cargando…</p>;

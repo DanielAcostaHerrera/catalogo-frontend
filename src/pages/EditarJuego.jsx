@@ -78,6 +78,7 @@ export default function EditarJuego() {
 
     const { loading, error, data } = useQuery(GET_JUEGO, {
         variables: { id: Number(id) },
+        fetchPolicy: "network-only",
     });
 
     const [actualizarJuego] = useMutation(ACTUALIZAR_JUEGO);

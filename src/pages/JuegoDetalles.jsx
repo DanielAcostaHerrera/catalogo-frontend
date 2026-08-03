@@ -31,7 +31,6 @@ export default function JuegoDetalles({ showToast }) {
         return resultado.join("\n");
     };
 
-    // 🔥 Apollo moderno
     const { loading, error, data } = useQuery(GET_JUEGO, {
         variables: { id: Number(id) },
         fetchPolicy: "network-only",

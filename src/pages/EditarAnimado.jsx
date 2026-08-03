@@ -37,6 +37,7 @@ export default function EditarAnimado() {
 
     const { loading, error, data } = useQuery(GET_ANIMADO, {
         variables: { id: Number(id) },
+        fetchPolicy: "network-only",
     });
 
     const [actualizarAnimado] = useMutation(ACTUALIZAR_ANIMADO);

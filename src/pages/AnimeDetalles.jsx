@@ -59,8 +59,7 @@ export default function AnimeDetalles({ showToast }) {
 
         showToast("Temporada añadida correctamente");
     };
-
-    // 🔥 Apollo moderno
+    
     const { loading, error, data } = useQuery(GET_ANIME, {
         variables: { id: Number(id) },
         fetchPolicy: "network-only",

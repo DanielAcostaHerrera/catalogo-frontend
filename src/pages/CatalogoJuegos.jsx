@@ -199,7 +199,10 @@ export default function CatalogoJuegos({ showToast }) {
         precioMax: filtros.precioMax !== "" ? parseInt(filtros.precioMax) : undefined,
     };
 
-    const { loading, error, data } = useQuery(query, { variables });
+        const { loading, error, data } = useQuery(query, {
+            variables,
+            fetchPolicy: "network-only",
+        });
 
     if (loading) return <p style={{ color: "#ccc" }}>Cargando…</p>;
     if (error) return <p style={{ color: "red" }}>Error: {error.message}</p>;

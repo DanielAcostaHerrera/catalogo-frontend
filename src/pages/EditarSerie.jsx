@@ -37,6 +37,7 @@ export default function EditarSerie() {
 
     const { loading, error, data } = useQuery(GET_SERIE, {
         variables: { id: Number(id) },
+        fetchPolicy: "network-only",
     });
 
     const [actualizarSerie] = useMutation(ACTUALIZAR_SERIE);

@@ -37,6 +37,7 @@ export default function EditarAnime() {
 
     const { loading, error, data } = useQuery(GET_ANIME, {
         variables: { id: Number(id) },
+        fetchPolicy: "network-only",
     });
 
     const [actualizarAnime] = useMutation(ACTUALIZAR_ANIME);

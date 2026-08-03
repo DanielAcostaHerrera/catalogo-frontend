@@ -60,7 +60,6 @@ export default function AnimadoDetalles({ showToast }) {
         showToast("Temporada añadida correctamente");
     };
 
-    // 🔥 Apollo moderno
     const { loading, error, data } = useQuery(GET_ANIMADO, {
         variables: { id: Number(id) },
         fetchPolicy: "network-only",
