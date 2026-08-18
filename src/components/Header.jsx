@@ -113,19 +113,19 @@ export default function Header() {
       >
         <div className="drawer-menu-contenido">
           <NavLink to="/catalogo-juegos" end onClick={() => setMenuOpen(false)} className="drawer-menu-item">
-            Juegos
+            🎮 Juegos
           </NavLink>
           <NavLink to="/catalogo-series" onClick={() => setMenuOpen(false)} className="drawer-menu-item">
-            Series
+            🎬 Series
           </NavLink>
           <NavLink to="/catalogo-animados" onClick={() => setMenuOpen(false)} className="drawer-menu-item">
-            Animados
+            🐭 Animados
           </NavLink>
           <NavLink to="/catalogo-animes" onClick={() => setMenuOpen(false)} className="drawer-menu-item">
-            Animes
+            🍥 Animes
           </NavLink>
           <NavLink to="/info" onClick={() => setMenuOpen(false)} className="drawer-menu-item">
-            Información del negocio
+            ❓ Información del negocio
           </NavLink>
         </div>
       </SwipeableDrawer>

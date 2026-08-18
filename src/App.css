@@ -858,13 +858,25 @@ textarea.input-dark {
 
 /* Contenedor del menú hamburguesa */
 .drawer-menu-contenido {
-  width: 250px;
-  background-color: #1c1c1c; /* fondo oscuro */
+  background-color: #1c1c1c; 
   height: 100%;
   padding: 20px 12px;
   display: flex;
   flex-direction: column;
-  gap: 14px; /* espacio entre items */
+  gap: 14px; 
+  width: max-content;       
+  min-width: 70vw;          
+  max-width: 70vw;          
+  box-sizing: border-box;
+}
+
+/* En pantallas grandes */
+@media (min-width: 951px) {
+  .drawer-menu-contenido {
+    min-width: max-content !important;      
+    max-width: 25vw;        
+    width: max-content;     
+  }
 }
 
 /* Cada item del menú */
@@ -877,6 +889,7 @@ textarea.input-dark {
   text-decoration: none;
   font-weight: 500;
   transition: background-color 0.2s, transform 0.2s;
+  white-space: nowrap;      
 }
 
 /* Hover: efecto visual */
