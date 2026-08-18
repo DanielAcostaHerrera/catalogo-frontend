@@ -376,7 +376,11 @@ body {
 
 .site-header {
   position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: #1e1e1e;
 }
+
 
 .header-container {
   display: flex;

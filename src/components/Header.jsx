@@ -66,7 +66,7 @@ export default function Header() {
             <Avatar
               alt="Usuario"
               src={auth.isLogged ? "/user-foto.png" : ""}
-              sx={{ width: 40, height: 40 }}
+              sx={{ width: 40, height: 40, bgcolor: "#1e1e1e"  }}
             >
               {!auth.isLogged && <AccountCircleIcon />}
             </Avatar>
