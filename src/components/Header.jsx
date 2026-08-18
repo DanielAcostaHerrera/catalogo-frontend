@@ -3,30 +3,41 @@ import { useCart } from "../context/CartContext";
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import LoginModal from "../components/LoginModal";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import Badge from "@mui/material/Badge";
+import Avatar from "@mui/material/Avatar";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import IconButton from "@mui/material/IconButton";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 
 export default function Header() {
   const { cartItems } = useCart();
   const [menuOpen, setMenuOpen] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
   const auth = useAuth();
 
-  const linkStyle = {
-    color: "#e6e6e6",
-    textDecoration: "none",
-    padding: "10px 14px",
-    borderRadius: 6,
-    transition: "background-color 0.2s, color 0.2s",
-  };
-
-  const activeStyle = {
-    backgroundColor: "#3a3a3a",
-    color: "#ffffff",
-  };
+  const handleAvatarClick = (event) => setAnchorEl(event.currentTarget);
+  const handleMenuClose = () => setAnchorEl(null);
 
   return (
     <header className="site-header">
       <div className="header-container">
+        
+        {/* 🔹 Bloque izquierdo: menú hamburguesa */}
         <div className="left-contents">
+          <button
+            className="hamburger-btn"
+            onClick={() => setMenuOpen(true)}
+          >
+            ☰
+          </button>
+        </div>
+
+        {/* 🔹 Bloque central: logo + título */}
+        <div className="center-contents">
           <div className="logo-box">
             <NavLink to="/" style={{ display: "inline-block" }}>
               <img
@@ -43,86 +54,88 @@ export default function Header() {
           </div>
         </div>
 
+        {/* 🔹 Bloque derecho: carrito + avatar */}
         <div className="right-contents">
-          <button
-            onClick={() => {
-              if (auth.isLogged) auth.logout();
-              else setShowLogin(true);
-            }}
-            className="admin-lock"
-          >
-            {auth.isLogged ? "🔓" : "🔐"}
-          </button>
+          <NavLink to="/carrito" style={{ textDecoration: "none", color: "inherit" }}>
+            <Badge badgeContent={cartItems.length} color="secondary">
+              <ShoppingCartIcon style={{ color: "#e6e6e6", cursor: "pointer" }} />
+            </Badge>
+          </NavLink>
 
-          <button
-            className="hamburger-btn"
-            onClick={() => setMenuOpen(!menuOpen)}
+          <IconButton onClick={handleAvatarClick} sx={{ p: 0 }}>
+            <Avatar
+              alt="Usuario"
+              src={auth.isLogged ? "/user-foto.png" : ""}
+              sx={{ width: 40, height: 40 }}
+            >
+              {!auth.isLogged && <AccountCircleIcon />}
+            </Avatar>
+          </IconButton>
+
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleMenuClose}
+            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+            transformOrigin={{ vertical: "top", horizontal: "right" }}
           >
-            ☰
-          </button>
+            {auth.isLogged ? (
+              <MenuItem
+                onClick={() => {
+                  auth.logout();
+                  handleMenuClose();
+                }}
+              >
+                Cerrar sesión
+              </MenuItem>
+            ) : (
+              <MenuItem
+                onClick={() => {
+                  setShowLogin(true);
+                  handleMenuClose();
+                }}
+              >
+                Iniciar sesión
+              </MenuItem>
+            )}
+          </Menu>
         </div>
       </div>
 
-      {menuOpen && (
-        <nav className="mobile-menu">
-          <NavLink
-            to="/catalogo-juegos"
-            end
-            style={({ isActive }) =>
-              isActive ? { ...linkStyle, ...activeStyle } : linkStyle
-            }
-          >
+      {/* 🔹 Menú hamburguesa como Drawer desde la izquierda */}
+      <SwipeableDrawer
+        anchor="left"
+        open={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        onOpen={() => setMenuOpen(true)}
+        disableDiscovery={true}
+        disableSwipeToOpen={true}
+      >
+        <div className="drawer-menu-contenido">
+          <NavLink to="/catalogo-juegos" end onClick={() => setMenuOpen(false)} className="drawer-menu-item">
             Juegos
           </NavLink>
-
-          <NavLink
-            to="/catalogo-series"
-            style={({ isActive }) =>
-              isActive ? { ...linkStyle, ...activeStyle } : linkStyle
-            }
-          >
+          <NavLink to="/catalogo-series" onClick={() => setMenuOpen(false)} className="drawer-menu-item">
             Series
           </NavLink>
-
-          <NavLink
-            to="/catalogo-animados"
-            style={({ isActive }) =>
-              isActive ? { ...linkStyle, ...activeStyle } : linkStyle
-            }
-          >
+          <NavLink to="/catalogo-animados" onClick={() => setMenuOpen(false)} className="drawer-menu-item">
             Animados
           </NavLink>
-
-          <NavLink
-            to="/catalogo-animes"
-            style={({ isActive }) =>
-              isActive ? { ...linkStyle, ...activeStyle } : linkStyle
-            }
-          >
+          <NavLink to="/catalogo-animes" onClick={() => setMenuOpen(false)} className="drawer-menu-item">
             Animes
           </NavLink>
-
-          <NavLink
-            to="/info"
-            style={({ isActive }) =>
-              isActive ? { ...linkStyle, ...activeStyle } : linkStyle
-            }
-          >
+          <NavLink to="/info" onClick={() => setMenuOpen(false)} className="drawer-menu-item">
             Información del negocio
           </NavLink>
-
-          <NavLink
-            to="/carrito"
-            style={({ isActive }) =>
-              isActive ? { ...linkStyle, ...activeStyle } : linkStyle
-            }
-          >
-            🛒 Carrito ({cartItems.length})
-          </NavLink>
-        </nav>
-      )}
+        </div>
+      </SwipeableDrawer>
 
       {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
     </header>
   );
 }
+
+
+
+
+

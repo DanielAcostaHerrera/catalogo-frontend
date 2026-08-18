@@ -390,20 +390,28 @@ body {
   gap: 0;
   justify-content: flex-start;
   align-items: center;
+  margin-left: 10px;
+}
+
+.center-contents {
+  display: flex;
+  gap: 0;
+  justify-content: center;
+  align-items: center;
+}
+
+.right-contents {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 10px;
 }
 
 .header-title {
   font-weight: 600;
   color: #f0f0f0;
   white-space: nowrap;
-}
-
-.right-contents {
-  display: flex;
-  gap: 12px;
-  justify-content: flex-end;
-  align-items: center;
-  padding-right: 10px;
 }
 
 .hamburger-btn {
@@ -843,6 +851,49 @@ textarea.input-dark {
     display: none;
   }
 }
+
+/* Contenedor del menú hamburguesa */
+.drawer-menu-contenido {
+  width: 250px;
+  background-color: #1c1c1c; /* fondo oscuro */
+  height: 100%;
+  padding: 20px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px; /* espacio entre items */
+}
+
+/* Cada item del menú */
+.drawer-menu-item {
+  display: block;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background-color: #2a2a2a;
+  color: #e6e6e6;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+/* Hover: efecto visual */
+.drawer-menu-item:hover {
+  background-color: #3a3a3a;
+  transform: translateX(4px);
+}
+
+/* Activo: estilo especial */
+.drawer-menu-item.active {
+  background-color: #444;
+  color: #fff;
+}
+
+.drawer-menu-item,
+.drawer-menu-item:visited,
+.drawer-menu-item:hover,
+.drawer-menu-item:active {
+  color: #e6e6e6; /* 🔥 fuerza el color siempre */
+}
+
 
 /* --------------------------------------------------
   Detalles Series
