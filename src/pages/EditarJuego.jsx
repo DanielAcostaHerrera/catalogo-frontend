@@ -4,14 +4,15 @@ import "../App.css";
 import { useReducer, useEffect } from "react";
 import { ACTUALIZAR_JUEGO } from "../mutations";
 import { GET_JUEGO } from "../graphql";
+import { useAuth, authContext } from "../context/authContext";
 
 const formReducer = (state, action) => {
     switch (action.type) {
-        case 'SET_FORM':
+        case "SET_FORM":
             return { ...state, ...action.payload };
-        case 'CHANGE':
+        case "CHANGE":
             return { ...state, [action.field]: action.value };
-        case 'RESET':
+        case "RESET":
             return action.payload;
         default:
             return state;
@@ -19,18 +20,87 @@ const formReducer = (state, action) => {
 };
 
 export default function EditarJuego() {
+    const auth = useAuth();
     const { id } = useParams();
     const navigate = useNavigate();
     const location = useLocation();
 
+    const { loading, error, data } = useQuery(GET_JUEGO, {
+        variables: { id: Number(id) },
+        fetchPolicy: "network-only",
+    });
+
+    const [actualizarJuego] = useMutation(ACTUALIZAR_JUEGO);
+
+    const [form, dispatch] = useReducer(formReducer, {
+        Nombre: "",
+        Tamano: "",
+        AnnoAct: "",
+        Sinopsis: "",
+        Requisitos: "",
+    });
+
+    // ============================
+    // CARGA DE DATOS
+    // ============================
+    useEffect(() => {
+        if (data?.juego) {
+            const j = data.juego;
+            dispatch({
+                type: "SET_FORM",
+                payload: {
+                    Nombre: j.Nombre,
+                    Tamano: j.TamanoFormateado || "",
+                    AnnoAct: String(j.AnnoAct),
+                    Sinopsis: j.Sinopsis?.replace(/\\n/g, "\n") || "",
+                    Requisitos: j.Requisitos?.replace(/\\n/g, "\n") || "",
+                },
+            });
+        }
+    }, [data]);
+
+    // ============================
+    // BLOQUEO DE VISTA SI NO LOGEADO
+    // ============================
+    if (!auth.isLogged) {
+        return (
+            <div className="detalle-wrapper">
+                <h2 className="detalle-titulo" style={{ color: "red" }}>
+                    ❌ No tienes permisos para acceder a esta vista
+                </h2>
+                <p style={{ color: "#ccc", marginTop: 10 }}>
+                    Debes iniciar sesión como administrador para editar juegos.
+                </p>
+            </div>
+        );
+    }
+
+    // ============================
+    // LOADING / ERROR
+    // ============================
+    if (loading) return <p style={{ color: "#ccc" }}>Cargando…</p>;
+    if (error) return <p style={{ color: "red" }}>Error: {error.message}</p>;
+
+    const j = data.juego;
+    const portadaUrl = `https://catalogo-backend-f4sk.onrender.com/portadas/Portadas Juegos/${j.Portada}`;
+
+    // ============================
+    // HANDLERS
+    // ============================
+    const handleChange = (e) => {
+        dispatch({
+            type: "CHANGE",
+            field: e.target.name,
+            value: e.target.value,
+        });
+    };
+
     const soloCuatroDigitos = (e, valorActual) => {
         const allowed = ["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Tab"];
-
         if (!/[0-9]/.test(e.key) && !allowed.includes(e.key)) {
             e.preventDefault();
             return;
         }
-
         if (!/[0-9]/.test(e.key)) return;
 
         const input = e.target;
@@ -44,15 +114,6 @@ export default function EditarJuego() {
         if (longitudResultante > 4) {
             e.preventDefault();
         }
-    };
-
-    const normalizarTexto = (txt) => (txt ? txt.replace(/\\n/g, "\n") : "");
-
-    const prepararRequisitos = (txt) => {
-        return txt
-            .replace(/\r/g, "")
-            .replace(/\n\n+/g, "\\n\\n")
-            .replace(/\n/g, "\\n");
     };
 
     const parseTamano = (valor) => {
@@ -76,51 +137,8 @@ export default function EditarJuego() {
         return null;
     };
 
-    const { loading, error, data } = useQuery(GET_JUEGO, {
-        variables: { id: Number(id) },
-        fetchPolicy: "network-only",
-    });
-
-    const [actualizarJuego] = useMutation(ACTUALIZAR_JUEGO);
-
-    const [form, dispatch] = useReducer(formReducer, {
-        Nombre: "",
-        Tamano: "",
-        AnnoAct: "",
-        Sinopsis: "",
-        Requisitos: "",
-    });
-
-    useEffect(() => {
-        if (data?.juego) {
-            const j = data.juego;
-            dispatch({
-                type: 'SET_FORM',
-                payload: {
-                    Nombre: j.Nombre,
-                    Tamano: j.TamanoFormateado || "",
-                    AnnoAct: String(j.AnnoAct),
-                    Sinopsis: normalizarTexto(j.Sinopsis),
-                    Requisitos: normalizarTexto(j.Requisitos),
-                }
-            });
-        }
-    }, [data]);
-
-    if (loading) return <p style={{ color: "#ccc" }}>Cargando…</p>;
-    if (error) return <p style={{ color: "red" }}>Error: {error.message}</p>;
-
-    const j = data.juego;
-    const portadaUrl = `https://catalogo-backend-f4sk.onrender.com/portadas/Portadas Juegos/${j.Portada}`;
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        dispatch({
-            type: 'CHANGE',
-            field: name,
-            value: value
-        });
-    };
+    const prepararRequisitos = (txt) =>
+        txt.replace(/\r/g, "").replace(/\n\n+/g, "\\n\\n").replace(/\n/g, "\\n");
 
     const construirPayload = () => {
         const payload = { Id: j.Id };
@@ -166,17 +184,16 @@ export default function EditarJuego() {
         return payload;
     };
 
+    // ============================
+    // RENDER NORMAL
+    // ============================
     return (
         <div className="detalle-wrapper">
             <h2 className="detalle-titulo">Editar {j.Nombre}</h2>
 
             <div className="detalle-container">
                 <div className="detalle-portada">
-                    <img
-                        src={portadaUrl}
-                        alt={j.Nombre}
-                        className="detalle-portada-img"
-                    />
+                    <img src={portadaUrl} alt={j.Nombre} className="detalle-portada-img" />
                 </div>
 
                 <div className="detalle-info">
@@ -243,21 +260,38 @@ export default function EditarJuego() {
                     try {
                         const res = await actualizarJuego({
                             variables: { data: payload },
+                            context: authContext(), // 🔥 TOKEN
                             refetchQueries: [
-                                { query: GET_JUEGO, variables: { id: Number(id) } }
+                                { query: GET_JUEGO, variables: { id: Number(id) } },
                             ],
                         });
 
                         if (res.data.actualizarJuego) {
                             alert("Juego actualizado correctamente");
                             navigate(`/juego/${id}`, {
-                                state: { from: location.state?.from || "/catalogo-juegos" }
+                                state: { from: location.state?.from || "/catalogo-juegos" },
                             });
                         } else {
                             alert("No se pudo actualizar el juego");
                         }
                     } catch (err) {
                         console.error(err);
+
+                        const msg =
+                            err?.message ||
+                            err?.graphQLErrors?.[0]?.message ||
+                            err?.networkError?.result?.errors?.[0]?.message ||
+                            "";
+
+                        if (
+                            msg.includes("No autorizado") ||
+                            msg.includes("Unauthorized") ||
+                            msg.includes("Forbidden")
+                        ) {
+                            alert("No tienes permisos para realizar esta acción.");
+                            return;
+                        }
+
                         alert("Error actualizando el juego");
                     }
                 }}
@@ -267,3 +301,4 @@ export default function EditarJuego() {
         </div>
     );
 }
+

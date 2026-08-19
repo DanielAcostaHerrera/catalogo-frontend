@@ -4,6 +4,7 @@ import "../App.css";
 import { useReducer, useEffect } from "react";
 import { ACTUALIZAR_ANIMADO } from "../mutations";
 import { GET_ANIMADO } from "../graphql";
+import { useAuth, authContext } from "../context/authContext";
 
 const formReducer = (state, action) => {
     switch (action.type) {
@@ -19,6 +20,7 @@ const formReducer = (state, action) => {
 };
 
 export default function EditarAnimado() {
+    const auth = useAuth();
     const { id } = useParams();
     const navigate = useNavigate();
     const location = useLocation();
@@ -66,6 +68,25 @@ export default function EditarAnimado() {
         }
     }, [data]);
 
+    // ============================
+    // BLOQUEO DE VISTA SI NO LOGEADO
+    // ============================
+    if (!auth.isLogged) {
+        return (
+            <div className="detalle-wrapper">
+                <h2 className="detalle-titulo" style={{ color: "red" }}>
+                    ❌ No tienes permisos para acceder a esta vista
+                </h2>
+                <p style={{ color: "#ccc", marginTop: 10 }}>
+                    Debes iniciar sesión como administrador para editar animados.
+                </p>
+            </div>
+        );
+    }
+
+    // ============================
+    // LOADING / ERROR
+    // ============================
     if (loading) return <p style={{ color: "#ccc" }}>Cargando…</p>;
     if (error) return <p style={{ color: "red" }}>Error: {error.message}</p>;
 
@@ -112,6 +133,9 @@ export default function EditarAnimado() {
         return payload;
     };
 
+    // ============================
+    // RENDER NORMAL
+    // ============================
     return (
         <div className="detalle-wrapper">
             <h2 className="detalle-titulo">Editar {a.Titulo}</h2>
@@ -188,6 +212,7 @@ export default function EditarAnimado() {
                     try {
                         const res = await actualizarAnimado({
                             variables: { data: payload },
+                            context: authContext(),
                             refetchQueries: [
                                 { query: GET_ANIMADO, variables: { id: Number(id) } }
                             ],
@@ -203,6 +228,22 @@ export default function EditarAnimado() {
                         }
                     } catch (err) {
                         console.error(err);
+
+                        const msg =
+                            err?.message ||
+                            err?.graphQLErrors?.[0]?.message ||
+                            err?.networkError?.result?.errors?.[0]?.message ||
+                            "";
+
+                        if (
+                            msg.includes("No autorizado") ||
+                            msg.includes("Unauthorized") ||
+                            msg.includes("Forbidden")
+                        ) {
+                            alert("No tienes permisos para realizar esta acción.");
+                            return;
+                        }
+
                         alert("Error actualizando el animado");
                     }
                 }}

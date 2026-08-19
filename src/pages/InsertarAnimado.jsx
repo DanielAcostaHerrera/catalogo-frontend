@@ -3,9 +3,11 @@ import { useMutation } from "@apollo/client";
 import "../App.css";
 import { useState } from "react";
 import { CREAR_ANIMADO } from "../mutations";
+import { useAuth, authContext } from "../context/authContext";
 
 export default function InsertarAnimado() {
     const navigate = useNavigate();
+    const auth = useAuth();
 
     const [Titulo, setTitulo] = useState("");
     const [Anno, setAnno] = useState("");
@@ -96,6 +98,25 @@ export default function InsertarAnimado() {
 
     const [crearAnimado] = useMutation(CREAR_ANIMADO);
 
+    // ============================
+    // BLOQUEO DE VISTA SI NO LOGEADO
+    // ============================
+    if (!auth.isLogged) {
+        return (
+            <div className="detalle-wrapper">
+                <h2 className="detalle-titulo" style={{ color: "red" }}>
+                    ❌ No tienes permisos para acceder a esta vista
+                </h2>
+                <p style={{ color: "#ccc", marginTop: 10 }}>
+                    Debes iniciar sesión como administrador para insertar animados.
+                </p>
+            </div>
+        );
+    }
+
+    // ============================
+    // RENDER NORMAL
+    // ============================
     return (
         <div className="detalle-wrapper">
 
@@ -180,6 +201,7 @@ export default function InsertarAnimado() {
                     try {
                         const res = await crearAnimado({
                             variables: { data: payload },
+                            context: authContext(),
                         });
 
                         if (res.data.crearAnimado) {
@@ -190,6 +212,22 @@ export default function InsertarAnimado() {
                         }
                     } catch (err) {
                         console.error(err);
+
+                        const msg =
+                            err?.message ||
+                            err?.graphQLErrors?.[0]?.message ||
+                            err?.networkError?.result?.errors?.[0]?.message ||
+                            "";
+
+                        if (
+                            msg.includes("No autorizado") ||
+                            msg.includes("Unauthorized") ||
+                            msg.includes("Forbidden")
+                        ) {
+                            alert("No tienes permisos para realizar esta acción.");
+                            return;
+                        }
+
                         alert("Error añadiendo el animado");
                     }
                 }}
@@ -199,3 +237,4 @@ export default function InsertarAnimado() {
         </div>
     );
 }
+

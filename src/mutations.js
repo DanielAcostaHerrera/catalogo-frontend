@@ -1,6 +1,43 @@
 import gql from "graphql-tag";
 
 // ============================================================
+//  LOGIN
+// ============================================================
+export const LOGIN = gql`
+  mutation Login($usuario: String!, $password: String!) {
+    login(usuario: $usuario, password: $password)
+  }
+`;
+
+// ============================================================
+//  CREAR USUARIO
+// ============================================================
+export const CREAR_USUARIO = gql`
+  mutation CrearUsuario($id: Int!, $usuario: String!, $password: String!, $rol: String!) {
+    crearUsuario(id: $id, usuario: $usuario, password: $password, rol: $rol)
+  }
+`;
+
+// ============================================================
+//  ACTUALIZAR USUARIO
+// ============================================================
+export const ACTUALIZAR_USUARIO = gql`
+  mutation ActualizarUsuario(
+    $id: Int!,
+    $usuario: String,
+    $password: String,
+    $rol: String
+  ) {
+    actualizarUsuario(
+      id: $id,
+      usuario: $usuario,
+      password: $password,
+      rol: $rol
+    )
+  }
+`;
+
+// ============================================================
 //  CREAR JUEGO
 // ============================================================
 export const CREAR_JUEGO = gql`

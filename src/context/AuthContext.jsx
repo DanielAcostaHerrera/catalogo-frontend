@@ -1,6 +1,20 @@
 import { createContext, useContext } from "react";
 
-export const AuthContext = createContext();
+export const AuthContext = createContext({
+    isLogged: false,
+    login: async () => {},
+    logout: () => {},
+});
+
+export function authContext() {
+    const token = localStorage.getItem("token");
+
+    return {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    };
+}
 
 export function useAuth() {
     const context = useContext(AuthContext);

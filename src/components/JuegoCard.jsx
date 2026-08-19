@@ -3,6 +3,7 @@ import AddToCartButton from "../components/AddToCartButton";
 import { useMutation } from "@apollo/client";
 import { ELIMINAR_JUEGO } from "../mutations";
 import ProductCard from "./ProductCard";
+import { authContext } from "../context/authContext";
 
 export default function JuegoCard({ juego, showToast, from }) {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ export default function JuegoCard({ juego, showToast, from }) {
       state: { from: location.pathname },
     });
   }
-  
+
   const [eliminarJuego] = useMutation(ELIMINAR_JUEGO);
 
   const renderAdminSection = () => (
@@ -32,6 +33,7 @@ export default function JuegoCard({ juego, showToast, from }) {
           try {
             const res = await eliminarJuego({
               variables: { id: juego.Id },
+              context: authContext(), // 🔥 TOKEN AQUÍ
             });
 
             if (res.data.eliminarJuego) {
@@ -42,7 +44,25 @@ export default function JuegoCard({ juego, showToast, from }) {
             }
           } catch (err) {
             console.error(err);
-            alert("Error eliminando el juego");
+
+            // ============================
+            //  MANEJO ROBUSTO DE PERMISOS
+            // ============================
+            const msg =
+              err?.message ||
+              err?.graphQLErrors?.[0]?.message ||
+              err?.networkError?.result?.errors?.[0]?.message ||
+              "";
+
+            if (
+              msg.includes("No autorizado") ||
+              msg.includes("Unauthorized") ||
+              msg.includes("Forbidden")
+            ) {
+              alert("No tienes permisos para realizar esta acción.");
+            } else {
+              alert("Error eliminando el juego");
+            }
           }
         }}
         className="admin-delete-btn"
@@ -74,4 +94,5 @@ export default function JuegoCard({ juego, showToast, from }) {
     />
   );
 }
+
 

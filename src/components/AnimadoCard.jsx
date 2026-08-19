@@ -3,6 +3,7 @@ import { useMutation } from "@apollo/client";
 import { ELIMINAR_ANIMADO } from "../mutations";
 import AddToCartButton from "../components/AddToCartButton";
 import ProductCard from "./ProductCard";
+import { authContext } from "../context/authContext";
 
 export default function AnimadoCard({
   animado,
@@ -58,6 +59,7 @@ export default function AnimadoCard({
           try {
             const res = await eliminarAnimado({
               variables: { id: animado.Id },
+              context: authContext(),
             });
 
             if (res.data.eliminarAnimado) {
@@ -68,7 +70,19 @@ export default function AnimadoCard({
             }
           } catch (err) {
             console.error(err);
-            alert("Error eliminando el animado");
+
+            // ============================
+            //  MANEJO DE PERMISOS
+            // ============================
+            if (
+              err.message.includes("No autorizado") ||
+              err.message.includes("Unauthorized") ||
+              err.message.includes("Forbidden")
+            ) {
+              alert("No tienes permisos para realizar esta acción.");
+            } else {
+              alert("Error eliminando el animado");
+            }
           }
         }}
         className="admin-delete-btn"
@@ -102,4 +116,5 @@ export default function AnimadoCard({
     />
   );
 }
+
 

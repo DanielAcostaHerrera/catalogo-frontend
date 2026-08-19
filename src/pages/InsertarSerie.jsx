@@ -3,13 +3,15 @@ import { useMutation } from "@apollo/client";
 import "../App.css";
 import { useState } from "react";
 import { CREAR_SERIE } from "../mutations";
+import { useAuth, authContext } from "../context/authContext";
 
 export default function InsertarSerie() {
     const navigate = useNavigate();
+    const auth = useAuth(); 
 
     const [Titulo, setTitulo] = useState("");
     const [Anno, setAnno] = useState("");
-    const [Temporadas, setTemporadas] = useState("");
+       const [Temporadas, setTemporadas] = useState("");
     const [Portada, setPortada] = useState("");
     const [Sinopsis, setSinopsis] = useState("");
     const [Episodios, setEpisodios] = useState("");
@@ -96,6 +98,25 @@ export default function InsertarSerie() {
 
     const [crearSerie] = useMutation(CREAR_SERIE);
 
+    // ============================
+    // BLOQUEO DE VISTA SI NO LOGEADO
+    // ============================
+    if (!auth.isLogged) {
+        return (
+            <div className="detalle-wrapper">
+                <h2 className="detalle-titulo" style={{ color: "red" }}>
+                    ❌ No tienes permisos para acceder a esta vista
+                </h2>
+                <p style={{ color: "#ccc", marginTop: 10 }}>
+                    Debes iniciar sesión como administrador para insertar series.
+                </p>
+            </div>
+        );
+    }
+
+    // ============================
+    // RENDER NORMAL
+    // ============================
     return (
         <div className="detalle-wrapper">
 
@@ -180,6 +201,7 @@ export default function InsertarSerie() {
                     try {
                         const res = await crearSerie({
                             variables: { data: payload },
+                            context: authContext(), 
                         });
 
                         if (res.data.crearSerie) {
@@ -190,6 +212,22 @@ export default function InsertarSerie() {
                         }
                     } catch (err) {
                         console.error(err);
+
+                        const msg =
+                            err?.message ||
+                            err?.graphQLErrors?.[0]?.message ||
+                            err?.networkError?.result?.errors?.[0]?.message ||
+                            "";
+
+                        if (
+                            msg.includes("No autorizado") ||
+                            msg.includes("Unauthorized") ||
+                            msg.includes("Forbidden")
+                        ) {
+                            alert("No tienes permisos para realizar esta acción.");
+                            return;
+                        }
+
                         alert("Error añadiendo la serie");
                     }
                 }}
@@ -199,4 +237,5 @@ export default function InsertarSerie() {
         </div>
     );
 }
+
 

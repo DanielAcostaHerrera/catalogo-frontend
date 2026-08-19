@@ -3,6 +3,7 @@ import { useMutation } from "@apollo/client";
 import { ELIMINAR_SERIE } from "../mutations";
 import AddToCartButton from "../components/AddToCartButton";
 import ProductCard from "./ProductCard";
+import { authContext } from "../context/authContext";
 
 export default function SerieCard({
   serie,
@@ -58,6 +59,7 @@ export default function SerieCard({
           try {
             const res = await eliminarSerie({
               variables: { id: serie.Id },
+              context: authContext(), // 🔥 TOKEN AQUÍ
             });
 
             if (res.data.eliminarSerie) {
@@ -68,7 +70,25 @@ export default function SerieCard({
             }
           } catch (err) {
             console.error(err);
-            alert("Error eliminando la serie");
+
+            // ============================
+            //  MANEJO ROBUSTO DE PERMISOS
+            // ============================
+            const msg =
+              err?.message ||
+              err?.graphQLErrors?.[0]?.message ||
+              err?.networkError?.result?.errors?.[0]?.message ||
+              "";
+
+            if (
+              msg.includes("No autorizado") ||
+              msg.includes("Unauthorized") ||
+              msg.includes("Forbidden")
+            ) {
+              alert("No tienes permisos para realizar esta acción.");
+            } else {
+              alert("Error eliminando la serie");
+            }
           }
         }}
         className="admin-delete-btn"
@@ -101,4 +121,5 @@ export default function SerieCard({
     />
   );
 }
+
 

@@ -1,6 +1,15 @@
 import gql from "graphql-tag";
 
 // ============================================================
+//  OBTENER USUARIO POR ID
+// ============================================================
+export const OBTENER_USUARIO_POR_ID = gql`
+  query ObtenerUsuarioPorId($id: Int!) {
+    obtenerUsuarioPorId(id: $id)
+  }
+`;
+
+// ============================================================
 //  CATÁLOGO NORMAL (SIN FILTROS)
 // ============================================================
 export const GET_CATALOGO = gql`

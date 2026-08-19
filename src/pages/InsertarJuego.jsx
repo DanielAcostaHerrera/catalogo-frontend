@@ -3,9 +3,11 @@ import { useMutation } from "@apollo/client";
 import "../App.css";
 import { useState } from "react";
 import { CREAR_JUEGO } from "../mutations";
+import { useAuth, authContext } from "../context/authContext";
 
 export default function InsertarJuego() {
     const navigate = useNavigate();
+    const auth = useAuth();
 
     const [Nombre, setNombre] = useState("");
     const [Tamano, setTamano] = useState("");
@@ -125,6 +127,25 @@ export default function InsertarJuego() {
 
     const [crearJuego] = useMutation(CREAR_JUEGO);
 
+    // ============================
+    // BLOQUEO DE VISTA SI NO LOGEADO
+    // ============================
+    if (!auth.isLogged) {
+        return (
+            <div className="detalle-wrapper">
+                <h2 className="detalle-titulo" style={{ color: "red" }}>
+                    ❌ No tienes permisos para acceder a esta vista
+                </h2>
+                <p style={{ color: "#ccc", marginTop: 10 }}>
+                    Debes iniciar sesión como administrador para insertar juegos.
+                </p>
+            </div>
+        );
+    }
+
+    // ============================
+    // RENDER NORMAL
+    // ============================
     return (
         <div className="detalle-wrapper">
 
@@ -201,6 +222,7 @@ export default function InsertarJuego() {
                     try {
                         const res = await crearJuego({
                             variables: { data: payload },
+                            context: authContext(), 
                         });
 
                         if (res.data.crearJuego) {
@@ -211,6 +233,22 @@ export default function InsertarJuego() {
                         }
                     } catch (err) {
                         console.error(err);
+
+                        const msg =
+                            err?.message ||
+                            err?.graphQLErrors?.[0]?.message ||
+                            err?.networkError?.result?.errors?.[0]?.message ||
+                            "";
+
+                        if (
+                            msg.includes("No autorizado") ||
+                            msg.includes("Unauthorized") ||
+                            msg.includes("Forbidden")
+                        ) {
+                            alert("No tienes permisos para realizar esta acción.");
+                            return;
+                        }
+
                         alert("Error añadiendo el juego");
                     }
                 }}
@@ -220,3 +258,4 @@ export default function InsertarJuego() {
         </div>
     );
 }
+

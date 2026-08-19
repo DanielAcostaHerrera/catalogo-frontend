@@ -14,9 +14,14 @@ export default function LoginModal({ onClose }) {
         userRef.current?.focus();
     }, []);
 
-    function handleLogin() {
-        if (auth.login(user, pass)) onClose();
-        else setError(true);
+    async function handleLogin() {
+        const ok = await auth.login(user, pass);
+
+        if (ok) {
+            onClose();
+        } else {
+            setError(true);
+        }
     }
 
     return (
@@ -35,7 +40,6 @@ export default function LoginModal({ onClose }) {
                     }}
                 />
 
-                {/* CONTENEDOR DEL INPUT DE CONTRASEÑA */}
                 <div className="auth-input-container">
                     <input
                         className="auth-input auth-input-pass"

@@ -3,6 +3,7 @@ import { useMutation } from "@apollo/client";
 import { ELIMINAR_ANIME } from "../mutations";
 import AddToCartButton from "../components/AddToCartButton";
 import ProductCard from "./ProductCard";
+import { authContext } from "../context/authContext";
 
 export default function AnimeCard({
   anime,
@@ -58,6 +59,7 @@ export default function AnimeCard({
           try {
             const res = await eliminarAnime({
               variables: { id: anime.Id },
+              context: authContext(),
             });
 
             if (res.data.eliminarAnime) {
@@ -68,7 +70,25 @@ export default function AnimeCard({
             }
           } catch (err) {
             console.error(err);
-            alert("Error eliminando el anime");
+
+            // ============================
+            //  MANEJO DE PERMISOS
+            // ============================
+            const msg =
+              err?.message ||
+              err?.graphQLErrors?.[0]?.message ||
+              err?.networkError?.result?.errors?.[0]?.message ||
+              "";
+
+            if (
+              msg.includes("No autorizado") ||
+              msg.includes("Unauthorized") ||
+              msg.includes("Forbidden")
+            ) {
+              alert("No tienes permisos para realizar esta acción.");
+            } else {
+              alert("Error eliminando el anime");
+            }
           }
         }}
         className="admin-delete-btn"
@@ -102,4 +122,5 @@ export default function AnimeCard({
     />
   );
 }
+
 
