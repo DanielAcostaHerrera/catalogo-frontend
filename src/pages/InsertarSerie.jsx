@@ -3,7 +3,7 @@ import { useMutation } from "@apollo/client";
 import "../App.css";
 import { useState } from "react";
 import { CREAR_SERIE } from "../mutations";
-import { useAuth, authContext } from "../context/authContext";
+import { useAuth, authContext } from "../context/AuthContext";
 
 export default function InsertarSerie() {
     const navigate = useNavigate();

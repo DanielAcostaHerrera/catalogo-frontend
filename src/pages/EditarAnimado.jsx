@@ -4,7 +4,7 @@ import "../App.css";
 import { useReducer, useEffect } from "react";
 import { ACTUALIZAR_ANIMADO } from "../mutations";
 import { GET_ANIMADO } from "../graphql";
-import { useAuth, authContext } from "../context/authContext";
+import { useAuth, authContext } from "../context/AuthContext";
 
 const formReducer = (state, action) => {
     switch (action.type) {

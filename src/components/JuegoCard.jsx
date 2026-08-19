@@ -3,7 +3,7 @@ import AddToCartButton from "../components/AddToCartButton";
 import { useMutation } from "@apollo/client";
 import { ELIMINAR_JUEGO } from "../mutations";
 import ProductCard from "./ProductCard";
-import { authContext } from "../context/authContext";
+import { authContext } from "../context/AuthContext";
 
 export default function JuegoCard({ juego, showToast, from }) {
   const navigate = useNavigate();

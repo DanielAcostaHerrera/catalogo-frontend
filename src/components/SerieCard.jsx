@@ -3,7 +3,7 @@ import { useMutation } from "@apollo/client";
 import { ELIMINAR_SERIE } from "../mutations";
 import AddToCartButton from "../components/AddToCartButton";
 import ProductCard from "./ProductCard";
-import { authContext } from "../context/authContext";
+import { authContext } from "../context/AuthContext";
 
 export default function SerieCard({
   serie,

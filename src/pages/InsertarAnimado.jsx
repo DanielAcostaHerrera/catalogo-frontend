@@ -3,7 +3,7 @@ import { useMutation } from "@apollo/client";
 import "../App.css";
 import { useState } from "react";
 import { CREAR_ANIMADO } from "../mutations";
-import { useAuth, authContext } from "../context/authContext";
+import { useAuth, authContext } from "../context/AuthContext";
 
 export default function InsertarAnimado() {
     const navigate = useNavigate();
