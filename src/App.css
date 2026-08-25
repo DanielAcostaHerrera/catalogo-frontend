@@ -280,8 +280,8 @@ body {
 
 .bienvenida-nuevo-categoria {
   background: #2a2a2a;
-  border: 1px solid #3a3a3a;
-  border-radius: 12px;
+  border: 1px solid #444;
+  border-radius: 6px;
   padding: 16px 12px;
   display: flex;
   flex-direction: column;
@@ -296,8 +296,10 @@ body {
 
 .bienvenida-nuevo-categoria:hover {
   background: #3a3a3a;
+  background-color: #555;
   transform: translateY(-4px);
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  border-color: #646cff;
 }
 
 .bienvenida-nuevo-categoria-icon {
@@ -353,7 +355,7 @@ body {
 }
 
 .bienvenida-nuevo-carrusel-ver:hover {
-  color: #00f0ff;
+  color: #646cff;
 }
 
 /* ======================================================
@@ -431,7 +433,7 @@ body {
 
 .ProductCardContainer:hover {
   border-color: #646cff;
-  transform: scale(1.02);
+  transform: scale(1.05);
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
 }
 
@@ -484,7 +486,6 @@ body {
   min-height: 40px;
   width: 100%;
   flex-wrap: nowrap;
-  overflow: hidden;
 }
 
 .ProductCardFooter .btn-add {
@@ -496,7 +497,7 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: none;
+  border: 1px solid #444;
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
@@ -510,6 +511,7 @@ body {
 .ProductCardFooter .btn-add:hover {
   background-color: #555;
   transform: scale(1.05);
+  border-color: #646cff;
 }
 
 .botones-wrapper {
@@ -525,7 +527,6 @@ body {
   gap: 6px;
   align-items: center;
   flex-shrink: 0;
-  overflow: hidden;
 }
 
 .ProductCardAdmin button {
@@ -537,7 +538,7 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: none;
+  border: 1px solid #444;
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
@@ -548,6 +549,7 @@ body {
 }
 
 .ProductCardAdmin button:hover {
+  border-color: #646cff;
   transform: scale(1.05);
 }
 
@@ -560,11 +562,11 @@ body {
 }
 
 .ProductCardAdmin .admin-delete-btn {
-  background: #7a1f1f;
+  background: #333;
 }
 
 .ProductCardAdmin .admin-delete-btn:hover {
-  background: #9a2a2a;
+  background: #555;
 }
 
 @media (max-width: 950px) {
@@ -822,11 +824,31 @@ body {
   cursor: pointer;
   font-weight: 600;
   transition: background-color 0.2s, transform 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 14px;
 }
 
 .btn-dark:hover {
   background-color: #555;
   transform: scale(1.05);
+  border-color: #646cff;
+}
+
+.btn-dark:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+    background-color: #2a2a2a;
+    border-color: #444;
+}
+
+.btn-dark:disabled:hover {
+    background-color: #2a2a2a;
+    transform: none !important;
+    border-color: #444;
 }
 
 /* --------------------------------------------------
@@ -1104,7 +1126,7 @@ body {
   padding: 8px 12px;
   background-color: #333;
   color: #fff;
-  border: none;
+  border: 1px solid #444;
   border-radius: 6px;
   cursor: pointer;
   font-weight: 600;
@@ -1116,6 +1138,7 @@ body {
 .btn-exportar:hover {
   background-color: #555;
   transform: scale(1.05);
+  border-color: #646cff;
 }
 
 .btn-carrito:disabled {
@@ -1240,6 +1263,12 @@ body {
   color: #e6e6e6;
   font-size: 20px;
   cursor: pointer;
+}
+
+.drawer-menu-logo-link {
+    display: block;
+    text-decoration: none;
+    cursor: pointer;
 }
 
 /* ======================================================
@@ -1473,6 +1502,62 @@ body {
     border-color: #444;
 }
 
+/* ======================================================
+   ACCESO DENEGADO
+   ====================================================== */
+
+.acceso-denegado-wrapper {
+    min-height: calc(100vh - 80px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #1e1e1e;
+    padding: 20px;
+}
+
+.acceso-denegado-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 100%;
+}
+
+.acceso-denegado-content {
+    text-align: center;
+    max-width: 500px;
+    padding: 40px;
+    background: #1a1a1a;
+    border-radius: 16px;
+    border: 1px solid #2a2a2a;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
+}
+
+.acceso-denegado-icono {
+    font-size: 72px;
+    margin-bottom: 16px;
+    display: block;
+}
+
+.acceso-denegado-titulo {
+    color: #f0f0f0;
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0 0 12px 0;
+}
+
+.acceso-denegado-texto {
+    color: #e6e6e6;
+    font-size: 1.1rem;
+    margin: 0 0 8px 0;
+}
+
+.acceso-denegado-subtexto {
+    color: #8899aa;
+    font-size: 0.95rem;
+    margin: 0;
+}
+
 /* --------------------------------------------------
    INPUTS OSCUROS
 -------------------------------------------------- */
@@ -1605,14 +1690,6 @@ textarea.input-dark {
   display: flex;
   gap: 10px;
   margin-bottom: 15px;
-}
-
-.btn-dark {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 8px 14px;
 }
 
 .btn-text {

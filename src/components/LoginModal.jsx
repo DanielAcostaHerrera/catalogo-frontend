@@ -1,5 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import IconButton from "@mui/material/IconButton";
 
 export default function LoginModal({ onClose }) {
     const auth = useAuth();
@@ -38,7 +41,7 @@ export default function LoginModal({ onClose }) {
                     <input
                         ref={userRef}
                         className="auth-input"
-                        placeholder="👤 Usuario"
+                        placeholder="Usuario"
                         value={user}
                         onChange={(e) => setUser(e.target.value)}
                         required
@@ -48,19 +51,29 @@ export default function LoginModal({ onClose }) {
                         <input
                             className="auth-input auth-input-pass"
                             type={showPass ? "text" : "password"}
-                            placeholder="🔑 Contraseña"
+                            placeholder="Contraseña"
                             value={pass}
                             onChange={(e) => setPass(e.target.value)}
                             required
                         />
 
-                        <span
+                        <IconButton
                             className="auth-input-icon"
                             onClick={() => setShowPass(!showPass)}
-                            type="button"
+                            size="small"
+                            sx={{ 
+                                position: "absolute",
+                                right: "8px",
+                                top: "50%",
+                                transform: "translateY(-50%)",
+                                padding: "4px",
+                                // 🔥 Estilo Windows: blanco cuando oculto, opaco cuando visible
+                                color: showPass ? "rgba(255,255,255,0.4)" : "#ffffff",
+                                transition: "color 0.2s ease"
+                            }}
                         >
-                            {showPass ? "👁️" : "🚫"}
-                        </span>
+                            {showPass ? <VisibilityOff fontSize="small" /> : <Visibility fontSize="small" />}
+                        </IconButton>
                     </div>
 
                     {error && <p className="auth-error">❌ Credenciales incorrectas</p>}

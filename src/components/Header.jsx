@@ -112,16 +112,18 @@ export default function Header() {
         disableSwipeToOpen={true}
       >
         <div className="drawer-menu-contenido">
-          {/* Logo en el menú */}
-          <div className="drawer-menu-header">
-            <img
-              src="/logo.png"
-              alt="PixelPlay Habana"
-              className="drawer-menu-logo"
-            />
-            <span className="drawer-menu-titulo">PixelPlay Habana</span>
-            <div className="drawer-menu-line"></div>
-          </div>
+          {/* Logo en el menú (también enlaza a Bienvenida) */}
+          <NavLink to="/" onClick={() => setMenuOpen(false)} className="drawer-menu-logo-link">
+            <div className="drawer-menu-header">
+              <img
+                src="/logo.png"
+                alt="PixelPlay Habana"
+                className="drawer-menu-logo"
+              />
+              <span className="drawer-menu-titulo">PixelPlay Habana</span>
+              <div className="drawer-menu-line"></div>
+            </div>
+          </NavLink>
 
           {/* Enlaces del menú */}
           <nav className="drawer-menu-nav">

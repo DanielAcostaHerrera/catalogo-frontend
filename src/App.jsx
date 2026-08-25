@@ -35,6 +35,7 @@ import UltimosEstrenosAnimes from "./pages/UltimosEstrenosAnimes";
 import InfoNegocio from "./pages/InfoNegocio";
 import CarritoView from "./pages/CarritoView";
 import Bienvenida from "./pages/Bienvenida";
+import AccesoDenegado from "./pages/AccesoDenegado";
 
 import { CartProvider } from "./context/CartProvider";
 import { AuthProvider } from "./context/AuthProvider";
@@ -89,6 +90,7 @@ function AppContent() {
               <Route path="/info" element={<InfoNegocio showToast={showToast} />} />
               <Route path="/carrito" element={<CarritoView showToast={showToast} />} />
               <Route path="/" element={<Bienvenida showToast={showToast} />} />
+              <Route path="/acceso-denegado" element={<AccesoDenegado />} />
             </Routes>
           </main>
 

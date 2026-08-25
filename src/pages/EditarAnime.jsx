@@ -69,16 +69,8 @@ export default function EditarAnime() {
     }, [data]);
 
     if (!auth.isLogged) {
-        return (
-            <div className="detalle-wrapper">
-                <h2 className="detalle-titulo" style={{ color: "red" }}>
-                    ❌ No tienes permisos para acceder a esta vista
-                </h2>
-                <p style={{ color: "#ccc", marginTop: 10 }}>
-                    Debes iniciar sesión como administrador para editar animes.
-                </p>
-            </div>
-        );
+        navigate("/acceso-denegado");
+        return null;
     }
 
     if (loading) return <p style={{ color: "#ccc" }}>Cargando…</p>;

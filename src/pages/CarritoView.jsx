@@ -2,6 +2,12 @@ import { useState } from "react";
 import { useCart } from "../context/CartContext";
 import Paginacion from "../components/Paginacion";
 
+const IconoWhatsApp = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="20" height="20" fill="#25D366">
+        <path d="M16 3C9.373 3 4 8.373 4 15c0 2.65.87 5.1 2.34 7.1L4 29l7.1-2.34A11.9 11.9 0 0 0 16 27c6.627 0 12-5.373 12-12S22.627 3 16 3zm0 22c-2.2 0-4.25-.72-5.9-1.94l-.42-.3-4.2 1.38 1.38-4.2-.3-.42A9.9 9.9 0 0 1 6 15c0-5.52 4.48-10 10-10s10 4.48 10 10-4.48 10-10 10zm5.1-7.3c-.28-.14-1.65-.81-1.9-.9-.25-.09-.43-.14-.61.14-.18.27-.7.9-.86 1.08-.16.18-.32.2-.6.07-.28-.14-1.18-.43-2.25-1.37-.83-.74-1.37-1.65-1.53-1.93-.16-.28-.02-.43.12-.57.12-.12.28-.32.42-.48.14-.16.18-.27.28-.45.09-.18.05-.34-.02-.48-.07-.14-.61-1.47-.84-2.01-.22-.53-.45-.46-.61-.46-.16 0-.34-.02-.52-.02-.18 0-.48.07-.73.34-.25.27-.96.94-.96 2.29s.98 2.65 1.12 2.83c.14.18 1.93 2.95 4.67 4.14.65.28 1.16.45 1.56.58.65.21 1.24.18 1.7.11.52-.08 1.65-.67 1.88-1.32.23-.65.23-1.2.16-1.32-.07-.12-.25-.18-.52-.32z"/>
+    </svg>
+);
+
 function CarritoView({ showToast }) {
     const { cartItems, removeFromCart, clearCart, totals } = useCart();
 
@@ -15,7 +21,6 @@ function CarritoView({ showToast }) {
     const ordenTipo = { juego: 1, serie: 2, anime: 3, animado: 4 };
     const tipoNombres = { juego: "🎮 Juegos", serie: "🎬 Series", anime: "🍥 Animes", animado: "🐭 Animados" };
 
-    // Agrupar items por tipo
     const itemsAgrupados = {
         juego: [],
         serie: [],
@@ -78,6 +83,8 @@ function CarritoView({ showToast }) {
         window.open(url, "_blank");
     };
 
+    const cartVacio = cartItems.length === 0;
+
     return (
         <div className="catalogo-container-moderno">
             <div className="catalogo-header-moderno">
@@ -110,12 +117,12 @@ function CarritoView({ showToast }) {
                 )}
 
                 <div className="btns-carrito">
-                    <button className="btn-dark" onClick={exportTxt} disabled={cartItems.length === 0}>
+                    <button className="btn-dark" onClick={exportTxt} disabled={cartVacio}>
                         📄 Exportar pedido
                     </button>
 
-                    <button className="btn-dark" onClick={enviarWhatsApp} disabled={cartItems.length === 0}>
-                        📲 Enviar por WhatsApp
+                    <button className="btn-dark" onClick={enviarWhatsApp} disabled={cartVacio}>
+                        <IconoWhatsApp /> Enviar por WhatsApp
                     </button>
 
                     <button
@@ -124,19 +131,17 @@ function CarritoView({ showToast }) {
                             clearCart();
                             if (showToast) showToast("Carrito vaciado");
                         }}
-                        disabled={cartItems.length === 0}
+                        disabled={cartVacio}
                     >
                         🗑️ Vaciar carrito
                     </button>
                 </div>
             </div>
 
-            {/* Secciones agrupadas por tipo */}
             {Object.keys(itemsAgrupados).map((tipo) => {
                 const items = itemsAgrupados[tipo];
                 if (items.length === 0) return null;
 
-                // Filtrar items de la página actual para esta sección
                 const itemsSeccion = items.filter(item => {
                     const index = cartItems.indexOf(item);
                     return index >= startIndex && index < endIndex;
