@@ -48,7 +48,7 @@ body {
   text-align: center;
   color: #667;
   font-size: 0.8rem;
-  max-width: 1400px;
+  max-width: 100%;
   margin: 0 auto;
   width: 100%;
   background: #1e1e1e;
@@ -310,7 +310,7 @@ body {
 }
 
 .bienvenida-nuevo-lanzamientos {
-  max-width: 1400px;
+  max-width: 100%;
   margin: 0 auto;
   padding: 0 20px 40px;
 }
@@ -363,7 +363,7 @@ body {
 .catalogo-container-moderno {
   background: #1e1e1e;
   padding: 0 20px 20px 20px;
-  max-width: 1400px;
+  max-width: 100%;
   margin: 0 auto;
   width: 100%;
   overflow-x: hidden;
@@ -478,18 +478,20 @@ body {
 .ProductCardFooter {
   display: flex;
   justify-content: center;
-  align-items: stretch;
-  gap: 6px;
-  padding: 8px 10px 12px 10px;
-  min-height: 44px;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 8px 10px 8px;
+  min-height: 40px;
+  width: 100%;
+  flex-wrap: nowrap;
+  overflow: hidden;
 }
 
-.ProductCardFooter button {
-  flex: 1;
-  min-width: 0;
-  height: 34px;
-  padding: 4px 8px;
-  font-size: 13px;
+.ProductCardFooter .btn-add {
+  flex-shrink: 0;
+  height: 28px;
+  padding: 2px 8px;
+  font-size: 12px;
   border-radius: 6px;
   display: inline-flex;
   align-items: center;
@@ -500,56 +502,60 @@ body {
   white-space: nowrap;
   font-weight: 600;
   color: #fff;
-}
-
-.ProductCardFooter button:hover {
-  transform: scale(1.05);
-}
-
-.ProductCardFooter .btn-add {
   background-color: #333;
-  min-width: 60px;
-  height: 34px;
+  min-width: 50px;
+  max-width: 100%;
 }
 
 .ProductCardFooter .btn-add:hover {
   background-color: #555;
+  transform: scale(1.05);
 }
 
 .ProductCardAdmin {
   display: flex;
-  gap: 6px;
-  align-items: stretch;
-  flex: 1;
+  gap: 4px;
+  align-items: center;
+  flex-shrink: 0;
+  overflow: hidden;
 }
 
-.ProductCardFooter .admin-edit-btn {
-  flex: 1;
-  min-width: 0;
-  height: 34px;
-  padding: 4px 8px;
-  background: #333;
-  color: white;
+.ProductCardAdmin button {
+  flex-shrink: 0;
+  height: 28px;
+  padding: 2px 8px;
+  font-size: 12px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
   font-weight: 600;
-  font-size: 13px;
+  color: #fff;
+  min-width: 36px;
+  max-width: 100%;
 }
 
-.ProductCardFooter .admin-edit-btn:hover {
+.ProductCardAdmin button:hover {
+  transform: scale(1.05);
+}
+
+.ProductCardAdmin .admin-edit-btn {
+  background: #333;
+}
+
+.ProductCardAdmin .admin-edit-btn:hover {
   background: #555;
 }
 
-.ProductCardFooter .admin-delete-btn {
-  flex: 1;
-  min-width: 0;
-  height: 34px;
-  padding: 4px 8px;
+.ProductCardAdmin .admin-delete-btn {
   background: #7a1f1f;
-  color: white;
-  font-weight: 600;
-  font-size: 13px;
 }
 
-.ProductCardFooter .admin-delete-btn:hover {
+.ProductCardAdmin .admin-delete-btn:hover {
   background: #9a2a2a;
 }
 
@@ -559,28 +565,24 @@ body {
   }
   .ProductCardTitulo {
     font-size: 13px;
-    margin: 10px 10px 6px 10px;
+    margin: 8px 8px 4px 8px;
   }
   .ProductCardFooter {
     padding: 4px 6px 8px 6px;
-    gap: 4px;
-    min-height: 38px;
-  }
-  .ProductCardFooter button {
-    height: 30px;
-    font-size: 11px;
-    padding: 2px 6px;
+    gap: 3px;
+    min-height: 34px;
   }
   .ProductCardFooter .btn-add {
-    min-width: 50px;
-    height: 30px;
+    height: 24px;
+    font-size: 10px;
+    padding: 2px 6px;
+    min-width: 40px;
   }
-  .ProductCardFooter .admin-edit-btn,
-  .ProductCardFooter .admin-delete-btn {
-    height: 30px;
-  }
-  .ProductCardAdmin {
-    gap: 4px;
+  .ProductCardAdmin button {
+    height: 24px;
+    font-size: 10px;
+    padding: 2px 6px;
+    min-width: 30px;
   }
 }
 
@@ -589,25 +591,21 @@ body {
     height: 140px;
   }
   .ProductCardFooter {
-    padding: 4px 4px 6px 4px;
-    gap: 3px;
-    min-height: 34px;
-  }
-  .ProductCardFooter button {
-    height: 26px;
-    font-size: 10px;
-    padding: 2px 4px;
+    padding: 3px 4px 6px 4px;
+    gap: 2px;
+    min-height: 30px;
   }
   .ProductCardFooter .btn-add {
-    min-width: 40px;
-    height: 26px;
+    height: 22px;
+    font-size: 9px;
+    padding: 2px 5px;
+    min-width: 32px;
   }
-  .ProductCardFooter .admin-edit-btn,
-  .ProductCardFooter .admin-delete-btn {
-    height: 26px;
-  }
-  .ProductCardAdmin {
-    gap: 3px;
+  .ProductCardAdmin button {
+    height: 22px;
+    font-size: 9px;
+    padding: 2px 5px;
+    min-width: 26px;
   }
 }
 
