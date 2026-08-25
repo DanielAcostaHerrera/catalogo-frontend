@@ -17,111 +17,83 @@ export default function InfoNegocio() {
     if (!data) return <p style={{ color: '#ccc' }}>Cargando información...</p>;
 
     return (
-        <div className="info-negocio-container">
-            <div className="catalogo-container-moderno">
-                <div className="catalogo-header-moderno">
-                    <h1 className="catalogo-titulo-moderno">📋 Información del negocio</h1>
-                    <p className="catalogo-subtitulo-moderno">
-                        Conoce más sobre PixelPlay Habana
+        <div className="catalogo-container-moderno">
+            <div className="catalogo-header-moderno">
+                <h1 className="catalogo-titulo-moderno">📋 Información del negocio</h1>
+                <p className="catalogo-subtitulo-moderno">
+                    Conoce más sobre PixelPlay Habana
+                </p>
+            </div>
+
+            <div className="info-negocio-card">
+                <h2 className="info-negocio-subtitulo">📍 Contacto</h2>
+                <div className="info-negocio-contacto">
+                    <p className="info-negocio-texto">
+                        <strong>Dirección:</strong> 80 # 1103 / 11 y 13 Playa
                     </p>
-                </div>
-
-                <div style={{
-                    background: '#2b2b2b',
-                    borderRadius: 8,
-                    padding: 20,
-                    boxShadow: '0 2px 6px rgba(0,0,0,0.4)',
-                    width: '100%',
-                    maxWidth: 900,
-                    margin: '0 auto',
-                    boxSizing: 'border-box'
-                }}>
-
-                    <h2 style={{ marginTop: 0, marginBottom: 10 }}>📍 Contacto</h2>
-                    <div style={{ marginBottom: 20, display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <p style={{ margin: 0 }}>
-                            <strong>Dirección:</strong> 80 # 1103 / 11 y 13 Playa
-                        </p>
-                        <a href={mapsUrl} target="_blank" rel="noopener noreferrer" title="Buscar en Google Maps">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                width="24" height="24" fill="red">
-                                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 
+                    <a href={mapsUrl} target="_blank" rel="noopener noreferrer" title="Buscar en Google Maps">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                            width="24" height="24" fill="red">
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 
                   0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                            </svg>
-                        </a>
-                    </div>
-
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: 20 }}>
-                        <p style={{ margin: 0 }}>
-                            <strong>Teléfonos:</strong> 52524842 y 72021641
-                        </p>
-                        <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" title="Chatear por WhatsApp">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"
-                                width="24" height="24" fill="#25D366">
-                                <path d="M16 3C9.373 3 4 8.373 4 15c0 2.65.87 5.1 2.34 7.1L4 29l7.1-2.34A11.9 11.9 0 0 0 16 27c6.627 0 12-5.373 12-12S22.627 3 16 3zm0 22c-2.2 0-4.25-.72-5.9-1.94l-.42-.3-4.2 1.38 1.38-4.2-.3-.42A9.9 9.9 0 0 1 6 15c0-5.52 4.48-10 10-10s10 4.48 10 10-4.48 10-10 10zm5.1-7.3c-.28-.14-1.65-.81-1.9-.9-.25-.09-.43-.14-.61.14-.18.27-.7.9-.86 1.08-.16.18-.32.2-.6.07-.28-.14-1.18-.43-2.25-1.37-.83-.74-1.37-1.65-1.53-1.93-.16-.28-.02-.43.12-.57.12-.12.28-.32.42-.48.14-.16.18-.27.28-.45.09-.18.05-.34-.02-.48-.07-.14-.61-1.47-.84-2.01-.22-.53-.45-.46-.61-.46-.16 0-.34-.02-.52-.02-.18 0-.48.07-.73.34-.25.27-.96.94-.96 2.29s.98 2.65 1.12 2.83c.14.18 1.93 2.95 4.67 4.14.65.28 1.16.45 1.56.58.65.21 1.24.18 1.7.11.52-.08 1.65-.67 1.88-1.32.23-.65.23-1.2.16-1.32-.07-.12-.25-.18-.52-.32z" />
-                            </svg>
-                        </a>
-                    </div>
-
-                    <h2 style={{ marginTop: 20, marginBottom: 10 }}>💰 Precios de juegos offline</h2>
-                    <table style={{
-                        width: '100%',
-                        borderCollapse: 'collapse',
-                        marginBottom: 20,
-                        backgroundColor: '#1e1e1e',
-                        borderRadius: 6,
-                        overflow: 'hidden'
-                    }}>
-                        <thead>
-                            <tr style={{ backgroundColor: '#333' }}>
-                                <th style={{ padding: '8px', textAlign: 'left' }}>Tamaño</th>
-                                <th style={{ padding: '8px', textAlign: 'left' }}>Precio</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {data.juegos.rangos.map((r, idx) => (
-                                <tr key={idx}>
-                                    <td style={{ padding: '6px' }}>{`${r.minGB} Gb – ${r.maxGB} Gb`}</td>
-                                    <td><span translate="no">{r.precio} CUP</span></td>
-                                </tr>
-                            ))}
-                            <tr>
-                                <td style={{ padding: '6px' }}>{`Más de ${data.juegos.default.minGB} Gb`}</td>
-                                <td><span translate="no">{data.juegos.default.precio} CUP</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <p style={{ fontSize: '0.95em', color: '#ccc' }}>
-                        🎮 Todos los juegos <em translate="no">online</em> cuestan <span translate="no">{data.juegos.online} CUP</span> y siempre se entregan actualizados.
-                    </p>
-
-                    <p style={{ fontSize: '0.95em', color: '#ccc' }}>
-                        📺 Todas las series cuestan <span translate="no">{data.series.precioPorCapitulo} CUP</span> por capítulo.
-                    </p>
-
-                    <h2 style={{ marginTop: 20, marginBottom: 10 }}>💿 Ofertas llenado de discos duros</h2>
-                    <div style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-                        gap: '10px',
-                        marginBottom: 20
-                    }}>
-                        {data.ofertasHDD.map((h, idx) => (
-                            <div key={idx} style={{
-                                backgroundColor: '#1e1e1e',
-                                padding: '8px',
-                                borderRadius: 6,
-                                textAlign: 'center'
-                            }} translate="no">
-                                {`HDD de ${h.capacidad} — ${h.precioUSD} USD`}
-                            </div>
-                        ))}
-                    </div>
-                    <p style={{ fontSize: '0.95em', color: '#ccc' }}>
-                        📦 Entregas a domicilio por un costo adicional siempre y cuando sea una compra mínima de
-                        <span translate="no"> {data.entregas.minimoCUP} CUP</span> dependiendo de la lejanía.<br />
-                    </p>
+                        </svg>
+                    </a>
                 </div>
+
+                <div className="info-negocio-contacto">
+                    <p className="info-negocio-texto">
+                        <strong>Teléfonos:</strong> 52524842 y 72021641
+                    </p>
+                    <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" title="Chatear por WhatsApp">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"
+                            width="24" height="24" fill="#25D366">
+                            <path d="M16 3C9.373 3 4 8.373 4 15c0 2.65.87 5.1 2.34 7.1L4 29l7.1-2.34A11.9 11.9 0 0 0 16 27c6.627 0 12-5.373 12-12S22.627 3 16 3zm0 22c-2.2 0-4.25-.72-5.9-1.94l-.42-.3-4.2 1.38 1.38-4.2-.3-.42A9.9 9.9 0 0 1 6 15c0-5.52 4.48-10 10-10s10 4.48 10 10-4.48 10-10 10zm5.1-7.3c-.28-.14-1.65-.81-1.9-.9-.25-.09-.43-.14-.61.14-.18.27-.7.9-.86 1.08-.16.18-.32.2-.6.07-.28-.14-1.18-.43-2.25-1.37-.83-.74-1.37-1.65-1.53-1.93-.16-.28-.02-.43.12-.57.12-.12.28-.32.42-.48.14-.16.18-.27.28-.45.09-.18.05-.34-.02-.48-.07-.14-.61-1.47-.84-2.01-.22-.53-.45-.46-.61-.46-.16 0-.34-.02-.52-.02-.18 0-.48.07-.73.34-.25.27-.96.94-.96 2.29s.98 2.65 1.12 2.83c.14.18 1.93 2.95 4.67 4.14.65.28 1.16.45 1.56.58.65.21 1.24.18 1.7.11.52-.08 1.65-.67 1.88-1.32.23-.65.23-1.2.16-1.32-.07-.12-.25-.18-.52-.32z" />
+                        </svg>
+                    </a>
+                </div>
+
+                <h2 className="info-negocio-subtitulo">💰 Precios de juegos offline</h2>
+                <table className="info-negocio-tabla">
+                    <thead>
+                        <tr>
+                            <th>Tamaño</th>
+                            <th>Precio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {data.juegos.rangos.map((r, idx) => (
+                            <tr key={idx}>
+                                <td>{`${r.minGB} Gb – ${r.maxGB} Gb`}</td>
+                                <td><span translate="no">{r.precio} CUP</span></td>
+                            </tr>
+                        ))}
+                        <tr>
+                            <td>{`Más de ${data.juegos.default.minGB} Gb`}</td>
+                            <td><span translate="no">{data.juegos.default.precio} CUP</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p className="info-negocio-nota">
+                    🎮 Todos los juegos <em translate="no">online</em> cuestan <span translate="no">{data.juegos.online} CUP</span> y siempre se entregan actualizados.
+                </p>
+
+                <p className="info-negocio-nota">
+                    📺 Todas las series cuestan <span translate="no">{data.series.precioPorCapitulo} CUP</span> por capítulo.
+                </p>
+
+                <h2 className="info-negocio-subtitulo">💿 Ofertas llenado de discos duros</h2>
+                <div className="info-negocio-ofertas">
+                    {data.ofertasHDD.map((h, idx) => (
+                        <div key={idx} className="info-negocio-oferta" translate="no">
+                            {`HDD de ${h.capacidad} — ${h.precioUSD} USD`}
+                        </div>
+                    ))}
+                </div>
+                <p className="info-negocio-nota">
+                    📦 Entregas a domicilio por un costo adicional siempre y cuando sea una compra mínima de
+                    <span translate="no"> {data.entregas.minimoCUP} CUP</span> dependiendo de la lejanía.
+                </p>
             </div>
         </div>
     );
