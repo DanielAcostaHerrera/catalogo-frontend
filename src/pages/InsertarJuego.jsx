@@ -127,9 +127,49 @@ export default function InsertarJuego() {
 
     const [crearJuego] = useMutation(CREAR_JUEGO);
 
-    // ============================
-    // BLOQUEO DE VISTA SI NO LOGEADO
-    // ============================
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        handleSubmitForm();
+    };
+
+    const handleSubmitForm = async () => {
+        const payload = construirPayload();
+        if (!payload) return;
+
+        try {
+            const res = await crearJuego({
+                variables: { data: payload },
+                context: authContext(),
+            });
+
+            if (res.data.crearJuego) {
+                alert("Juego añadido correctamente");
+                navigate("/catalogo-juegos");
+            } else {
+                alert("No se pudo añadir el juego");
+            }
+        } catch (err) {
+            console.error(err);
+
+            const msg =
+                err?.message ||
+                err?.graphQLErrors?.[0]?.message ||
+                err?.networkError?.result?.errors?.[0]?.message ||
+                "";
+
+            if (
+                msg.includes("No autorizado") ||
+                msg.includes("Unauthorized") ||
+                msg.includes("Forbidden")
+            ) {
+                alert("No tienes permisos para realizar esta acción.");
+                return;
+            }
+
+            alert("Error añadiendo el juego");
+        }
+    };
+
     if (!auth.isLogged) {
         return (
             <div className="detalle-wrapper">
@@ -143,119 +183,91 @@ export default function InsertarJuego() {
         );
     }
 
-    // ============================
-    // RENDER NORMAL
-    // ============================
     return (
-        <div className="detalle-wrapper">
-
-            <h2 className="detalle-titulo">Añadir Nuevo Juego</h2>
-
-            <div className="detalle-container">
-
-                <div className="detalle-portada insertar-portada">
-                    <label>Nombre de la portada (archivo):</label>
-                    <input
-                        className="input-dark"
-                        value={Portada}
-                        onChange={(e) => setPortada(e.target.value)}
-                    />
+        <>
+            <div className="catalogo-container-moderno">
+                <div className="catalogo-header-moderno">
+                    <h1 className="catalogo-titulo-moderno">🎮 Añadir Nuevo Juego</h1>
+                    <p className="catalogo-subtitulo-moderno">
+                        Completa los campos para añadir un nuevo juego al catálogo
+                    </p>
                 </div>
 
-                <div className="detalle-info">
+                <form onSubmit={handleSubmit} className="insertar-form-moderno">
+                    <div className="detalle-container">
+                        <div className="detalle-portada insertar-portada">
+                            <label className="insertar-label">Nombre de la portada (archivo):</label>
+                            <input
+                                className="input-dark"
+                                value={Portada}
+                                onChange={(e) => setPortada(e.target.value)}
+                            />
+                        </div>
 
-                    <label>Nombre *</label>
-                    <input
-                        className="input-dark"
-                        value={Nombre}
-                        onChange={(e) => setNombre(e.target.value)}
-                    />
+                        <div className="detalle-info">
+                            <label className="insertar-label">Nombre *</label>
+                            <input
+                                className="input-dark"
+                                value={Nombre}
+                                onChange={(e) => setNombre(e.target.value)}
+                            />
 
-                    <label>Tamaño *</label>
-                    <input
-                        className="input-dark"
-                        value={Tamano}
-                        onChange={(e) => setTamano(e.target.value)}
-                    />
+                            <label className="insertar-label">Tamaño *</label>
+                            <input
+                                className="input-dark"
+                                value={Tamano}
+                                onChange={(e) => setTamano(e.target.value)}
+                            />
 
-                    <label>Año de actualización</label>
-                    <input
-                        className="input-dark"
-                        value={AnnoAct}
-                        onChange={(e) => setAnnoAct(e.target.value)}
-                        onKeyDown={(e) => soloCuatroDigitos(e, AnnoAct)}
-                    />
-                </div>
+                            <label className="insertar-label">Año de actualización</label>
+                            <input
+                                className="input-dark"
+                                value={AnnoAct}
+                                onChange={(e) => setAnnoAct(e.target.value)}
+                                onKeyDown={(e) => soloCuatroDigitos(e, AnnoAct)}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="detalle-extra">
+                        <div className="detalle-card">
+                            <strong>Sinopsis:</strong>
+                            <textarea
+                                className="input-dark"
+                                rows={8}
+                                value={Sinopsis}
+                                onChange={(e) => setSinopsis(e.target.value)}
+                                style={{ width: "100%", marginTop: 10 }}
+                            />
+                        </div>
+
+                        <div className="detalle-card">
+                            <strong>Requisitos de Sistema:</strong>
+                            <textarea
+                                className="input-dark"
+                                rows={12}
+                                value={Requisitos}
+                                onChange={(e) => setRequisitos(e.target.value)}
+                                style={{ width: "100%", marginTop: 10 }}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="insertar-botones">
+                        <button type="submit" className="btn-dark">
+                            Añadir Juego
+                        </button>
+                        <button
+                            type="button"
+                            className="btn-dark"
+                            onClick={() => navigate("/catalogo-juegos")}
+                        >
+                            Cancelar
+                        </button>
+                    </div>
+                </form>
             </div>
-
-            <div className="detalle-extra">
-
-                <div className="detalle-card">
-                    <strong>Sinopsis:</strong>
-                    <textarea
-                        className="input-dark"
-                        rows={8}
-                        value={Sinopsis}
-                        onChange={(e) => setSinopsis(e.target.value)}
-                        style={{ width: "100%", marginTop: 10 }}
-                    />
-                </div>
-
-                <div className="detalle-card">
-                    <strong>Requisitos de Sistema:</strong>
-                    <textarea
-                        className="input-dark"
-                        rows={12}
-                        value={Requisitos}
-                        onChange={(e) => setRequisitos(e.target.value)}
-                        style={{ width: "100%", marginTop: 10 }}
-                    />
-                </div>
-            </div>
-
-            <button
-                className="btn-guardar"
-                onClick={async () => {
-                    const payload = construirPayload();
-                    if (!payload) return;
-
-                    try {
-                        const res = await crearJuego({
-                            variables: { data: payload },
-                            context: authContext(), 
-                        });
-
-                        if (res.data.crearJuego) {
-                            alert("Juego añadido correctamente");
-                            navigate("/catalogo-juegos");
-                        } else {
-                            alert("No se pudo añadir el juego");
-                        }
-                    } catch (err) {
-                        console.error(err);
-
-                        const msg =
-                            err?.message ||
-                            err?.graphQLErrors?.[0]?.message ||
-                            err?.networkError?.result?.errors?.[0]?.message ||
-                            "";
-
-                        if (
-                            msg.includes("No autorizado") ||
-                            msg.includes("Unauthorized") ||
-                            msg.includes("Forbidden")
-                        ) {
-                            alert("No tienes permisos para realizar esta acción.");
-                            return;
-                        }
-
-                        alert("Error añadiendo el juego");
-                    }
-                }}
-            >
-                Añadir Juego
-            </button>
-        </div>
+        </>
     );
 }
 

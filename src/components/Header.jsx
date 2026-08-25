@@ -112,18 +112,37 @@ export default function Header() {
         disableSwipeToOpen={true}
       >
         <div className="drawer-menu-contenido">
-          <NavLink to="/catalogo-juegos" end onClick={() => setMenuOpen(false)} className="drawer-menu-item">
-            🎮 Juegos
-          </NavLink>
-          <NavLink to="/catalogo-series" onClick={() => setMenuOpen(false)} className="drawer-menu-item">
-            🎬 Series
-          </NavLink>
-          <NavLink to="/catalogo-animados" onClick={() => setMenuOpen(false)} className="drawer-menu-item">
-            🐭 Animados
-          </NavLink>
-          <NavLink to="/catalogo-animes" onClick={() => setMenuOpen(false)} className="drawer-menu-item">
-            🍥 Animes
-          </NavLink>
+          {/* Logo en el menú */}
+          <div className="drawer-menu-header">
+            <img
+              src="/logo.png"
+              alt="PixelPlay Habana"
+              className="drawer-menu-logo"
+            />
+            <span className="drawer-menu-titulo">PixelPlay Habana</span>
+            <div className="drawer-menu-line"></div>
+          </div>
+
+          {/* Enlaces del menú */}
+          <nav className="drawer-menu-nav">
+            <NavLink to="/catalogo-juegos" end onClick={() => setMenuOpen(false)} className="drawer-menu-item">
+              🎮 Juegos
+            </NavLink>
+            <NavLink to="/catalogo-series" onClick={() => setMenuOpen(false)} className="drawer-menu-item">
+              🎬 Series
+            </NavLink>
+            <NavLink to="/catalogo-animados" onClick={() => setMenuOpen(false)} className="drawer-menu-item">
+              🐭 Animados
+            </NavLink>
+            <NavLink to="/catalogo-animes" onClick={() => setMenuOpen(false)} className="drawer-menu-item">
+              🍥 Animes
+            </NavLink>
+          </nav>
+
+          {/* Separador */}
+          <div className="drawer-menu-divider"></div>
+
+          {/* Información del negocio */}
           <NavLink to="/info" onClick={() => setMenuOpen(false)} className="drawer-menu-item">
             ❓ Información del negocio
           </NavLink>

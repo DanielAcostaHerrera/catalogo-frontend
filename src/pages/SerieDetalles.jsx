@@ -75,57 +75,64 @@ export default function SerieDetalles({ showToast }) {
     const lineas = normalizarTexto(s.Episodios).split("\n").filter((l) => l.trim() !== "");
 
     return (
-        <div className="detalle-wrapper">
-            <h2 className="detalle-titulo">{s.Titulo}</h2>
-
-            <div className="detalle-container">
-                <div className="detalle-portada">
-                    <img src={portadaUrl} alt={s.Titulo} className="detalle-portada-img" />
-                </div>
-
-                <div className="detalle-info">
-                    <p><strong>Año de estreno:</strong> {s.Anno || "No disponible"}</p>
-                    <p><strong>Temporadas:</strong> {s.Temporadas || "No disponible"}</p>
-                </div>
-            </div>
-
-            <div className="detalle-extra">
-                <div className="detalle-card">
-                    <strong>Sinopsis:</strong>
-                    <p style={{ whiteSpace: "pre-line", marginLeft: 10, textAlign: "justify" }}>
-                        {normalizarTexto(s.Sinopsis) || "Sin sinopsis disponible."}
+        <>
+            <div className="catalogo-container-moderno">
+                <div className="catalogo-header-moderno">
+                    <h1 className="catalogo-titulo-moderno">🎬 {s.Titulo}</h1>
+                    <p className="catalogo-subtitulo-moderno">
+                        Detalles de la serie
                     </p>
                 </div>
 
-                <div className="detalle-card">
-                    <strong>Episodios:</strong>
-                    <br />
-                    <br />
-                    <div className="episodios-container">
-                        {lineas.map((l, idx) => {
-                            const match = l.match(/(\d+)\s*Episodios?/i);
-                            if (match) {
-                                const cantidad = parseInt(match[1], 10);
-                                const nombreBloque =
-                                    l.replace(/-\s*\d+\s*Episodios?/i, "").trim() + " (entera)";
+                <div className="detalle-container">
+                    <div className="detalle-portada">
+                        <img src={portadaUrl} alt={s.Titulo} className="detalle-portada-img" />
+                    </div>
 
-                                return (
-                                    <div key={idx} className="episodio-item">
-                                        <span className="episodio-texto">{l}</span>
-                                        <button
-                                            className="btn-add episodio-btn"
-                                            onClick={() => handleAddTemporada(s, nombreBloque, cantidad)}
-                                        >
-                                            🛒 Añadir
-                                        </button>
-                                    </div>
-                                );
-                            }
-                            return <div key={idx}>{l}</div>;
-                        })}
+                    <div className="detalle-info">
+                        <p><strong>Año de estreno:</strong> {s.Anno || "No disponible"}</p>
+                        <p><strong>Temporadas:</strong> {s.Temporadas || "No disponible"}</p>
+                    </div>
+                </div>
+
+                <div className="detalle-extra">
+                    <div className="detalle-card">
+                        <strong>Sinopsis:</strong>
+                        <p style={{ whiteSpace: "pre-line", marginLeft: 10, textAlign: "justify" }}>
+                            {normalizarTexto(s.Sinopsis) || "Sin sinopsis disponible."}
+                        </p>
+                    </div>
+
+                    <div className="detalle-card">
+                        <strong>Episodios:</strong>
+                        <br />
+                        <br />
+                        <div className="episodios-container">
+                            {lineas.map((l, idx) => {
+                                const match = l.match(/(\d+)\s*Episodios?/i);
+                                if (match) {
+                                    const cantidad = parseInt(match[1], 10);
+                                    const nombreBloque =
+                                        l.replace(/-\s*\d+\s*Episodios?/i, "").trim() + " (entera)";
+
+                                    return (
+                                        <div key={idx} className="episodio-item">
+                                            <span className="episodio-texto">{l}</span>
+                                            <button
+                                                className="btn-add episodio-btn"
+                                                onClick={() => handleAddTemporada(s, nombreBloque, cantidad)}
+                                            >
+                                                🛒 Añadir
+                                            </button>
+                                        </div>
+                                    );
+                                }
+                                return <div key={idx}>{l}</div>;
+                            })}
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 }

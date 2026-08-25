@@ -30,7 +30,6 @@ export default function InsertarAnime() {
         const start = input.selectionStart ?? 0;
         const end = input.selectionEnd ?? 0;
         const seleccion = end - start;
-
         const longitudActual = valorActual.length;
         const longitudResultante = longitudActual - seleccion + 1;
 
@@ -98,9 +97,49 @@ export default function InsertarAnime() {
 
     const [crearAnime] = useMutation(CREAR_ANIME);
 
-    // ============================
-    // BLOQUEO DE VISTA SI NO LOGEADO
-    // ============================
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        handleSubmitForm();
+    };
+
+    const handleSubmitForm = async () => {
+        const payload = construirPayload();
+        if (!payload) return;
+
+        try {
+            const res = await crearAnime({
+                variables: { data: payload },
+                context: authContext(),
+            });
+
+            if (res.data.crearAnime) {
+                alert("Anime añadido correctamente");
+                navigate("/catalogo-animes");
+            } else {
+                alert("No se pudo añadir el anime");
+            }
+        } catch (err) {
+            console.error(err);
+
+            const msg =
+                err?.message ||
+                err?.graphQLErrors?.[0]?.message ||
+                err?.networkError?.result?.errors?.[0]?.message ||
+                "";
+
+            if (
+                msg.includes("No autorizado") ||
+                msg.includes("Unauthorized") ||
+                msg.includes("Forbidden")
+            ) {
+                alert("No tienes permisos para realizar esta acción.");
+                return;
+            }
+
+            alert("Error añadiendo el anime");
+        }
+    };
+
     if (!auth.isLogged) {
         return (
             <div className="detalle-wrapper">
@@ -114,127 +153,98 @@ export default function InsertarAnime() {
         );
     }
 
-    // ============================
-    // RENDER NORMAL
-    // ============================
     return (
-        <div className="detalle-wrapper">
-
-            <h2 className="detalle-titulo">Añadir Nuevo Anime</h2>
-
-            <div className="detalle-container">
-
-                <div className="detalle-portada insertar-portada">
-                    <label>Nombre de la portada (archivo):</label>
-                    <input
-                        className="input-dark"
-                        value={Portada}
-                        onChange={(e) => setPortada(e.target.value)}
-                    />
+        <>
+            <div className="catalogo-container-moderno">
+                <div className="catalogo-header-moderno">
+                    <h1 className="catalogo-titulo-moderno">🍥 Añadir Nuevo Anime</h1>
+                    <p className="catalogo-subtitulo-moderno">
+                        Completa los campos para añadir un nuevo anime al catálogo
+                    </p>
                 </div>
 
-                <div className="detalle-info">
+                <form onSubmit={handleSubmit} className="insertar-form-moderno">
+                    <div className="detalle-container">
+                        <div className="detalle-portada insertar-portada">
+                            <label className="insertar-label">Nombre de la portada (archivo):</label>
+                            <input
+                                className="input-dark"
+                                value={Portada}
+                                onChange={(e) => setPortada(e.target.value)}
+                            />
+                        </div>
 
-                    <label>Título *</label>
-                    <input
-                        className="input-dark"
-                        value={Titulo}
-                        onChange={(e) => setTitulo(e.target.value)}
-                    />
+                        <div className="detalle-info">
+                            <label className="insertar-label">Título *</label>
+                            <input
+                                className="input-dark"
+                                value={Titulo}
+                                onChange={(e) => setTitulo(e.target.value)}
+                            />
 
-                    <label>Año de estreno *</label>
-                    <input
-                        className="input-dark"
-                        value={Anno}
-                        onChange={(e) => setAnno(e.target.value)}
-                        onKeyDown={(e) => soloCuatroDigitos(e, Anno)}
-                    />
+                            <label className="insertar-label">Año de estreno *</label>
+                            <input
+                                className="input-dark"
+                                value={Anno}
+                                onChange={(e) => setAnno(e.target.value)}
+                                onKeyDown={(e) => soloCuatroDigitos(e, Anno)}
+                            />
 
-                    <label>Temporadas *</label>
-                    <input
-                        className="input-dark"
-                        value={Temporadas}
-                        onChange={(e) => setTemporadas(e.target.value)}
-                    />
-                </div>
+                            <label className="insertar-label">Temporadas *</label>
+                            <input
+                                className="input-dark"
+                                value={Temporadas}
+                                onChange={(e) => setTemporadas(e.target.value)}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="detalle-extra">
+                        <div className="detalle-card">
+                            <strong>Sinopsis:</strong>
+                            <textarea
+                                className="input-dark"
+                                rows={8}
+                                value={Sinopsis}
+                                onChange={(e) => setSinopsis(e.target.value)}
+                                style={{
+                                    width: "100%",
+                                    marginTop: 10,
+                                    whiteSpace: "pre-wrap"
+                                }}
+                            />
+                        </div>
+
+                        <div className="detalle-card">
+                            <strong>Episodios:</strong>
+                            <textarea
+                                className="input-dark"
+                                rows={12}
+                                value={Episodios}
+                                onChange={(e) => setEpisodios(e.target.value)}
+                                style={{
+                                    width: "100%",
+                                    marginTop: 10,
+                                    whiteSpace: "pre-wrap"
+                                }}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="insertar-botones">
+                        <button type="submit" className="btn-dark">
+                            Añadir Anime
+                        </button>
+                        <button
+                            type="button"
+                            className="btn-dark"
+                            onClick={() => navigate("/catalogo-animes")}
+                        >
+                            Cancelar
+                        </button>
+                    </div>
+                </form>
             </div>
-
-            <div className="detalle-extra">
-
-                <div className="detalle-card">
-                    <strong>Sinopsis:</strong>
-                    <textarea
-                        className="input-dark"
-                        rows={8}
-                        value={Sinopsis}
-                        onChange={(e) => setSinopsis(e.target.value)}
-                        style={{
-                            width: "100%",
-                            marginTop: 10,
-                            whiteSpace: "pre-wrap"
-                        }}
-                    />
-                </div>
-
-                <div className="detalle-card">
-                    <strong>Episodios:</strong>
-                    <textarea
-                        className="input-dark"
-                        rows={12}
-                        value={Episodios}
-                        onChange={(e) => setEpisodios(e.target.value)}
-                        style={{
-                            width: "100%",
-                            marginTop: 10,
-                            whiteSpace: "pre-wrap"
-                        }}
-                    />
-                </div>
-            </div>
-
-            <button
-                className="btn-guardar"
-                onClick={async () => {
-                    const payload = construirPayload();
-                    if (!payload) return;
-
-                    try {
-                        const res = await crearAnime({
-                            variables: { data: payload },
-                            context: authContext(), 
-                        });
-
-                        if (res.data.crearAnime) {
-                            alert("Anime añadido correctamente");
-                            navigate("/catalogo-animes");
-                        } else {
-                            alert("No se pudo añadir el anime");
-                        }
-                    } catch (err) {
-                        console.error(err);
-
-                        const msg =
-                            err?.message ||
-                            err?.graphQLErrors?.[0]?.message ||
-                            err?.networkError?.result?.errors?.[0]?.message ||
-                            "";
-
-                        if (
-                            msg.includes("No autorizado") ||
-                            msg.includes("Unauthorized") ||
-                            msg.includes("Forbidden")
-                        ) {
-                            alert("No tienes permisos para realizar esta acción.");
-                            return;
-                        }
-
-                        alert("Error añadiendo el anime");
-                    }
-                }}
-            >
-                Añadir Anime
-            </button>
-        </div>
+        </>
     );
 }
-

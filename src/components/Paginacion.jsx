@@ -46,26 +46,12 @@ export default function Paginacion({ page, totalPages, onPageChange }) {
     };
 
     return (
-        <div style={{ textAlign: "center", marginTop: 20, width: "100%" }}>
-            <div
-                style={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    justifyContent: "center",
-                    gap: "8px",
-                }}
-            >
+        <div className="paginacion-container">
+            <div className="paginacion-botones">
                 {page > 1 && (
                     <button
+                        className="btn-dark"
                         onClick={() => onPageChange(page - 1)}
-                        style={{
-                            borderRadius: 6,
-                            border: "1px solid #444",
-                            padding: "8px 16px",
-                            backgroundColor: "#2b2b2b",
-                            color: "#f0f0f0",
-                            cursor: "pointer",
-                        }}
                         aria-label="Página anterior"
                     >
                         «
@@ -78,19 +64,11 @@ export default function Paginacion({ page, totalPages, onPageChange }) {
                     return (
                         <React.Fragment key={p}>
                             {showEllipsis && (
-                                <span style={{ color: "#f0f0f0", margin: "0 4px" }}>…</span>
+                                <span className="paginacion-ellipsis">…</span>
                             )}
                             <button
+                                className={`btn-dark ${p === page ? 'paginacion-btn-activo' : ''}`}
                                 onClick={() => onPageChange(p)}
-                                style={{
-                                    borderRadius: 6,
-                                    border: "1px solid #444",
-                                    padding: "8px 16px",
-                                    backgroundColor: p === page ? "#444" : "#2b2b2b",
-                                    color: "#f0f0f0",
-                                    fontWeight: p === page ? "bold" : "normal",
-                                    cursor: "pointer",
-                                }}
                                 aria-current={p === page ? "page" : undefined}
                             >
                                 {p}
@@ -101,15 +79,8 @@ export default function Paginacion({ page, totalPages, onPageChange }) {
 
                 {page < totalPages && (
                     <button
+                        className="btn-dark"
                         onClick={() => onPageChange(page + 1)}
-                        style={{
-                            borderRadius: 6,
-                            border: "1px solid #444",
-                            padding: "8px 16px",
-                            backgroundColor: "#2b2b2b",
-                            color: "#f0f0f0",
-                            cursor: "pointer",
-                        }}
                         aria-label="Página siguiente"
                     >
                         »
@@ -117,11 +88,11 @@ export default function Paginacion({ page, totalPages, onPageChange }) {
                 )}
             </div>
 
-            <div style={{ marginTop: 12, color: "#f0f0f0" }}>
+            <div className="paginacion-info">
                 Página {page} de {totalPages}
             </div>
 
-            <div style={{ marginTop: 8 }}>
+            <div className="paginacion-ir">
                 <input
                     type="text"
                     inputMode="numeric"
@@ -138,15 +109,8 @@ export default function Paginacion({ page, totalPages, onPageChange }) {
                             }
                         }
                     }}
+                    className="paginacion-input"
                     placeholder="Ir a página..."
-                    style={{
-                        padding: "6px",
-                        borderRadius: "4px",
-                        width: "90px",
-                        border: "1px solid #444",
-                        backgroundColor: "#1c1c1c",
-                        color: "#f0f0f0",
-                    }}
                     onKeyDown={(e) => {
                         if (e.key === "Enter") {
                             handleGo();
@@ -155,16 +119,8 @@ export default function Paginacion({ page, totalPages, onPageChange }) {
                     aria-label="Ingresar número de página"
                 />
                 <button
+                    className="btn-dark"
                     onClick={handleGo}
-                    style={{
-                        marginLeft: "8px",
-                        padding: "6px 12px",
-                        backgroundColor: "#333",
-                        color: "#f0f0f0",
-                        border: "none",
-                        borderRadius: "4px",
-                        cursor: "pointer",
-                    }}
                 >
                     Ir
                 </button>

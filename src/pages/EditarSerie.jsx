@@ -68,9 +68,6 @@ export default function EditarSerie() {
         }
     }, [data]);
 
-    // ============================
-    // BLOQUEO DE VISTA SI NO LOGEADO
-    // ============================
     if (!auth.isLogged) {
         return (
             <div className="detalle-wrapper">
@@ -84,9 +81,6 @@ export default function EditarSerie() {
         );
     }
 
-    // ============================
-    // LOADING / ERROR
-    // ============================
     if (loading) return <p style={{ color: "#ccc" }}>Cargando…</p>;
     if (error) return <p style={{ color: "red" }}>Error: {error.message}</p>;
 
@@ -132,123 +126,141 @@ export default function EditarSerie() {
         return payload;
     };
 
-    // ============================
-    // RENDER NORMAL
-    // ============================
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        handleSubmitForm();
+    };
+
+    const handleSubmitForm = async () => {
+        const payload = construirPayload();
+        if (!payload) return;
+
+        try {
+            const res = await actualizarSerie({
+                variables: { data: payload },
+                context: authContext(),
+                refetchQueries: [
+                    { query: GET_SERIE, variables: { id: Number(id) } },
+                ],
+            });
+
+            if (res.data.actualizarSerie) {
+                alert("Serie actualizada correctamente");
+                navigate(`/serie/${id}`, {
+                    state: { from: location.state?.from || "/catalogo-series" },
+                });
+            } else {
+                alert("No se pudo actualizar la serie");
+            }
+        } catch (err) {
+            console.error(err);
+
+            const msg =
+                err?.message ||
+                err?.graphQLErrors?.[0]?.message ||
+                err?.networkError?.result?.errors?.[0]?.message ||
+                "";
+
+            if (
+                msg.includes("No autorizado") ||
+                msg.includes("Unauthorized") ||
+                msg.includes("Forbidden")
+            ) {
+                alert("No tienes permisos para realizar esta acción.");
+                return;
+            }
+
+            alert("Error actualizando la serie");
+        }
+    };
+
     return (
-        <div className="detalle-wrapper">
-            <h2 className="detalle-titulo">Editar {s.Titulo}</h2>
-
-            <div className="detalle-container">
-                <div className="detalle-portada">
-                    <img
-                        src={portadaUrl}
-                        alt={s.Titulo}
-                        className="detalle-portada-img"
-                    />
+        <>
+            <div className="catalogo-container-moderno">
+                <div className="catalogo-header-moderno">
+                    <h1 className="catalogo-titulo-moderno">✏️ Editar {s.Titulo}</h1>
+                    <p className="catalogo-subtitulo-moderno">
+                        Modifica los campos de la serie
+                    </p>
                 </div>
 
-                <div className="detalle-info">
-                    <label>Título</label>
-                    <input
-                        className="input-dark"
-                        name="Titulo"
-                        value={form.Titulo}
-                        onChange={handleChange}
-                    />
+                <form onSubmit={handleSubmit} className="insertar-form-moderno">
+                    <div className="detalle-container">
+                        <div className="detalle-portada">
+                            <img
+                                src={portadaUrl}
+                                alt={s.Titulo}
+                                className="detalle-portada-img"
+                            />
+                        </div>
 
-                    <label>Año de estreno</label>
-                    <input
-                        className="input-dark"
-                        name="Anno"
-                        value={form.Anno}
-                        onChange={handleChange}
-                    />
+                        <div className="detalle-info">
+                            <label className="insertar-label">Título</label>
+                            <input
+                                className="input-dark"
+                                name="Titulo"
+                                value={form.Titulo}
+                                onChange={handleChange}
+                            />
 
-                    <label>Temporadas</label>
-                    <input
-                        className="input-dark"
-                        name="Temporadas"
-                        value={form.Temporadas}
-                        onChange={handleChange}
-                    />
-                </div>
+                            <label className="insertar-label">Año de estreno</label>
+                            <input
+                                className="input-dark"
+                                name="Anno"
+                                value={form.Anno}
+                                onChange={handleChange}
+                            />
+
+                            <label className="insertar-label">Temporadas</label>
+                            <input
+                                className="input-dark"
+                                name="Temporadas"
+                                value={form.Temporadas}
+                                onChange={handleChange}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="detalle-extra">
+                        <div className="detalle-card">
+                            <strong>Sinopsis:</strong>
+                            <textarea
+                                className="input-dark"
+                                name="Sinopsis"
+                                rows={8}
+                                value={form.Sinopsis}
+                                onChange={handleChange}
+                                style={{ width: "100%", marginTop: 10 }}
+                            />
+                        </div>
+
+                        <div className="detalle-card">
+                            <strong>Episodios:</strong>
+                            <textarea
+                                className="input-dark"
+                                name="Episodios"
+                                rows={12}
+                                value={form.Episodios}
+                                onChange={handleChange}
+                                style={{ width: "100%", marginTop: 10 }}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="insertar-botones">
+                        <button type="submit" className="btn-dark">
+                            Guardar Cambios
+                        </button>
+                        <button
+                            type="button"
+                            className="btn-dark"
+                            onClick={() => navigate(`/serie/${id}`)}
+                        >
+                            Cancelar
+                        </button>
+                    </div>
+                </form>
             </div>
-
-            <div className="detalle-extra">
-                <div className="detalle-card">
-                    <strong>Sinopsis:</strong>
-                    <textarea
-                        className="input-dark"
-                        name="Sinopsis"
-                        rows={8}
-                        value={form.Sinopsis}
-                        onChange={handleChange}
-                        style={{ width: "100%", marginTop: 10 }}
-                    />
-                </div>
-
-                <div className="detalle-card">
-                    <strong>Episodios:</strong>
-                    <textarea
-                        className="input-dark"
-                        name="Episodios"
-                        rows={12}
-                        value={form.Episodios}
-                        onChange={handleChange}
-                        style={{ width: "100%", marginTop: 10 }}
-                    />
-                </div>
-            </div>
-
-            <button
-                className="btn-guardar"
-                style={{ marginTop: 20 }}
-                onClick={async () => {
-                    const payload = construirPayload();
-                    if (!payload) return;
-
-                    try {
-                        const res = await actualizarSerie({
-                            variables: { data: payload },
-                            context: authContext(), // 🔥 TOKEN
-                            refetchQueries: [
-                                { query: GET_SERIE, variables: { id: Number(id) } },
-                            ],
-                        });
-
-                        if (res.data.actualizarSerie) {
-                            alert("Serie actualizada correctamente");
-                            navigate(`/serie/${id}`, {
-                                state: { from: location.state?.from || "/catalogo-series" },
-                            });
-                        } else {
-                            alert("No se pudo actualizar la serie");
-                        }
-                    } catch (err) {
-                        console.error(err);
-
-                        const msg =
-                            err?.message ||
-                            err?.graphQLErrors?.[0]?.message ||
-                            err?.networkError?.result?.errors?.[0]?.message ||
-                            "";
-
-                        if (
-                            msg.includes("No autorizado") ||
-                            msg.includes("Unauthorized") ||
-                            msg.includes("Forbidden")
-                        ) {
-                            alert("No tienes permisos para realizar esta acción.");
-                            return;
-                        }
-
-                        alert("Error actualizando la serie");
-                    }
-                }}
-            >
-                Guardar Cambios
-            </button>
-        </div>
+        </>
     );
 }

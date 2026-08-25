@@ -14,7 +14,8 @@ export default function LoginModal({ onClose }) {
         userRef.current?.focus();
     }, []);
 
-    async function handleLogin() {
+    const handleSubmit = async (e) => {
+        e.preventDefault();
         const ok = await auth.login(user, pass);
 
         if (ok) {
@@ -22,53 +23,56 @@ export default function LoginModal({ onClose }) {
         } else {
             setError(true);
         }
-    }
+    };
 
     return (
-        <div className="auth-overlay">
-            <div className="auth-modal">
-                <h2 className="auth-title">Acceso Administrativo</h2>
+        <div className="auth-overlay" onClick={onClose}>
+            <div className="auth-modal" onClick={(e) => e.stopPropagation()}>
+                <form onSubmit={handleSubmit} className="auth-form">
+                    <div className="auth-modal-header">
+                        <span className="auth-modal-icon">🔐</span>
+                        <h2 className="auth-title">Acceso Administrativo</h2>
+                        <div className="auth-modal-line"></div>
+                    </div>
 
-                <input
-                    ref={userRef}
-                    className="auth-input"
-                    placeholder="Usuario"
-                    value={user}
-                    onChange={(e) => setUser(e.target.value)}
-                    onKeyDown={(e) => {
-                        if (e.key === "Enter") handleLogin();
-                    }}
-                />
-
-                <div className="auth-input-container">
                     <input
-                        className="auth-input auth-input-pass"
-                        type={showPass ? "text" : "password"}
-                        placeholder="Contraseña"
-                        value={pass}
-                        onChange={(e) => setPass(e.target.value)}
-                        onKeyDown={(e) => {
-                            if (e.key === "Enter") handleLogin();
-                        }}
+                        ref={userRef}
+                        className="auth-input"
+                        placeholder="👤 Usuario"
+                        value={user}
+                        onChange={(e) => setUser(e.target.value)}
+                        required
                     />
 
-                    <span
-                        className="auth-input-icon"
-                        onClick={() => setShowPass(!showPass)}
-                    >
-                        {showPass ? "👁️" : "🚫"}
-                    </span>
-                </div>
+                    <div className="auth-input-container">
+                        <input
+                            className="auth-input auth-input-pass"
+                            type={showPass ? "text" : "password"}
+                            placeholder="🔑 Contraseña"
+                            value={pass}
+                            onChange={(e) => setPass(e.target.value)}
+                            required
+                        />
 
-                {error && <p className="auth-error">Credenciales incorrectas</p>}
+                        <span
+                            className="auth-input-icon"
+                            onClick={() => setShowPass(!showPass)}
+                            type="button"
+                        >
+                            {showPass ? "👁️" : "🚫"}
+                        </span>
+                    </div>
 
-                <button className="auth-btn-login" onClick={handleLogin}>
-                    Entrar
-                </button>
+                    {error && <p className="auth-error">❌ Credenciales incorrectas</p>}
 
-                <button className="auth-btn-cancel" onClick={onClose}>
-                    Cancelar
-                </button>
+                    <button type="submit" className="auth-btn-login">
+                        ⚡ Entrar
+                    </button>
+
+                    <button type="button" className="auth-btn-cancel" onClick={onClose}>
+                        ✕ Cancelar
+                    </button>
+                </form>
             </div>
         </div>
     );

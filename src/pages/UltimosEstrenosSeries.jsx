@@ -13,31 +13,27 @@ export default function UltimosEstrenosSeries({ showToast }) {
     const [page, setPage] = useState(Number(searchParams.get("page")) || 1);
     const [limitInput, setLimitInput] = useState(searchParams.get("limit") || "10");
     const [limit, setLimit] = useState(Number(searchParams.get("limit")) || 10);
+    const [tempLimit, setTempLimit] = useState(limitInput);
 
     const variables = { page: 1, limit };
 
     const soloNumeros = (e) => {
-        const allowed = ["Backspace", "Tab", "ArrowLeft", "ArrowRight", "Delete"];
+        const allowed = ["Backspace", "Tab", "ArrowLeft", "ArrowRight", "Delete", "Enter"];
         if (!/[0-9]/.test(e.key) && !allowed.includes(e.key)) {
             e.preventDefault();
         }
     };
 
-    const manejarLimitInput = (valor) => {
-        setLimitInput(valor);
-
-        if (valor === "") {
-            setLimit(10);
-            setPage(1);
-            setSearchParams({ page: 1, limit: 10 });
-            return;
-        }
-
-        const num = parseInt(valor);
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const num = parseInt(tempLimit);
         if (!isNaN(num) && num > 0) {
             setLimit(num);
+            setLimitInput(tempLimit);
             setPage(1);
             setSearchParams({ page: 1, limit: num });
+        } else {
+            setTempLimit(limitInput);
         }
     };
 
@@ -48,8 +44,8 @@ export default function UltimosEstrenosSeries({ showToast }) {
         fetchPolicy: "network-only",
     });
 
-    if (loading) return <p style={{ color: "#ccc" }}>Cargando…</p>;
-    if (error) return <p style={{ color: "red" }}>Error: {error.message}</p>;
+    if (loading) return <p className="text-gray-400">Cargando…</p>;
+    if (error) return <p className="text-red-500">Error: {error.message}</p>;
 
     const series = data?.ultimosEstrenosSeries?.series || [];
 
@@ -60,32 +56,31 @@ export default function UltimosEstrenosSeries({ showToast }) {
     const seriesPagina = series.slice(startIndex, endIndex);
 
     return (
-        <div className="catalogo-container">
-            <h2 style={{ color: "#f0f0f0", marginBottom: "20px" }}>
-                Últimos Estrenos (Series)
-            </h2>
+        <div className="catalogo-container-moderno">
+            <div className="catalogo-header-moderno">
+                <h1 className="catalogo-titulo-moderno">🎬 Últimos Estrenos (Series)</h1>
+                <p className="catalogo-subtitulo-moderno">
+                    Las series más recientes añadidas al catálogo
+                </p>
+            </div>
 
-            <div style={{ marginBottom: "20px" }}>
-                <label style={{ color: "#f0f0f0", marginRight: "10px" }}>
+            <form onSubmit={handleSubmit} className="ultimos-estrenos-form">
+                <label className="ultimos-estrenos-label">
                     Mostrar:
                 </label>
                 <input
                     type="text"
-                    value={limitInput}
-                    onChange={(e) => manejarLimitInput(e.target.value)}
+                    value={tempLimit}
+                    onChange={(e) => setTempLimit(e.target.value)}
                     onKeyDown={soloNumeros}
-                    className="filtro-input"
-                    style={{ width: "80px", textAlign: "center" }}
+                    className="ultimos-estrenos-input"
                 />
-            </div>
+                <button type="submit" className="btn-dark">
+                    Actualizar
+                </button>
+            </form>
 
-            <div
-                style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
-                    gap: "20px",
-                }}
-            >
+            <div className="catalogo-grid-moderno">
                 {seriesPagina.map((s) => (
                     <SerieCard
                         key={s.Id}

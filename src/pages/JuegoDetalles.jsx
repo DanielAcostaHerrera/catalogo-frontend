@@ -45,78 +45,85 @@ export default function JuegoDetalles({ showToast }) {
     const portadaUrl = `https://catalogo-backend-f4sk.onrender.com/portadas/Portadas Juegos/${j.Portada}`;
 
     return (
-        <div className="detalle-wrapper">
-            <h2 className="detalle-titulo">{j.Nombre}</h2>
-
-            <div className="detalle-container">
-                <div className="detalle-portada">
-                    <img
-                        src={portadaUrl}
-                        alt={j.Nombre}
-                        className="detalle-portada-img"
-                    />
-
-                    <AddToCartButton
-                        item={{
-                            id: j.Id,
-                            tipo: "juego",
-                            nombre: j.Nombre,
-                            portada: `Portadas Juegos/${j.Portada}`,
-                            precio: j.Precio ?? 0,
-                            tamanoFormateado: j.TamanoFormateado ?? "Tamaño desconocido"
-                        }}
-                        showToast={showToast}
-                    />
-                </div>
-
-                <div className="detalle-info">
-                    <p><strong>Tamaño:</strong> {j.TamanoFormateado}</p>
-
-                    <p>
-                        <strong>Precio:</strong>{" "}
-                        {j.Precio ? `${j.Precio} CUP` : "No disponible"}
-                    </p>
-
-                    <p>
-                        <strong>Año de actualización:</strong>{" "}
-                        {j.Nombre?.toLowerCase().includes("[online]")
-                            ? new Date().getFullYear()
-                            : j.AnnoAct || "No disponible"}
-                    </p>
-                </div>
-            </div>
-
-            <div className="detalle-extra">
-                <div className="detalle-card">
-                    <strong>Sinopsis:</strong>
-                    <p style={{ whiteSpace: "pre-line", marginLeft: 10, textAlign: "justify" }}>
-                        {normalizarTexto(j.Sinopsis) || "Sin sinopsis disponible."}
+        <>
+            <div className="catalogo-container-moderno">
+                <div className="catalogo-header-moderno">
+                    <h1 className="catalogo-titulo-moderno">🎮 {j.Nombre}</h1>
+                    <p className="catalogo-subtitulo-moderno">
+                        Detalles del juego
                     </p>
                 </div>
 
-                <div className="detalle-card">
-                    <strong>Requisitos de Sistema:</strong>
-                    <p style={{ whiteSpace: "pre-line", marginLeft: 10, textAlign: "justify" }}>
-                        {procesarRequisitos(j.Requisitos) || "No disponibles."}
-                    </p>
+                <div className="detalle-container">
+                    <div className="detalle-portada">
+                        <img
+                            src={portadaUrl}
+                            alt={j.Nombre}
+                            className="detalle-portada-img"
+                        />
 
-                    {j.Requisitos === "No disponible" && (
-                        <button
-                            className="btn-add"
-                            onClick={() => {
-                                const nombreLimpio = limpiarNombreParaBusqueda(j.Nombre);
-                                const query = encodeURIComponent(`Requisitos ${nombreLimpio}`);
-                                window.open(
-                                    `https://www.google.com/search?q=${query}`,
-                                    "_blank"
-                                );
+                        <AddToCartButton
+                            item={{
+                                id: j.Id,
+                                tipo: "juego",
+                                nombre: j.Nombre,
+                                portada: `Portadas Juegos/${j.Portada}`,
+                                precio: j.Precio ?? 0,
+                                tamanoFormateado: j.TamanoFormateado ?? "Tamaño desconocido"
                             }}
-                        >
-                            Buscar en Google
-                        </button>
-                    )}
+                            showToast={showToast}
+                        />
+                    </div>
+
+                    <div className="detalle-info">
+                        <p><strong>Tamaño:</strong> {j.TamanoFormateado}</p>
+
+                        <p>
+                            <strong>Precio:</strong>{" "}
+                            {j.Precio ? `${j.Precio} CUP` : "No disponible"}
+                        </p>
+
+                        <p>
+                            <strong>Año de actualización:</strong>{" "}
+                            {j.Nombre?.toLowerCase().includes("[online]")
+                                ? new Date().getFullYear()
+                                : j.AnnoAct || "No disponible"}
+                        </p>
+                    </div>
+                </div>
+
+                <div className="detalle-extra">
+                    <div className="detalle-card">
+                        <strong>Sinopsis:</strong>
+                        <p style={{ whiteSpace: "pre-line", marginLeft: 10, textAlign: "justify" }}>
+                            {normalizarTexto(j.Sinopsis) || "Sin sinopsis disponible."}
+                        </p>
+                    </div>
+
+                    <div className="detalle-card">
+                        <strong>Requisitos de Sistema:</strong>
+                        <p style={{ whiteSpace: "pre-line", marginLeft: 10, textAlign: "justify" }}>
+                            {procesarRequisitos(j.Requisitos) || "No disponibles."}
+                        </p>
+
+                        {j.Requisitos === "No disponible" && (
+                            <button
+                                className="btn-add"
+                                onClick={() => {
+                                    const nombreLimpio = limpiarNombreParaBusqueda(j.Nombre);
+                                    const query = encodeURIComponent(`Requisitos ${nombreLimpio}`);
+                                    window.open(
+                                        `https://www.google.com/search?q=${query}`,
+                                        "_blank"
+                                    );
+                                }}
+                            >
+                                Buscar en Google
+                            </button>
+                        )}
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 }

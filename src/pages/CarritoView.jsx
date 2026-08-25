@@ -13,10 +13,21 @@ function CarritoView({ showToast }) {
     const endIndex = startIndex + limit;
 
     const ordenTipo = { juego: 1, serie: 2, anime: 3, animado: 4 };
+    const tipoNombres = { juego: "🎮 Juegos", serie: "🎬 Series", anime: "🍥 Animes", animado: "🐭 Animados" };
 
-    const itemsPagina = cartItems
-        .slice(startIndex, endIndex)
-        .sort((a, b) => (ordenTipo[a.tipo] ?? 99) - (ordenTipo[b.tipo] ?? 99));
+    // Agrupar items por tipo
+    const itemsAgrupados = {
+        juego: [],
+        serie: [],
+        anime: [],
+        animado: []
+    };
+
+    cartItems.forEach((item) => {
+        if (itemsAgrupados[item.tipo]) {
+            itemsAgrupados[item.tipo].push(item);
+        }
+    });
 
     const generarContenidoAgrupado = () => {
         const grupos = { juego: [], serie: [], anime: [], animado: [] };
@@ -40,7 +51,7 @@ function CarritoView({ showToast }) {
         if (grupos.anime.length) content += "Animes:\n" + grupos.anime.join("\n") + "\n\n";
         if (grupos.animado.length) content += "Animados:\n" + grupos.animado.join("\n") + "\n\n";
 
-        content += `Total: ${(totals.price ?? 0).toFixed(2)} CUP\nEspacio: ${(totals.size ?? 0).toFixed(1)} GB`;
+        content += `Precio total: ${(totals.price ?? 0).toFixed(2)} CUP\nTamaño total: ${(totals.size ?? 0).toFixed(1)} GB`;
 
         return content;
     };
@@ -68,95 +79,124 @@ function CarritoView({ showToast }) {
     };
 
     return (
-        <div>
-            <h2>Mi pedido</h2>
+        <div className="catalogo-container-moderno">
+            <div className="catalogo-header-moderno">
+                <h1 className="catalogo-titulo-moderno">🛒 Mi Pedido</h1>
+                <p className="catalogo-subtitulo-moderno">
+                    Revisa y confirma tu pedido antes de enviarlo
+                </p>
+            </div>
 
-            <div style={{ marginBottom: "16px" }}>
-                <p>Total precio: {(totals.price ?? 0).toFixed(2)} CUP</p>
-                <p>Total tamaño: {(totals.size ?? 0).toFixed(1)} GB</p>
+            <div className="carrito-resumen">
+                <div className="carrito-totales">
+                    <div className="carrito-total-item">
+                        <span className="carrito-total-label">Precio total:</span>
+                        <span className="carrito-total-valor">{(totals.price ?? 0).toFixed(2)} CUP</span>
+                    </div>
+                    <div className="carrito-total-item">
+                        <span className="carrito-total-label">Tamaño total:</span>
+                        <span className="carrito-total-valor">{(totals.size ?? 0).toFixed(1)} GB</span>
+                    </div>
+                </div>
 
                 {cartItems.some((g) => g.tipo === "juego" && g.nombre.includes("[online]")) && (
-                    <p style={{ color: "red" }}>⚠ El tamaño calculado no incluye juegos online</p>
+                    <p className="carrito-advertencia">⚠ El tamaño calculado no incluye juegos online</p>
                 )}
 
                 {cartItems.some((g) => g.tipo === "serie" || g.tipo === "anime" || g.tipo === "animado") && (
-                    <p style={{ color: "red" }}>
+                    <p className="carrito-advertencia">
                         ⚠ El tamaño calculado no incluye series/animados/anime
                     </p>
                 )}
 
                 <div className="btns-carrito">
-                    <button className="btn-carrito" onClick={exportTxt} disabled={cartItems.length === 0}>
-                        Exportar pedido
+                    <button className="btn-dark" onClick={exportTxt} disabled={cartItems.length === 0}>
+                        📄 Exportar pedido
                     </button>
 
-                    <button className="btn-carrito" onClick={enviarWhatsApp} disabled={cartItems.length === 0}>
-                        📲 Enviar pedido por WhatsApp
+                    <button className="btn-dark" onClick={enviarWhatsApp} disabled={cartItems.length === 0}>
+                        📲 Enviar por WhatsApp
                     </button>
 
                     <button
-                        className="btn-carrito"
+                        className="btn-dark"
                         onClick={() => {
                             clearCart();
                             if (showToast) showToast("Carrito vaciado");
                         }}
                         disabled={cartItems.length === 0}
                     >
-                        Vaciar carrito
+                        🗑️ Vaciar carrito
                     </button>
                 </div>
             </div>
 
-            <ul className="carrito-lista">
-                {itemsPagina.map((g) => {
-                    let carpeta = "";
-                    switch (g.tipo) {
-                        case "juego": carpeta = "Portadas Juegos"; break;
-                        case "serie": carpeta = "Portadas Series"; break;
-                        case "animado": carpeta = "Portadas Animados"; break;
-                        case "anime": carpeta = "Portadas Anime"; break;
-                        default: carpeta = ""; break;
-                    }
+            {/* Secciones agrupadas por tipo */}
+            {Object.keys(itemsAgrupados).map((tipo) => {
+                const items = itemsAgrupados[tipo];
+                if (items.length === 0) return null;
 
-                    const portadaUrl = g.portada.includes("Portadas")
-                        ? `https://catalogo-backend-f4sk.onrender.com/portadas/${g.portada}`
-                        : `https://catalogo-backend-f4sk.onrender.com/portadas/${carpeta}/${g.portada}`;
+                // Filtrar items de la página actual para esta sección
+                const itemsSeccion = items.filter(item => {
+                    const index = cartItems.indexOf(item);
+                    return index >= startIndex && index < endIndex;
+                });
 
-                    return (
-                        <li key={g.id} style={{ display: "flex", gap: "12px", alignItems: "center" }}>
-                            <img
-                                src={portadaUrl}
-                                alt={g.nombre}
-                                style={{
-                                    width: "80px",
-                                    height: "100px",
-                                    objectFit: "fill",
-                                    borderRadius: 4,
-                                }}
-                            />
+                if (itemsSeccion.length === 0) return null;
 
-                            <div style={{ flex: 1 }}>
-                                <strong>{g.nombre}</strong>
-                                <div>{(g.Precio ?? g.precio ?? 0).toFixed(2)} CUP</div>
+                return (
+                    <div key={tipo} className="carrito-seccion">
+                        <h2 className="carrito-seccion-titulo">{tipoNombres[tipo] || tipo}</h2>
+                        <ul className="carrito-lista-moderna">
+                            {itemsSeccion.map((g) => {
+                                let carpeta = "";
+                                switch (g.tipo) {
+                                    case "juego": carpeta = "Portadas Juegos"; break;
+                                    case "serie": carpeta = "Portadas Series"; break;
+                                    case "animado": carpeta = "Portadas Animados"; break;
+                                    case "anime": carpeta = "Portadas Anime"; break;
+                                    default: carpeta = ""; break;
+                                }
 
-                                {g.tipo === "juego" && (
-                                    <div>{g.tamanoFormateado || "Tamaño desconocido"}</div>
-                                )}
+                                const portadaUrl = g.portada.includes("Portadas")
+                                    ? `https://catalogo-backend-f4sk.onrender.com/portadas/${g.portada}`
+                                    : `https://catalogo-backend-f4sk.onrender.com/portadas/${carpeta}/${g.portada}`;
 
-                                {g.bloques && (
-                                    <div>
-                                        {g.bloques.map((b, i) => (
-                                            <div key={i}>{b.descripcion}</div>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
+                                return (
+                                    <li key={g.id} className="carrito-item">
+                                        <img
+                                            src={portadaUrl}
+                                            alt={g.nombre}
+                                            className="carrito-item-img"
+                                        />
 
-                            <button onClick={() => removeFromCart(g.id)}>Quitar</button>
-                        </li>
-                    );
-                })}
-            </ul>
+                                        <div className="carrito-item-info">
+                                            <strong>{g.nombre}</strong>
+                                            <div className="carrito-item-precio">{(g.Precio ?? g.precio ?? 0).toFixed(2)} CUP</div>
+
+                                            {g.tipo === "juego" && (
+                                                <div className="carrito-item-tamano">{g.tamanoFormateado || "Tamaño desconocido"}</div>
+                                            )}
+
+                                            {g.bloques && (
+                                                <div className="carrito-item-bloques">
+                                                    {g.bloques.map((b, i) => (
+                                                        <div key={i}>{b.descripcion}</div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <button className="btn-dark carrito-item-remove" onClick={() => removeFromCart(g.id)}>
+                                            ✕
+                                        </button>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    </div>
+                );
+            })}
 
             {totalPages > 1 && (
                 <Paginacion page={page} totalPages={totalPages} onPageChange={setPage} />

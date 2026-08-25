@@ -33,7 +33,7 @@ export default function JuegoCard({ juego, showToast, from }) {
           try {
             const res = await eliminarJuego({
               variables: { id: juego.Id },
-              context: authContext(), // 🔥 TOKEN AQUÍ
+              context: authContext(),
             });
 
             if (res.data.eliminarJuego) {

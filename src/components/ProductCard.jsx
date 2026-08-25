@@ -2,8 +2,6 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import AddToCartButton from "../components/AddToCartButton";
 
-import "../styles/ProductCard.css";
-
 export default function ProductCard({
   portadaUrl,
   navigateLink,
@@ -21,41 +19,30 @@ export default function ProductCard({
       <Link
         to={navigateLink}
         state={navigateState}
-        style={{ textDecoration: "none", color: "inherit" }}
+        className="ProductCardLink"
       >
-        <img
-          className="ProductCardImage"
-          src={portadaUrl}
-          alt={imageAlt}
-          loading="lazy"
-          width={"100%"}
-          height={180}
-        />
+        <div className="ProductCardImageWrapper">
+          <img
+            className="ProductCardImage"
+            src={portadaUrl}
+            alt={imageAlt}
+            loading="lazy"
+          />
+        </div>
 
-        <h3
-          style={{
-            margin: 8,
-            fontSize: 15,
-            color: "#f0f0f0",
-            textAlign: "center",
-          }}
-        >
+        <h3 className="ProductCardTitulo">
           {titulo}
         </h3>
       </Link>
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: 8,
-          marginBottom: 8,
-        }}
-      >
+      <div className="ProductCardFooter">
         <AddToCartButton item={product} showToast={showToast} />
 
-        {auth.isLogged && <div className="admin-section">{adminButtons()}</div>}
+        {auth.isLogged && (
+          <div className="ProductCardAdmin">
+            {adminButtons()}
+          </div>
+        )}
       </div>
     </div>
   );

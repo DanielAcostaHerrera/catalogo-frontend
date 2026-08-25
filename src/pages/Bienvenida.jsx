@@ -44,118 +44,134 @@ export default function Bienvenida() {
     const animes = animesData?.ultimosEstrenosAnimes?.animes || [];
 
     return (
-        <div
-            style={{
-                minHeight: "100vh",
-                backgroundColor: "#1c1c1c",
-                color: "#f0f0f0",
-                padding: "20px",
-            }}
-        >
-            <div className="brand-box">
-                <img src="/logo.png" alt="PixelPlay Habana" />
-                <h1>PixelPlay Habana</h1>
+        <>
+            <div className="bienvenida-nuevo">
+                <section className="bienvenida-nuevo-hero">
+                    <div className="bienvenida-nuevo-hero-content">
+                        <h1 className="bienvenida-nuevo-title">
+                            <span className="text-purple-neon">PixelPlay Habana</span>
+                        </h1>
+                        <p className="bienvenida-nuevo-descripcion">
+                            PixelPlay Habana es el punto de encuentro para los amantes de los videojuegos de PC y las mejores series.
+                            Nuestro catálogo reúne estrenos y clásicos cuidadosamente seleccionados pensados para que encuentres justo
+                            lo que buscas. Explora y descubre nuevas aventuras digitales o maratones imperdibles, todo en un solo lugar.
+                        </p>
+                    </div>
+
+                    <div className="bienvenida-nuevo-categorias">
+                        <button
+                            className="bienvenida-nuevo-categoria"
+                            onClick={() => navigate("/catalogo-juegos", { state: { from: location.pathname } })}
+                        >
+                            <span className="bienvenida-nuevo-categoria-icon">🎮</span>
+                            <span className="bienvenida-nuevo-categoria-nombre">Juegos</span>
+                        </button>
+                        <button
+                            className="bienvenida-nuevo-categoria"
+                            onClick={() => navigate("/catalogo-series", { state: { from: location.pathname } })}
+                        >
+                            <span className="bienvenida-nuevo-categoria-icon">🎬</span>
+                            <span className="bienvenida-nuevo-categoria-nombre">Series</span>
+                        </button>
+                        <button
+                            className="bienvenida-nuevo-categoria"
+                            onClick={() => navigate("/catalogo-animados", { state: { from: location.pathname } })}
+                        >
+                            <span className="bienvenida-nuevo-categoria-icon">🐭</span>
+                            <span className="bienvenida-nuevo-categoria-nombre">Animados</span>
+                        </button>
+                        <button
+                            className="bienvenida-nuevo-categoria"
+                            onClick={() => navigate("/catalogo-animes", { state: { from: location.pathname } })}
+                        >
+                            <span className="bienvenida-nuevo-categoria-icon">🍥</span>
+                            <span className="bienvenida-nuevo-categoria-nombre">Animes</span>
+                        </button>
+                    </div>
+                </section>
+
+                <section className="bienvenida-nuevo-lanzamientos">
+                    <h2 className="bienvenida-nuevo-section-title">⚡ Últimos lanzamientos</h2>
+
+                    <div className="bienvenida-nuevo-carruseles">
+                        <div className="bienvenida-nuevo-carrusel-wrapper">
+                            <div className="bienvenida-nuevo-carrusel-header">
+                                <span className="bienvenida-nuevo-carrusel-titulo">🎮 Juegos</span>
+                                <button
+                                    className="bienvenida-nuevo-carrusel-ver"
+                                    onClick={() => navigate("/catalogo-juegos", { state: { from: location.pathname } })}
+                                >
+                                    Ver todos →
+                                </button>
+                            </div>
+                            <Carrusel
+                                items={juegos.map((j) => ({
+                                    portada: `https://catalogo-backend-f4sk.onrender.com/portadas/Portadas Juegos/${j.Portada}`,
+                                    id: j.Id,
+                                    tipo: "juego",
+                                }))}
+                            />
+                        </div>
+
+                        <div className="bienvenida-nuevo-carrusel-wrapper">
+                            <div className="bienvenida-nuevo-carrusel-header">
+                                <span className="bienvenida-nuevo-carrusel-titulo">🎬 Series</span>
+                                <button
+                                    className="bienvenida-nuevo-carrusel-ver"
+                                    onClick={() => navigate("/catalogo-series", { state: { from: location.pathname } })}
+                                >
+                                    Ver todas →
+                                </button>
+                            </div>
+                            <Carrusel
+                                items={series.map((s) => ({
+                                    portada: `https://catalogo-backend-f4sk.onrender.com/portadas/Portadas Series/${s.Portada}`,
+                                    id: s.Id,
+                                    tipo: "serie",
+                                }))}
+                            />
+                        </div>
+
+                        <div className="bienvenida-nuevo-carrusel-wrapper">
+                            <div className="bienvenida-nuevo-carrusel-header">
+                                <span className="bienvenida-nuevo-carrusel-titulo">🐭 Animados</span>
+                                <button
+                                    className="bienvenida-nuevo-carrusel-ver"
+                                    onClick={() => navigate("/catalogo-animados", { state: { from: location.pathname } })}
+                                >
+                                    Ver todos →
+                                </button>
+                            </div>
+                            <Carrusel
+                                items={animados.map((a) => ({
+                                    portada: `https://catalogo-backend-f4sk.onrender.com/portadas/Portadas Animados/${a.Portada}`,
+                                    id: a.Id,
+                                    tipo: "animado",
+                                }))}
+                            />
+                        </div>
+
+                        <div className="bienvenida-nuevo-carrusel-wrapper">
+                            <div className="bienvenida-nuevo-carrusel-header">
+                                <span className="bienvenida-nuevo-carrusel-titulo">🍥 Animes</span>
+                                <button
+                                    className="bienvenida-nuevo-carrusel-ver"
+                                    onClick={() => navigate("/catalogo-animes", { state: { from: location.pathname } })}
+                                >
+                                    Ver todos →
+                                </button>
+                            </div>
+                            <Carrusel
+                                items={animes.map((an) => ({
+                                    portada: `https://catalogo-backend-f4sk.onrender.com/portadas/Portadas Anime/${an.Portada}`,
+                                    id: an.Id,
+                                    tipo: "anime",
+                                }))}
+                            />
+                        </div>
+                    </div>
+                </section>
             </div>
-
-            <p
-                style={{
-                    textAlign: "justify",
-                    fontSize: "1.2rem",
-                    marginBottom: "20px",
-                    color: "#ccc",
-                    lineHeight: "1.6",
-                    width: "100%",
-                }}
-            >
-                PixelPlay Habana es un punto de encuentro para los amantes de los videojuegos de PC y las mejores series.
-                Nuestro catálogo reúne estrenos y clásicos cuidadosamente seleccionados pensados para que encuentres justo
-                lo que buscas. Explora y descubre nuevas aventuras digitales o maratones imperdibles, todo en un solo lugar.
-            </p>
-
-            <div style={{ textAlign: "center", marginBottom: "30px" }}>
-                <button
-                    className="btn-dark"
-                    style={{ marginBottom: 15 }}
-                    onClick={() => navigate("/info", { state: { from: location.pathname } })}
-                >
-                    ❓ Preguntas Frecuentes
-                </button>
-            </div>
-
-            <hr style={{ border: "0", height: "1px", background: "#444", margin: "30px 0" }} />
-
-            <h2 style={{ textAlign: "center", marginBottom: "20px" }}>🎮 Últimos Juegos</h2>
-            <Carrusel
-                items={juegos.map((j) => ({
-                    portada: `https://catalogo-backend-f4sk.onrender.com/portadas/Portadas Juegos/${j.Portada}`,
-                    id: j.Id,
-                    tipo: "juego",
-                }))}
-            />
-            <div style={{ textAlign: "center", marginTop: 15 }}>
-                <button
-                    className="btn-dark"
-                    style={{ marginBottom: 15 }}
-                    onClick={() => navigate("/catalogo-juegos", { state: { from: location.pathname } })}
-                >
-                    Ver Catálogo de Juegos
-                </button>
-            </div>
-
-            <h2 style={{ textAlign: "center", margin: "40px 0 20px" }}>🎬 Últimas Series</h2>
-            <Carrusel
-                items={series.map((s) => ({
-                    portada: `https://catalogo-backend-f4sk.onrender.com/portadas/Portadas Series/${s.Portada}`,
-                    id: s.Id,
-                    tipo: "serie",
-                }))}
-            />
-            <div style={{ textAlign: "center", marginTop: 15 }}>
-                <button
-                    className="btn-dark"
-                    style={{ marginBottom: 15 }}
-                    onClick={() => navigate("/catalogo-series", { state: { from: location.pathname } })}
-                >
-                    Ver Catálogo de Series
-                </button>
-            </div>
-
-            <h2 style={{ textAlign: "center", margin: "40px 0 20px" }}>🐭 Últimos Animados</h2>
-            <Carrusel
-                items={animados.map((a) => ({
-                    portada: `https://catalogo-backend-f4sk.onrender.com/portadas/Portadas Animados/${a.Portada}`,
-                    id: a.Id,
-                    tipo: "animado",
-                }))}
-            />
-            <div style={{ textAlign: "center", marginTop: 15 }}>
-                <button
-                    className="btn-dark"
-                    style={{ marginBottom: 15 }}
-                    onClick={() => navigate("/catalogo-animados", { state: { from: location.pathname } })}
-                >
-                    Ver Catálogo de Animados
-                </button>
-            </div>
-
-            <h2 style={{ textAlign: "center", margin: "40px 0 20px" }}>🍥 Últimos Animes</h2>
-            <Carrusel
-                items={animes.map((an) => ({
-                    portada: `https://catalogo-backend-f4sk.onrender.com/portadas/Portadas Anime/${an.Portada}`,
-                    id: an.Id,
-                    tipo: "anime",
-                }))}
-            />
-
-            <div style={{ textAlign: "center", marginTop: 15 }}>
-                <button
-                    className="btn-dark"
-                    style={{ marginBottom: 15 }}
-                    onClick={() => navigate("/catalogo-animes", { state: { from: location.pathname } })}
-                >
-                    Ver Catálogo de Animes
-                </button>
-            </div>
-        </div>
+        </>
     );
 }

@@ -17,6 +17,48 @@ body {
   background-color: transparent;
 }
 
+/* ======================================================
+   APP CONTAINER - FOOTER FIJO ABAJO
+   ====================================================== */
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: #1e1e1e;
+  color: #f0f0f0;
+  width: 100%;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.app-main {
+  flex: 1;
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* ======================================================
+   FOOTER
+   ====================================================== */
+
+.bienvenida-nuevo-footer {
+  border-top: 1px solid #3a3a3a;
+  padding: 16px 24px;
+  text-align: center;
+  color: #667;
+  font-size: 0.8rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  background: #1e1e1e;
+  flex-shrink: 0;
+}
+
+/* ======================================================
+   CARRUSEL
+   ====================================================== */
+
 .carousel {
   display: flex;
   align-items: center;
@@ -96,6 +138,472 @@ body {
   margin: 0;
 }
 
+/* ======================================================
+   PAGINACIÓN
+   ====================================================== */
+
+.paginacion-container {
+  text-align: center;
+  margin-top: 20px;
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+.paginacion-botones {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.paginacion-ellipsis {
+  color: #f0f0f0;
+  margin: 0 4px;
+}
+
+.paginacion-btn-activo {
+  background-color: #444 !important;
+  border-color: #646cff !important;
+}
+
+.paginacion-btn-activo:hover {
+  background-color: #555 !important;
+  transform: scale(1.05);
+}
+
+.paginacion-info {
+  margin-top: 12px;
+  color: #f0f0f0;
+}
+
+.paginacion-ir {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.paginacion-input {
+  padding: 6px 12px;
+  border-radius: 6px;
+  width: 100px;
+  border: 1px solid #444;
+  background-color: #1c1c1c;
+  color: #f0f0f0;
+  font-size: 14px;
+}
+
+.paginacion-input:focus {
+  outline: none;
+  border-color: #646cff;
+}
+
+/* ======================================================
+   BIENVENIDA
+   ====================================================== */
+
+@keyframes neonPulse {
+  0% {
+    text-shadow: 0 0 5px #a855f7, 0 0 10px #a855f7;
+  }
+  50% {
+    text-shadow: 0 0 10px #a855f7, 0 0 25px #a855f7, 0 0 40px #8b5cf6;
+  }
+  100% {
+    text-shadow: 0 0 5px #a855f7, 0 0 10px #a855f7;
+  }
+}
+
+.text-purple-neon {
+  color: #a855f7;
+  animation: neonPulse 2s ease-in-out infinite;
+}
+
+.bienvenida-nuevo {
+  background: #1e1e1e;
+  padding: 0 20px 20px 20px;
+}
+
+.bienvenida-nuevo-hero {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px 20px;
+  text-align: center;
+}
+
+.bienvenida-nuevo-hero-content {
+  margin-bottom: 20px;
+}
+
+.bienvenida-nuevo-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0 0 6px;
+  color: #f0f0f0;
+}
+
+@media (min-width: 951px) {
+  .bienvenida-nuevo-title {
+    font-size: 3.5rem;
+  }
+}
+
+.text-cyan-400 {
+  color: #00f0ff;
+}
+
+.bienvenida-nuevo-descripcion {
+  color: #8899aa;
+  font-size: 1rem;
+  margin: 0 auto;
+  max-width: 1200px;
+  line-height: 1.7;
+  text-align: justify;
+  padding: 0 20px;
+}
+
+.bienvenida-nuevo-categorias {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+@media (min-width: 951px) {
+  .bienvenida-nuevo-categorias {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.bienvenida-nuevo-categoria {
+  background: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  border-radius: 12px;
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  color: #f0f0f0;
+  font-family: inherit;
+}
+
+.bienvenida-nuevo-categoria:hover {
+  background: #3a3a3a;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+
+.bienvenida-nuevo-categoria-icon {
+  font-size: 2rem;
+}
+
+.bienvenida-nuevo-categoria-nombre {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.bienvenida-nuevo-lanzamientos {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px 40px;
+}
+
+.bienvenida-nuevo-section-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #f0f0f0;
+  margin: 0 0 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #3a3a3a;
+}
+
+.bienvenida-nuevo-carruseles {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.bienvenida-nuevo-carrusel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.bienvenida-nuevo-carrusel-titulo {
+  font-weight: 700;
+  font-size: 1.35rem;
+  color: #f0f0f0;
+}
+
+.bienvenida-nuevo-carrusel-ver {
+  background: none;
+  border: none;
+  color: #8899aa;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.bienvenida-nuevo-carrusel-ver:hover {
+  color: #00f0ff;
+}
+
+/* ======================================================
+   CATÁLOGO DE JUEGOS - MODERNO
+   ====================================================== */
+
+.catalogo-container-moderno {
+  background: #1e1e1e;
+  padding: 0 20px 20px 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.catalogo-header-moderno {
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #3a3a3a;
+}
+
+.catalogo-titulo-moderno {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #f0f0f0;
+  margin: 0 0 8px 0;
+}
+
+.catalogo-subtitulo-moderno {
+  color: #8899aa;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.catalogo-top-buttons-moderno {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.catalogo-grid-moderno {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+@media (max-width: 950px) {
+  .catalogo-titulo-moderno {
+    font-size: 1.5rem;
+  }
+  .catalogo-grid-moderno {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px;
+  }
+}
+
+/* ======================================================
+   PRODUCT CARD
+   ====================================================== */
+
+.ProductCardContainer {
+  background: #1a1a1a;
+  border: 1px solid #444;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.3s ease;
+}
+
+.ProductCardContainer:hover {
+  border-color: #646cff;
+  transform: scale(1.02);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+
+.ProductCardLink {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.ProductCardImageWrapper {
+  position: relative;
+  overflow: hidden;
+  background: #0a0a0a;
+}
+
+.ProductCardImage {
+  width: 100%;
+  height: 200px;
+  object-fit: fill;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.ProductCardContainer:hover .ProductCardImage {
+  transform: scale(1.06);
+}
+
+.ProductCardTitulo {
+  margin: 12px 12px 8px 12px;
+  font-size: 15px;
+  color: #f0f0f0;
+  text-align: center;
+  font-weight: 600;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ProductCardFooter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px 12px 12px;
+}
+
+.ProductCardFooter button {
+  flex: 0 0 auto;
+  height: 36px;
+  padding: 6px 12px;
+  font-size: 14px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ProductCardFooter .btn-add {
+  min-width: 80px;
+  background-color: #333;
+  color: #fff;
+  font-weight: 600;
+}
+
+.ProductCardFooter .btn-add:hover {
+  background-color: #555;
+}
+
+.ProductCardAdmin {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.ProductCardFooter .admin-edit-btn {
+  min-width: 36px;
+  background: #3a3a3a;
+  color: white;
+  font-weight: 600;
+}
+
+.ProductCardFooter .admin-edit-btn:hover {
+  background: #4a4a4a;
+}
+
+.ProductCardFooter .admin-delete-btn {
+  min-width: 36px;
+  background: #7a1f1f;
+  color: white;
+  font-weight: 600;
+}
+
+.ProductCardFooter .admin-delete-btn:hover {
+  background: #9a2a2a;
+}
+
+@media (max-width: 950px) {
+  .ProductCardImage {
+    height: 160px;
+  }
+  .ProductCardTitulo {
+    font-size: 13px;
+    margin: 10px 10px 6px 10px;
+  }
+  .ProductCardFooter {
+    padding: 0 10px 10px 10px;
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .ProductCardImage {
+    height: 140px;
+  }
+}
+
+/* ======================================================
+   INSERTAR - MODERNO
+   ====================================================== */
+
+.insertar-form-moderno {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background: #1a1a1a;
+  border-radius: 12px;
+  border: 1px solid #2a2a2a;
+}
+
+.insertar-portada {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+@media (max-width: 950px) {
+  .insertar-portada {
+    width: 100%;
+    max-width: 400px;
+  }
+}
+
+.insertar-label {
+  color: #f0f0f0;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 6px;
+  width: 100%;
+}
+
+.insertar-botones {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #2a2a2a;
+}
+
+.detalle-container {
+  background-color: transparent !important;
+}
+
+.detalle-info {
+  background: #1a1a1a !important;
+}
+
 /* --------------------------------------------------
    INPUTS Y FILTROS
 -------------------------------------------------- */
@@ -137,9 +645,7 @@ body {
   border-radius: 6px;
   cursor: pointer;
   font-weight: 600;
-  transition:
-    background-color 0.2s,
-    transform 0.2s;
+  transition: background-color 0.2s, transform 0.2s;
 }
 
 .btn-dark:hover {
@@ -217,114 +723,200 @@ body {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 }
 
-/* --------------------------------------------------
-   DETALLE DE JUEGO (MÓVIL)
--------------------------------------------------- */
 @media (max-width: 950px) {
   .detalle-titulo {
     font-size: 24px;
     margin-bottom: 16px;
   }
-
   .detalle-container {
     flex-direction: column;
     align-items: center;
     text-align: center;
     padding: 0;
   }
-
   .detalle-portada {
     width: 100%;
     max-width: 400px;
   }
-
   .detalle-info {
     width: 100%;
     margin-top: 10px;
     text-align: left;
   }
-
   .detalle-extra {
     text-align: center;
     margin-top: 10px !important;
   }
-
   .detalle-extra p {
     margin-left: 0 !important;
   }
-
   .detalle-extra > div {
     margin-top: 10px !important;
   }
-
   .insertar-portada {
     width: 100% !important;
     max-width: none !important;
   }
 }
 
-/* --------------------------------------------------
-   FILTROS (MÓVIL)
--------------------------------------------------- */
 @media (max-width: 950px) {
   .filtros-grid {
     grid-template-columns: 1fr;
   }
-
   .texto-multilinea {
     white-space: pre-line;
   }
-
   .filtro-nombre {
     grid-column: span 1;
   }
 }
 
-/* --------------------------------------------------
+/* ======================================================
    CARRITO
--------------------------------------------------- */
-.carrito-lista {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+   ====================================================== */
+
+.carrito-resumen {
+    background: #1a1a1a;
+    border-radius: 12px;
+    border: 1px solid #2a2a2a;
+    padding: 20px;
+    margin-bottom: 25px;
 }
 
-.carrito-lista li {
-  background-color: #2a2a2a;
-  color: #f0f0f0;
-  margin-bottom: 10px;
-  padding: 10px;
-  border-radius: 6px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.carrito-totales {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
 }
 
-.carrito-lista button {
-  background-color: #444;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  padding: 6px 10px;
-  cursor: pointer;
+.carrito-total-item {
+    display: flex;
+    gap: 8px;
+    font-size: 16px;
 }
 
-.carrito-lista button:hover {
-  background-color: #666;
+.carrito-total-label {
+    color: #8899aa;
+}
+
+.carrito-total-valor {
+    color: #f0f0f0;
+    font-weight: 600;
+}
+
+.carrito-advertencia {
+    color: #ff6b6b;
+    font-size: 13px;
+    margin: 8px 0 12px 0;
 }
 
 .btns-carrito {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-top: 8px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+}
+
+.carrito-lista-moderna {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.carrito-item {
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    transition: border-color 0.3s ease;
+}
+
+.carrito-item:hover {
+    border-color: #444;
+}
+
+.carrito-item-img {
+    width: 80px;
+    height: 100px;
+    object-fit: fill;
+    border-radius: 6px;
+    flex-shrink: 0;
+}
+
+.carrito-item-info {
+    flex: 1;
+}
+
+.carrito-item-info strong {
+    color: #f0f0f0;
+    font-size: 16px;
+}
+
+.carrito-item-precio {
+    color: #00f0ff;
+    font-weight: 600;
+    font-size: 14px;
+    margin-top: 2px;
+}
+
+.carrito-item-tamano {
+    color: #8899aa;
+    font-size: 13px;
+    margin-top: 2px;
+}
+
+.carrito-item-bloques {
+    color: #8899aa;
+    font-size: 13px;
+    margin-top: 2px;
+}
+
+.carrito-item-remove {
+    min-width: 36px !important;
+    height: 36px !important;
+    padding: 0 !important;
+    flex-shrink: 0;
+    background: #7a1f1f !important;
+    color: white !important;
+    font-weight: 600;
+}
+
+.carrito-item-remove:hover {
+    background: #9a2a2a !important;
 }
 
 @media (max-width: 950px) {
-  .btns-carrito {
-    flex-direction: column;
-    align-items: stretch;
-  }
+    .carrito-item {
+        flex-wrap: wrap;
+    }
+    .carrito-totales {
+        flex-direction: column;
+        gap: 8px;
+    }
+    .carrito-item-img {
+        width: 60px;
+        height: 80px;
+    }
+}
+
+.carrito-seccion {
+    margin-bottom: 30px;
+}
+
+.carrito-seccion-titulo {
+    color: #f0f0f0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #2a2a2a;
 }
 
 /* --------------------------------------------------
@@ -340,9 +932,7 @@ body {
   border-radius: 6px;
   cursor: pointer;
   font-weight: 600;
-  transition:
-    background-color 0.2s,
-    transform 0.2s;
+  transition: background-color 0.2s, transform 0.2s;
 }
 
 .btn-add:hover,
@@ -370,17 +960,15 @@ body {
   background-color: #3367d6;
 }
 
-/*
-  HEADER 
- */
-
+/* --------------------------------------------------
+   HEADER
+-------------------------------------------------- */
 .site-header {
   position: sticky;
   top: 0;
   z-index: 1000;
   background-color: #1e1e1e;
 }
-
 
 .header-container {
   display: flex;
@@ -478,210 +1066,240 @@ body {
   cursor: pointer;
 }
 
-/* --------------------------------------------------
-   SELECTOR DE LÍMITE (ÚLTIMOS ESTRENOS)
--------------------------------------------------- */
-.selector-limit {
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+/* ======================================================
+   ÚLTIMOS ESTRENOS
+   ====================================================== */
+
+.ultimos-estrenos-form {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 25px;
+    padding: 16px 20px;
+    background: #1a1a1a;
+    border-radius: 8px;
+    border: 1px solid #2a2a2a;
 }
 
-.selector-limit label {
-  color: #f0f0f0;
-  font-size: 14px;
+.ultimos-estrenos-label {
+    color: #f0f0f0;
+    font-weight: 500;
+    font-size: 14px;
 }
 
-.selector-limit input {
-  padding: 6px 10px;
-  border-radius: 4px;
-  border: 1px solid #555;
-  background-color: #222;
-  color: #f0f0f0;
-  font-size: 14px;
-  text-align: center;
-  width: 80px;
-  transition:
-    background-color 0.2s,
-    transform 0.2s;
+.ultimos-estrenos-input {
+    width: 80px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #444;
+    background-color: #111;
+    color: #f0f0f0;
+    font-size: 14px;
+    text-align: center;
 }
 
-.selector-limit input:focus {
-  outline: none;
-  background-color: #333;
+.ultimos-estrenos-input:focus {
+    outline: none;
+    border-color: #646cff;
 }
 
-/* --------------------------------------------------
-   Modal de Autenticación
--------------------------------------------------- */
+@media (max-width: 950px) {
+    .ultimos-estrenos-form {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+/* ======================================================
+   MODAL DE AUTENTICACIÓN
+   ====================================================== */
 
 .auth-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  backdrop-filter: blur(4px);
-  background: rgba(0, 0, 0, 0.55);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(6px);
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
 }
 
 .auth-modal {
-  background: #2b2b2b;
-  padding: 25px 30px;
-  border-radius: 10px;
-  width: 320px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
-  animation: authFadeIn 0.25s ease-out;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+    background: #14141e;
+    padding: 35px 40px;
+    border-radius: 16px;
+    width: 360px;
+    box-shadow: 0 0 40px rgba(100, 108, 255, 0.1), 0 8px 50px rgba(0, 0, 0, 0.6);
+    animation: authFadeIn 0.3s ease-out;
+    border: 1px solid rgba(100, 108, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.auth-modal::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 30% 50%, rgba(100, 108, 255, 0.03), transparent 60%);
+    pointer-events: none;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+}
+
+.auth-modal-header {
+    text-align: center;
+    margin-bottom: 4px;
+}
+
+.auth-modal-icon {
+    font-size: 32px;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.auth-modal-line {
+    width: 50px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #646cff, transparent);
+    margin: 8px auto 0 auto;
+    border-radius: 2px;
 }
 
 @keyframes authFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+    from {
+        opacity: 0;
+        transform: translateY(-16px) scale(0.96);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 .auth-title {
-  margin: 0;
-  margin-bottom: 10px;
-  text-align: center;
-  color: #fff;
-  font-size: 20px;
-  font-weight: 600;
+    margin: 0;
+    text-align: center;
+    color: #f0f0f0;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
 }
 
 .auth-input {
-  width: 100%;
-  padding: 10px 12px;
-  padding-right: 35px;
-  border-radius: 6px;
-  border: 1px solid #444;
-  background: #1e1e1e;
-  color: #fff;
-  font-size: 14px;
-  outline: none;
-  transition: border-color 0.2s;
-  box-sizing: border-box; 
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 1px solid #2a2a3a;
+    background: #0d0d14;
+    color: #f0f0f0;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    box-sizing: border-box;
+}
+
+.auth-input::placeholder {
+    color: #556;
+    font-weight: 400;
 }
 
 .auth-input:focus {
-  border-color: #3a7afe;
+    border-color: #646cff;
+    box-shadow: 0 0 0 3px rgba(100, 108, 255, 0.12), 0 0 20px rgba(100, 108, 255, 0.05);
 }
 
 .auth-input-container {
-  position: relative;
-  width: 100%;
+    position: relative;
+    width: 100%;
 }
 
 .auth-input-pass {
-  padding-right: 35px;
-  box-sizing: border-box;
+    padding-right: 44px;
+    box-sizing: border-box;
 }
 
-/* 🔥 Icono de mostrar/ocultar contraseña */
 .auth-input-icon {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  color: #ccc;
-  font-size: 18px;
-  user-select: none;
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #556;
+    font-size: 18px;
+    user-select: none;
+    transition: color 0.2s;
+    padding: 4px;
+    background: transparent;
+    border: none;
 }
 
+.auth-input-icon:hover {
+    color: #f0f0f0;
+}
 
 .auth-error {
-  color: #ff6b6b;
-  font-size: 13px;
-  margin: 0;
-  margin-bottom: 5px;
-  text-align: center;
+    color: #ff6b6b;
+    font-size: 13px;
+    margin: -4px 0 0 0;
+    text-align: center;
+    background: rgba(255, 107, 107, 0.06);
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 107, 107, 0.1);
 }
 
 .auth-btn-login {
-  width: 100%;
-  padding: 10px;
-  background: #3a7afe;
-  border: none;
-  border-radius: 6px;
-  color: white;
-  font-size: 15px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: background 0.2s;
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #646cff, #7c3aed);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: transform 0.2s, box-shadow 0.2s;
+    letter-spacing: 0.5px;
 }
 
 .auth-btn-login:hover {
-  background: #2f63d6;
+    transform: scale(1.02);
+    box-shadow: 0 0 30px rgba(100, 108, 255, 0.25);
 }
 
 .auth-btn-cancel {
-  width: 100%;
-  padding: 10px;
-  background: #555;
-  border: none;
-  border-radius: 6px;
-  color: white;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background 0.2s;
+    width: 100%;
+    padding: 10px;
+    background: transparent;
+    border: 1px solid #2a2a3a;
+    border-radius: 8px;
+    color: #8899aa;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
 }
 
 .auth-btn-cancel:hover {
-  background: #666;
-}
-
-.admin-edit-btn,
-.admin-delete-btn {
-  padding: 8px 12px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: 600;
-  transition:
-    background 0.2s,
-    transform 0.15s;
-}
-
-.admin-edit-btn {
-  background: #3a3a3a;
-  color: white;
-}
-
-.admin-edit-btn:hover {
-  background: #4a4a4a;
-  transform: scale(1.05);
-}
-
-.admin-delete-btn {
-  background: #7a1f1f;
-  color: white;
-}
-
-.admin-delete-btn:hover {
-  background: #9a2a2a;
-  transform: scale(1.05);
+    background: #1a1a2a;
+    color: #f0f0f0;
+    border-color: #444;
 }
 
 /* --------------------------------------------------
-   Inputs oscuros para formularios
+   INPUTS OSCUROS
 -------------------------------------------------- */
-
 .input-dark {
   width: 100%;
   padding: 8px 10px;
@@ -704,9 +1322,8 @@ textarea.input-dark {
 }
 
 /* --------------------------------------------------
-   Botón oscuro genérico (Guardar Cambios, etc.)
+   BOTÓN GUARDAR
 -------------------------------------------------- */
-
 .btn-guardar {
   margin-top: 20px;
   padding: 10px 20px;
@@ -716,9 +1333,7 @@ textarea.input-dark {
   border-radius: 4px;
   font-size: 15px;
   cursor: pointer;
-  transition:
-    background-color 0.2s ease,
-    transform 0.1s ease;
+  transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
 .btn-guardar:hover {
@@ -731,10 +1346,8 @@ textarea.input-dark {
 }
 
 /* --------------------------------------------------
-  Drawer de filtros (barra lateral derecha)
+   DRAWER DE FILTROS
 -------------------------------------------------- */
-
-/* 🔥 Por defecto (móvil) */
 .MuiDrawer-paper {
   background-color: #1e1e1e !important;
   color: #f0f0f0 !important;
@@ -746,12 +1359,11 @@ textarea.input-dark {
   min-width: 70vw !important;
 }
 
-/* 🔥 PC (pantallas grandes) */
 @media (min-width: 951px) {
   .MuiDrawer-paper {
-    width: max-content !important;    
-    max-width: 25vw !important;       
-    min-width: max-content !important; 
+    width: max-content !important;
+    max-width: 25vw !important;
+    min-width: max-content !important;
   }
 }
 
@@ -770,27 +1382,23 @@ textarea.input-dark {
   gap: 20px;
 }
 
-/* 🔥 Labels dentro del Drawer (encima del input) */
 .drawer-filtros-contenido label {
   color: #f0f0f0;
-  display: block;               
-  margin-bottom: 4px;           
+  display: block;
+  margin-bottom: 4px;
 }
 
-/* 🔥 Inputs dentro del Drawer (debajo del label) */
 .drawer-filtros-contenido input {
-  width: 100% !important;       
+  width: 100% !important;
   max-width: 100% !important;
   box-sizing: border-box !important;
-  display: block !important;  
+  display: block !important;
   border: 1px solid #444;
   background-color: #111;
   color: #f0f0f0;
   font-size: 14px;
-  box-sizing: border-box; 
 }
 
-/* 🔥 Contenedor de botones dentro del Drawer */
 .drawer-filtros-botones {
   display: flex;
   flex-direction: row;
@@ -799,49 +1407,42 @@ textarea.input-dark {
   margin-top: 4px;
 }
 
-/* 🔥 Cada botón ocupa la mitad del ancho disponible */
 .drawer-filtros-botones .btn-dark {
   flex: 1 !important;
   width: auto !important;
   min-width: 0 !important;
-  white-space: nowrap !important;  
+  white-space: nowrap !important;
 }
 
-/* 🔥 En móvil: botones uno debajo del otro y al 100% */
 @media (max-width: 950px) {
   .drawer-filtros-botones {
     flex-direction: column;
     width: 100% !important;
   }
-
   .drawer-filtros-botones .btn-dark {
     width: 100% !important;
     flex: none !important;
   }
 }
 
-/* Botones superiores del catálogo */
 .catalogo-top-buttons {
   display: flex;
   gap: 10px;
   margin-bottom: 15px;
 }
 
-/* Botón oscuro general */
 .btn-dark {
   display: inline-flex;
-  align-items: center;      
+  align-items: center;
   justify-content: center;
-  gap: 6px;                 
+  gap: 6px;
   padding: 8px 14px;
 }
 
-/* Texto visible en PC */
 .btn-text {
   display: inline-block;
 }
 
-/* Icono visible siempre */
 .btn-icon {
   display: inline-flex;
   align-items: center;
@@ -849,37 +1450,77 @@ textarea.input-dark {
   font-size: 22px;
 }
 
-/* En móvil: ocultar texto del botón */
 @media (max-width: 950px) {
   .btn-text {
     display: none;
   }
 }
 
-/* Contenedor del menú hamburguesa */
+/* ======================================================
+   DRAWER MENÚ - CON LOGO Y ESTRUCTURA 
+   ====================================================== */
+
 .drawer-menu-contenido {
-  background-color: #1c1c1c; 
+  background-color: #1c1c1c;
   height: 100%;
-  padding: 20px 12px;
+  padding: 24px 16px;
   display: flex;
   flex-direction: column;
-  gap: 14px; 
-  width: max-content;       
-  min-width: 70vw;          
-  max-width: 70vw;          
+  gap: 10px;
+  width: max-content;
+  min-width: 70vw;
+  max-width: 70vw;
   box-sizing: border-box;
+  border-right: 1px solid rgba(100, 108, 255, 0.08);
 }
 
-/* En pantallas grandes */
 @media (min-width: 951px) {
   .drawer-menu-contenido {
-    min-width: max-content !important;      
-    max-width: 25vw;        
-    width: max-content;     
+    min-width: max-content !important;
+    max-width: 25vw;
+    width: max-content;
   }
 }
 
-/* Cada item del menú */
+/* 🔥 HEADER DEL MENÚ */
+.drawer-menu-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 12px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.drawer-menu-logo {
+  height: 45px;
+  width: auto;
+  margin-bottom: 4px;
+}
+
+.drawer-menu-titulo {
+  color: #f0f0f0;
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: 0.5px;
+}
+
+.drawer-menu-line {
+  width: 35px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #646cff, transparent);
+  margin-top: 8px;
+  border-radius: 2px;
+}
+
+/* 🔥 NAVEGACIÓN */
+.drawer-menu-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* 🔥 ITEMS DEL MENÚ (colores originales) */
 .drawer-menu-item {
   display: block;
   padding: 12px 14px;
@@ -888,42 +1529,67 @@ textarea.input-dark {
   color: #e6e6e6;
   text-decoration: none;
   font-weight: 500;
-  transition: background-color 0.2s, transform 0.2s;
-  white-space: nowrap;      
+  transition: background-color 0.2s, transform 0.2s, border-color 0.2s;
+  white-space: nowrap;
+  border: 1px solid #444;
 }
 
-/* Hover: efecto visual */
 .drawer-menu-item:hover {
   background-color: #3a3a3a;
   transform: translateX(4px);
+  color: #fff;
+  border-color: #646cff;
 }
 
-/* Activo: estilo especial */
 .drawer-menu-item.active {
   background-color: #444;
   color: #fff;
+  border-color: #646cff;
 }
 
 .drawer-menu-item,
 .drawer-menu-item:visited,
 .drawer-menu-item:hover,
 .drawer-menu-item:active {
-  color: #e6e6e6; /* 🔥 fuerza el color siempre */
+  color: #e6e6e6;
 }
 
+/* 🔥 ITEMS SECUNDARIOS (Información, Carrito) */
+.drawer-menu-item-secondary {
+  background-color: transparent;
+  border: 1px solid #2a2a2a;
+  font-size: 14px;
+  color: #8899aa;
+}
+
+.drawer-menu-item-secondary:hover {
+  background-color: #2a2a2a;
+  border-color: #444;
+  color: #f0f0f0;
+}
+
+.drawer-menu-item-secondary.active {
+  background-color: #2a2a2a;
+  color: #fff;
+  border-color: #646cff;
+}
+
+/* 🔥 DIVIDER */
+.drawer-menu-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #2a2a2a, transparent);
+  margin: 4px 0;
+}
 
 /* --------------------------------------------------
-  Detalles Series
+   DETALLES SERIES
 -------------------------------------------------- */
-
-/* 🔥 Contenedor de episodios */
 .episodios-container {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-/* 🔥 Cada fila de episodio (PC) */
 .episodio-item {
   display: flex;
   justify-content: space-between;
@@ -933,33 +1599,28 @@ textarea.input-dark {
   border-bottom: 1px solid #333;
 }
 
-/* 🔥 Texto del episodio */
 .episodio-texto {
   flex: 1;
 }
 
-/* 🔥 Botón de añadir (PC) */
 .episodio-btn {
   flex-shrink: 0;
 }
 
-/* 🔥 En móvil: botón debajo del texto */
 @media (max-width: 950px) {
   .episodio-item {
-    flex-direction: column;       
-    align-items: stretch;         
+    flex-direction: column;
+    align-items: stretch;
     gap: 6px;
     padding: 8px 0;
-    text-align: center;           
+    text-align: center;
   }
-
   .episodio-texto {
-    text-align: center;           
+    text-align: center;
   }
-
   .episodio-btn {
-    width: 100%;                  
-    justify-content: center;      
+    width: 100%;
+    justify-content: center;
   }
 }
 

@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 
 /* 🔹 JUEGOS */
@@ -44,30 +44,16 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function AppContent() {
-  const location = useLocation();
   const showToast = (msg) => toast(msg);
+  const currentYear = new Date().getFullYear();
 
   return (
-    <div
-      style={{
-        backgroundColor: "#1e1e1e",
-        color: "#f0f0f0",
-        minHeight: "100vh",
-        width: "100%",
-        fontFamily: "Segoe UI, sans-serif",
-      }}
-    >
+    <div className="app-container">
       <AuthProvider>
         <CartProvider>
-          {location.pathname !== "/" && <Header />}
+          <Header />
 
-          <main
-            style={{
-              width: "100%",
-              padding: "20px",
-              boxSizing: "border-box",
-            }}
-          >
+          <main className="app-main">
             <Routes>
               {/* 🔹 JUEGOS */}
               <Route path="/catalogo-juegos" element={<CatalogoJuegos showToast={showToast} />} />
@@ -106,10 +92,13 @@ function AppContent() {
             </Routes>
           </main>
 
-          {/* 🔹 Contenedor de Toasts */}
           <ToastContainer position="bottom-right" autoClose={3000} />
         </CartProvider>
       </AuthProvider>
+
+      <footer className="bienvenida-nuevo-footer">
+        <p>© {currentYear} PixelPlay Habana</p>
+      </footer>
     </div>
   );
 }

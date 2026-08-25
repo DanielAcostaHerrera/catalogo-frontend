@@ -41,14 +41,18 @@ export default function CatalogoJuegos({ showToast }) {
     const [annoMaxTemp, setAnnoMaxTemp] = useState(filtros.annoMax);
 
     const soloAnios = (e) => {
-        const allowed = ["Backspace", "Tab", "ArrowLeft", "ArrowRight", "Delete"];
-        if (!/[0-9]/.test(e.key) && !allowed.includes(e.key)) e.preventDefault();
+        const allowed = ["Backspace", "Tab", "ArrowLeft", "ArrowRight", "Delete", "Enter"];
+        if (!/[0-9]/.test(e.key) && !allowed.includes(e.key)) {
+            e.preventDefault();
+        }
     };
 
     const soloNumeros = (e, permitirDecimal = false) => {
-        const allowed = ["Backspace", "Tab", "ArrowLeft", "ArrowRight", "Delete"];
+        const allowed = ["Backspace", "Tab", "ArrowLeft", "ArrowRight", "Delete", "Enter"];
         if (permitirDecimal) allowed.push(".");
-        if (!/[0-9]/.test(e.key) && !allowed.includes(e.key)) e.preventDefault();
+        if (!/[0-9]/.test(e.key) && !allowed.includes(e.key)) {
+            e.preventDefault();
+        }
     };
 
     const aplicarFiltros = () => {
@@ -199,13 +203,13 @@ export default function CatalogoJuegos({ showToast }) {
         precioMax: filtros.precioMax !== "" ? parseInt(filtros.precioMax) : undefined,
     };
 
-        const { loading, error, data } = useQuery(query, {
-            variables,
-            fetchPolicy: "network-only",
-        });
+    const { loading, error, data } = useQuery(query, {
+        variables,
+        fetchPolicy: "network-only",
+    });
 
-    if (loading) return <p style={{ color: "#ccc" }}>Cargando…</p>;
-    if (error) return <p style={{ color: "red" }}>Error: {error.message}</p>;
+    if (loading) return <p className="text-gray-400">Cargando…</p>;
+    if (error) return <p className="text-red-500">Error: {error.message}</p>;
 
     const juegos =
         data?.catalogo?.juegos ||
@@ -219,186 +223,190 @@ export default function CatalogoJuegos({ showToast }) {
 
     const totalPages = Math.ceil(total / limit);
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        aplicarFiltros();
+    };
 
     return (
-        <div className="catalogo-container">
-            <h2 style={{ color: "#f0f0f0", marginBottom: "20px" }}>
-                Catálogo de Juegos
-            </h2>
-
-            <div className="catalogo-top-buttons">
-                <button className="btn-dark" onClick={() => setOpenFiltros(true)}>
-                    <span className="btn-text">Filtros</span>
-                    <span className="btn-icon"><FilterListIcon /></span>
-                </button>
-
-                {hayFiltros  && (
-                    <button
-                        className="btn-dark"
-                        onClick={() => {
-                            reiniciarCatalogo();
-                        }}
-                    >
-                        <span className="btn-icon">✕</span>
-                        <span className="btn-text">Limpiar filtros</span>
-                    </button>
-                )}
-
-                <button className="btn-dark" onClick={() => navigate("/ultimos-estrenos-juegos")}>
-                    <span className="btn-text">Últimos estrenos</span>
-                    <span className="btn-icon"><UpdateIcon /></span>
-                </button>
-
-                {auth.isLogged && (
-                    <button
-                        className="btn-dark"
-                        onClick={() =>
-                            navigate("/insertar-juego", { state: { from: location.pathname } })
-                        }
-                    >
-                        <span className="btn-text">Añadir juego</span>
-                        <span className="btn-icon"><AddIcon /></span>
-                    </button>
-                )}
-            </div>
-
-            <SwipeableDrawer
-                anchor="right"
-                open={openFiltros}
-                onClose={() => setOpenFiltros(false)}
-                onOpen={() => setOpenFiltros(true)}
-                disableDiscovery={true}  
-                disableSwipeToOpen={true}            
-            >
-                <div 
-                    className="drawer-filtros-contenido"
-                    onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                            e.preventDefault();
-                            aplicarFiltros();
-                        }
-                    }}
-                >
-                    <h3 className="drawer-filtros-titulo">Filtros</h3>
-
-                    {/* Nombre */}
-                    <div className="filtro-nombre">
-                        <label>Nombre</label>
-                        <input
-                            type="text"
-                            value={nombreTemp}
-                            onChange={(e) => setNombreTemp(e.target.value)}
-                            className="filtro-input"
-                        />
-                    </div>
-
-                    <div className="filtro-nombre">
-                        <label>Año mínimo</label>
-                        <input
-                            type="text"
-                            value={annoMinTemp}
-                            onChange={(e) => setAnnoMinTemp(e.target.value)}
-                            onKeyDown={soloAnios}
-                            className="filtro-input"
-                        />
-                    </div>
-
-                    <div className="filtro-nombre">
-                        <label>Año máximo</label>
-                        <input
-                            type="text"
-                            value={annoMaxTemp}
-                            onChange={(e) => setAnnoMaxTemp(e.target.value)}
-                            onKeyDown={soloAnios}
-                            className="filtro-input"
-                        />
-                    </div>
-
-                    <div className="filtro-nombre">
-                        <label>Tamaño mínimo (Gb)</label>
-                        <input
-                            type="text"
-                            value={tamanoMinTemp}
-                            onChange={(e) => setTamanoMinTemp(e.target.value.replace(",", "."))}
-                            onKeyDown={(e) => soloNumeros(e, true)}
-                            className="filtro-input"
-                        />
-                    </div>
-
-                    <div className="filtro-nombre">
-                        <label>Tamaño máximo (Gb)</label>
-                        <input
-                            type="text"
-                            value={tamanoMaxTemp}
-                            onChange={(e) => setTamanoMaxTemp(e.target.value.replace(",", "."))}
-                            onKeyDown={(e) => soloNumeros(e, true)}
-                            className="filtro-input"
-                        />
-                    </div>
-
-                    <div className="filtro-nombre">
-                        <label>Precio mínimo (CUP)</label>
-                        <input
-                            type="text"
-                            value={precioMinTemp}
-                            onChange={(e) => setPrecioMinTemp(e.target.value)}
-                            onKeyDown={(e) => soloNumeros(e, false)}
-                            className="filtro-input"
-                        />
-                    </div>
-
-                    <div className="filtro-nombre">
-                        <label>Precio máximo (CUP)</label>
-                        <input
-                            type="text"
-                            value={precioMaxTemp}
-                            onChange={(e) => setPrecioMaxTemp(e.target.value)}
-                            onKeyDown={(e) => soloNumeros(e, false)}
-                            className="filtro-input"
-                        />
-                    </div>
-
-                    <div className="drawer-filtros-botones">
-                        <button className="btn-dark" onClick={aplicarFiltros}>
-                            Aplicar filtros
-                        </button>
-
-                        <button className="btn-dark" onClick={reiniciarCatalogo}>
-                            Limpiar filtros
-                        </button>
-                    </div>
+        <>
+            <div className="catalogo-container-moderno">
+                {/* HEADER DEL CATÁLOGO */}
+                <div className="catalogo-header-moderno">
+                    <h1 className="catalogo-titulo-moderno">🎮 Catálogo de Juegos</h1>
+                    <p className="catalogo-subtitulo-moderno">
+                        Explora nuestra colección de juegos para PC
+                    </p>
                 </div>
-            </SwipeableDrawer>
 
-            <div
-                style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
-                    gap: "20px",
-                }}
-            >
-                {juegos.map((j) => (
-                    <JuegoCard
-                        key={j.Id}
-                        juego={j}
-                        showToast={showToast}
-                        from={location.pathname + location.search}
-                    />
-                ))}
+                {/* BOTONES SUPERIORES */}
+                <div className="catalogo-top-buttons-moderno">
+                    <button className="btn-dark" onClick={() => setOpenFiltros(true)}>
+                        <span className="btn-text">Filtros</span>
+                        <span className="btn-icon"><FilterListIcon /></span>
+                    </button>
+
+                    {hayFiltros && (
+                        <button className="btn-dark" onClick={reiniciarCatalogo}>
+                            <span className="btn-icon">✕</span>
+                            <span className="btn-text">Limpiar filtros</span>
+                        </button>
+                    )}
+
+                    <button className="btn-dark" onClick={() => navigate("/ultimos-estrenos-juegos")}>
+                        <span className="btn-text">Últimos estrenos</span>
+                        <span className="btn-icon"><UpdateIcon /></span>
+                    </button>
+
+                    {auth.isLogged && (
+                        <button
+                            className="btn-dark"
+                            onClick={() =>
+                                navigate("/insertar-juego", { state: { from: location.pathname } })
+                            }
+                        >
+                            <span className="btn-text">Añadir juego</span>
+                            <span className="btn-icon"><AddIcon /></span>
+                        </button>
+                    )}
+                </div>
+
+                {/* DRAWER DE FILTROS */}
+                <SwipeableDrawer
+                    anchor="right"
+                    open={openFiltros}
+                    onClose={() => setOpenFiltros(false)}
+                    onOpen={() => setOpenFiltros(true)}
+                    disableDiscovery={true}
+                    disableSwipeToOpen={true}
+                >
+                    <form className="drawer-filtros-contenido" onSubmit={handleSubmit}>
+                        <h3 className="drawer-filtros-titulo">Filtros</h3>
+
+                        <div className="filtro-nombre">
+                            <label htmlFor="nombre">Nombre</label>
+                            <input
+                                id="nombre"
+                                type="text"
+                                value={nombreTemp}
+                                onChange={(e) => setNombreTemp(e.target.value)}
+                                className="filtro-input"
+                            />
+                        </div>
+
+                        <div className="filtro-nombre">
+                            <label htmlFor="annoMin">Año mínimo</label>
+                            <input
+                                id="annoMin"
+                                type="text"
+                                value={annoMinTemp}
+                                onChange={(e) => setAnnoMinTemp(e.target.value)}
+                                onKeyDown={soloAnios}
+                                className="filtro-input"
+                            />
+                        </div>
+
+                        <div className="filtro-nombre">
+                            <label htmlFor="annoMax">Año máximo</label>
+                            <input
+                                id="annoMax"
+                                type="text"
+                                value={annoMaxTemp}
+                                onChange={(e) => setAnnoMaxTemp(e.target.value)}
+                                onKeyDown={soloAnios}
+                                className="filtro-input"
+                            />
+                        </div>
+
+                        <div className="filtro-nombre">
+                            <label htmlFor="tamanoMin">Tamaño mínimo (Gb)</label>
+                            <input
+                                id="tamanoMin"
+                                type="text"
+                                value={tamanoMinTemp}
+                                onChange={(e) => setTamanoMinTemp(e.target.value.replace(",", "."))}
+                                onKeyDown={(e) => soloNumeros(e, true)}
+                                className="filtro-input"
+                            />
+                        </div>
+
+                        <div className="filtro-nombre">
+                            <label htmlFor="tamanoMax">Tamaño máximo (Gb)</label>
+                            <input
+                                id="tamanoMax"
+                                type="text"
+                                value={tamanoMaxTemp}
+                                onChange={(e) => setTamanoMaxTemp(e.target.value.replace(",", "."))}
+                                onKeyDown={(e) => soloNumeros(e, true)}
+                                className="filtro-input"
+                            />
+                        </div>
+
+                        <div className="filtro-nombre">
+                            <label htmlFor="precioMin">Precio mínimo (CUP)</label>
+                            <input
+                                id="precioMin"
+                                type="text"
+                                value={precioMinTemp}
+                                onChange={(e) => setPrecioMinTemp(e.target.value)}
+                                onKeyDown={(e) => soloNumeros(e, false)}
+                                className="filtro-input"
+                            />
+                        </div>
+
+                        <div className="filtro-nombre">
+                            <label htmlFor="precioMax">Precio máximo (CUP)</label>
+                            <input
+                                id="precioMax"
+                                type="text"
+                                value={precioMaxTemp}
+                                onChange={(e) => setPrecioMaxTemp(e.target.value)}
+                                onKeyDown={(e) => soloNumeros(e, false)}
+                                className="filtro-input"
+                            />
+                        </div>
+
+                        <div className="drawer-filtros-botones">
+                            <button type="submit" className="btn-dark">
+                                Aplicar filtros
+                            </button>
+                            <button
+                                type="button"
+                                className="btn-dark"
+                                onClick={reiniciarCatalogo}
+                            >
+                                Limpiar filtros
+                            </button>
+                        </div>
+                    </form>
+                </SwipeableDrawer>
+
+                {/* GRID DE JUEGOS */}
+                <div className="catalogo-grid-moderno">
+                    {juegos.map((j) => (
+                        <JuegoCard
+                            key={j.Id}
+                            juego={j}
+                            showToast={showToast}
+                            from={location.pathname + location.search}
+                        />
+                    ))}
+                </div>
+
+                {/* PAGINACIÓN */}
+                <Paginacion
+                    page={page}
+                    totalPages={totalPages}
+                    onPageChange={(p) => {
+                        setPage(p);
+                        const params = {
+                            ...Object.fromEntries(searchParams.entries()),
+                            page: p,
+                        };
+                        setSearchParams(params);
+                    }}
+                />
             </div>
-
-            <Paginacion
-                page={page}
-                totalPages={totalPages}
-                onPageChange={(p) => {
-                    setPage(p);
-                    const params = {
-                        ...Object.fromEntries(searchParams.entries()),
-                        page: p,
-                    };
-                    setSearchParams(params);
-                }}
-            />
-        </div>
+        </>
     );
 }

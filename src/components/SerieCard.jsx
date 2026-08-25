@@ -59,7 +59,7 @@ export default function SerieCard({
           try {
             const res = await eliminarSerie({
               variables: { id: serie.Id },
-              context: authContext(), // 🔥 TOKEN AQUÍ
+              context: authContext(),
             });
 
             if (res.data.eliminarSerie) {

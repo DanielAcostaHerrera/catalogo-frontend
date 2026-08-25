@@ -40,9 +40,6 @@ export default function EditarJuego() {
         Requisitos: "",
     });
 
-    // ============================
-    // CARGA DE DATOS
-    // ============================
     useEffect(() => {
         if (data?.juego) {
             const j = data.juego;
@@ -59,9 +56,6 @@ export default function EditarJuego() {
         }
     }, [data]);
 
-    // ============================
-    // BLOQUEO DE VISTA SI NO LOGEADO
-    // ============================
     if (!auth.isLogged) {
         return (
             <div className="detalle-wrapper">
@@ -75,18 +69,12 @@ export default function EditarJuego() {
         );
     }
 
-    // ============================
-    // LOADING / ERROR
-    // ============================
     if (loading) return <p style={{ color: "#ccc" }}>Cargando…</p>;
     if (error) return <p style={{ color: "red" }}>Error: {error.message}</p>;
 
     const j = data.juego;
     const portadaUrl = `https://catalogo-backend-f4sk.onrender.com/portadas/Portadas Juegos/${j.Portada}`;
 
-    // ============================
-    // HANDLERS
-    // ============================
     const handleChange = (e) => {
         dispatch({
             type: "CHANGE",
@@ -184,121 +172,139 @@ export default function EditarJuego() {
         return payload;
     };
 
-    // ============================
-    // RENDER NORMAL
-    // ============================
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        handleSubmitForm();
+    };
+
+    const handleSubmitForm = async () => {
+        const payload = construirPayload();
+        if (!payload) return;
+
+        try {
+            const res = await actualizarJuego({
+                variables: { data: payload },
+                context: authContext(),
+                refetchQueries: [
+                    { query: GET_JUEGO, variables: { id: Number(id) } },
+                ],
+            });
+
+            if (res.data.actualizarJuego) {
+                alert("Juego actualizado correctamente");
+                navigate(`/juego/${id}`, {
+                    state: { from: location.state?.from || "/catalogo-juegos" },
+                });
+            } else {
+                alert("No se pudo actualizar el juego");
+            }
+        } catch (err) {
+            console.error(err);
+
+            const msg =
+                err?.message ||
+                err?.graphQLErrors?.[0]?.message ||
+                err?.networkError?.result?.errors?.[0]?.message ||
+                "";
+
+            if (
+                msg.includes("No autorizado") ||
+                msg.includes("Unauthorized") ||
+                msg.includes("Forbidden")
+            ) {
+                alert("No tienes permisos para realizar esta acción.");
+                return;
+            }
+
+            alert("Error actualizando el juego");
+        }
+    };
+
     return (
-        <div className="detalle-wrapper">
-            <h2 className="detalle-titulo">Editar {j.Nombre}</h2>
-
-            <div className="detalle-container">
-                <div className="detalle-portada">
-                    <img src={portadaUrl} alt={j.Nombre} className="detalle-portada-img" />
+        <>
+            <div className="catalogo-container-moderno">
+                <div className="catalogo-header-moderno">
+                    <h1 className="catalogo-titulo-moderno">✏️ Editar {j.Nombre}</h1>
+                    <p className="catalogo-subtitulo-moderno">
+                        Modifica los campos del juego
+                    </p>
                 </div>
 
-                <div className="detalle-info">
-                    <label>Nombre</label>
-                    <input
-                        className="input-dark"
-                        name="Nombre"
-                        value={form.Nombre}
-                        onChange={handleChange}
-                    />
+                <form onSubmit={handleSubmit} className="insertar-form-moderno">
+                    <div className="detalle-container">
+                        <div className="detalle-portada">
+                            <img src={portadaUrl} alt={j.Nombre} className="detalle-portada-img" />
+                        </div>
 
-                    <label>Tamaño</label>
-                    <input
-                        className="input-dark"
-                        name="Tamano"
-                        value={form.Tamano}
-                        onChange={handleChange}
-                    />
+                        <div className="detalle-info">
+                            <label className="insertar-label">Nombre</label>
+                            <input
+                                className="input-dark"
+                                name="Nombre"
+                                value={form.Nombre}
+                                onChange={handleChange}
+                            />
 
-                    <label>Año de actualización</label>
-                    <input
-                        className="input-dark"
-                        name="AnnoAct"
-                        value={form.AnnoAct}
-                        onChange={handleChange}
-                        onKeyDown={(e) => soloCuatroDigitos(e, form.AnnoAct)}
-                    />
-                </div>
+                            <label className="insertar-label">Tamaño</label>
+                            <input
+                                className="input-dark"
+                                name="Tamano"
+                                value={form.Tamano}
+                                onChange={handleChange}
+                            />
+
+                            <label className="insertar-label">Año de actualización</label>
+                            <input
+                                className="input-dark"
+                                name="AnnoAct"
+                                value={form.AnnoAct}
+                                onChange={handleChange}
+                                onKeyDown={(e) => soloCuatroDigitos(e, form.AnnoAct)}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="detalle-extra">
+                        <div className="detalle-card">
+                            <strong>Sinopsis:</strong>
+                            <textarea
+                                className="input-dark"
+                                name="Sinopsis"
+                                rows={8}
+                                value={form.Sinopsis}
+                                onChange={handleChange}
+                                style={{ width: "100%", marginTop: 10 }}
+                            />
+                        </div>
+
+                        <div className="detalle-card">
+                            <strong>Requisitos de Sistema:</strong>
+                            <textarea
+                                className="input-dark"
+                                name="Requisitos"
+                                rows={12}
+                                value={form.Requisitos}
+                                onChange={handleChange}
+                                style={{ width: "100%", marginTop: 10 }}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="insertar-botones">
+                        <button type="submit" className="btn-dark">
+                            Guardar Cambios
+                        </button>
+                        <button
+                            type="button"
+                            className="btn-dark"
+                            onClick={() => navigate(`/juego/${id}`)}
+                        >
+                            Cancelar
+                        </button>
+                    </div>
+                </form>
             </div>
-
-            <div className="detalle-extra">
-                <div className="detalle-card">
-                    <strong>Sinopsis:</strong>
-                    <textarea
-                        className="input-dark"
-                        name="Sinopsis"
-                        rows={8}
-                        value={form.Sinopsis}
-                        onChange={handleChange}
-                        style={{ width: "100%", marginTop: 10 }}
-                    />
-                </div>
-
-                <div className="detalle-card">
-                    <strong>Requisitos de Sistema:</strong>
-                    <textarea
-                        className="input-dark"
-                        name="Requisitos"
-                        rows={12}
-                        value={form.Requisitos}
-                        onChange={handleChange}
-                        style={{ width: "100%", marginTop: 10 }}
-                    />
-                </div>
-            </div>
-
-            <button
-                className="btn-guardar"
-                style={{ marginTop: 20 }}
-                onClick={async () => {
-                    const payload = construirPayload();
-                    if (!payload) return;
-
-                    try {
-                        const res = await actualizarJuego({
-                            variables: { data: payload },
-                            context: authContext(), // 🔥 TOKEN
-                            refetchQueries: [
-                                { query: GET_JUEGO, variables: { id: Number(id) } },
-                            ],
-                        });
-
-                        if (res.data.actualizarJuego) {
-                            alert("Juego actualizado correctamente");
-                            navigate(`/juego/${id}`, {
-                                state: { from: location.state?.from || "/catalogo-juegos" },
-                            });
-                        } else {
-                            alert("No se pudo actualizar el juego");
-                        }
-                    } catch (err) {
-                        console.error(err);
-
-                        const msg =
-                            err?.message ||
-                            err?.graphQLErrors?.[0]?.message ||
-                            err?.networkError?.result?.errors?.[0]?.message ||
-                            "";
-
-                        if (
-                            msg.includes("No autorizado") ||
-                            msg.includes("Unauthorized") ||
-                            msg.includes("Forbidden")
-                        ) {
-                            alert("No tienes permisos para realizar esta acción.");
-                            return;
-                        }
-
-                        alert("Error actualizando el juego");
-                    }
-                }}
-            >
-                Guardar Cambios
-            </button>
-        </div>
+        </>
     );
 }
 
