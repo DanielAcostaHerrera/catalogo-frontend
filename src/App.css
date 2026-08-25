@@ -425,6 +425,8 @@ body {
   flex-direction: column;
   justify-content: space-between;
   transition: all 0.3s ease;
+  width: 100%;
+  min-width: 0;
 }
 
 .ProductCardContainer:hover {
@@ -470,21 +472,24 @@ body {
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+  word-break: break-word;
 }
 
 .ProductCardFooter {
   display: flex;
   justify-content: center;
-  align-items: center;
-  gap: 8px;
-  padding: 0 12px 12px 12px;
+  align-items: stretch;
+  gap: 6px;
+  padding: 8px 10px 12px 10px;
+  min-height: 44px;
 }
 
 .ProductCardFooter button {
-  flex: 0 0 auto;
-  height: 36px;
-  padding: 6px 12px;
-  font-size: 14px;
+  flex: 1;
+  min-width: 0;
+  height: 34px;
+  padding: 4px 8px;
+  font-size: 13px;
   border-radius: 6px;
   display: inline-flex;
   align-items: center;
@@ -492,13 +497,19 @@ body {
   border: none;
   cursor: pointer;
   transition: all 0.2s ease;
+  white-space: nowrap;
+  font-weight: 600;
+  color: #fff;
+}
+
+.ProductCardFooter button:hover {
+  transform: scale(1.05);
 }
 
 .ProductCardFooter .btn-add {
-  min-width: 80px;
   background-color: #333;
-  color: #fff;
-  font-weight: 600;
+  min-width: 60px;
+  height: 34px;
 }
 
 .ProductCardFooter .btn-add:hover {
@@ -508,25 +519,34 @@ body {
 .ProductCardAdmin {
   display: flex;
   gap: 6px;
-  align-items: center;
+  align-items: stretch;
+  flex: 1;
 }
 
 .ProductCardFooter .admin-edit-btn {
-  min-width: 36px;
-  background: #3a3a3a;
+  flex: 1;
+  min-width: 0;
+  height: 34px;
+  padding: 4px 8px;
+  background: #333;
   color: white;
   font-weight: 600;
+  font-size: 13px;
 }
 
 .ProductCardFooter .admin-edit-btn:hover {
-  background: #4a4a4a;
+  background: #555;
 }
 
 .ProductCardFooter .admin-delete-btn {
-  min-width: 36px;
+  flex: 1;
+  min-width: 0;
+  height: 34px;
+  padding: 4px 8px;
   background: #7a1f1f;
   color: white;
   font-weight: 600;
+  font-size: 13px;
 }
 
 .ProductCardFooter .admin-delete-btn:hover {
@@ -542,14 +562,52 @@ body {
     margin: 10px 10px 6px 10px;
   }
   .ProductCardFooter {
-    padding: 0 10px 10px 10px;
-    flex-wrap: wrap;
+    padding: 4px 6px 8px 6px;
+    gap: 4px;
+    min-height: 38px;
+  }
+  .ProductCardFooter button {
+    height: 30px;
+    font-size: 11px;
+    padding: 2px 6px;
+  }
+  .ProductCardFooter .btn-add {
+    min-width: 50px;
+    height: 30px;
+  }
+  .ProductCardFooter .admin-edit-btn,
+  .ProductCardFooter .admin-delete-btn {
+    height: 30px;
+  }
+  .ProductCardAdmin {
+    gap: 4px;
   }
 }
 
-@media (max-width: 950px) {
+@media (max-width: 600px) {
   .ProductCardImage {
     height: 140px;
+  }
+  .ProductCardFooter {
+    padding: 4px 4px 6px 4px;
+    gap: 3px;
+    min-height: 34px;
+  }
+  .ProductCardFooter button {
+    height: 26px;
+    font-size: 10px;
+    padding: 2px 4px;
+  }
+  .ProductCardFooter .btn-add {
+    min-width: 40px;
+    height: 26px;
+  }
+  .ProductCardFooter .admin-edit-btn,
+  .ProductCardFooter .admin-delete-btn {
+    height: 26px;
+  }
+  .ProductCardAdmin {
+    gap: 3px;
   }
 }
 

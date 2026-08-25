@@ -1,7 +1,3 @@
-/* ======================================================
-   INDEX.CSS - CORREGIDO
-   ====================================================== */
-
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -15,12 +11,15 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 html, body, #root {
   margin: 0;
   padding: 0;
   width: 100%;
   min-height: 100vh;
-  overflow-x: hidden;
   background-color: #1e1e1e;
 }
 
@@ -30,14 +29,12 @@ body {
   min-height: 100vh;
   background-color: #1e1e1e;
   color: #f0f0f0;
-  overflow-x: hidden;
 }
 
 #root {
   display: flex;
   flex-direction: column;
   flex: 1;
-  background-color: #1e1e1e;
 }
 
 img {
@@ -46,35 +43,23 @@ img {
   display: block;
 }
 
-.catalogo-container-moderno,
-.catalogo-grid-moderno,
-.bienvenida-nuevo,
-.bienvenida-nuevo-hero {
-  max-width: 100%;
-  overflow-x: hidden;
-}
-
-.ProductCardContainer {
-  max-width: 100%;
-  overflow: hidden;
-}
-
-.ProductCardImage {
-  max-width: 100%;
-  height: auto;
-}
-
 .catalogo-grid-moderno {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 16px;
   width: 100%;
-  max-width: 100%;
 }
 
 @media (max-width: 950px) {
   .catalogo-grid-moderno {
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     gap: 12px;
+  }
+}
+
+@media (max-width: 600px) {
+  .catalogo-grid-moderno {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
   }
 }
