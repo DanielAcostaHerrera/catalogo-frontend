@@ -512,9 +512,17 @@ body {
   transform: scale(1.05);
 }
 
+.botones-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: nowrap;
+}
+
 .ProductCardAdmin {
   display: flex;
-  gap: 4px;
+  gap: 6px;
   align-items: center;
   flex-shrink: 0;
   overflow: hidden;

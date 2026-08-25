@@ -36,13 +36,15 @@ export default function ProductCard({
       </Link>
 
       <div className="ProductCardFooter">
-        <AddToCartButton item={product} showToast={showToast} />
+        <div className="botones-wrapper">
+          <AddToCartButton item={product} showToast={showToast} />
 
-        {auth.isLogged && (
-          <div className="ProductCardAdmin">
-            {adminButtons()}
-          </div>
-        )}
+          {auth.isLogged && (
+            <div className="ProductCardAdmin">
+              {adminButtons()}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
