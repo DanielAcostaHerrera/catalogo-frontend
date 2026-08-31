@@ -13,10 +13,10 @@ import { tamanoAMb } from "../utils/FormatoJuego";
 const PORTADAS_BASE = "https://catalogo-backend-f4sk.onrender.com/portadas";
 
 const CATEGORIAS = [
-    { ruta: "/catalogo-juegos", icon: "🎮", nombre: "Juegos", hint: "PC y estrenos" },
-    { ruta: "/catalogo-series", icon: "🎬", nombre: "Series", hint: "Maratones" },
-    { ruta: "/catalogo-animados", icon: "🐭", nombre: "Animados", hint: "Para toda la familia" },
-    { ruta: "/catalogo-animes", icon: "🍥", nombre: "Animes", hint: "Temporada actual" },
+    { ruta: "/catalogo-juegos", icon: "🎮", nombre: "Juegos" },
+    { ruta: "/catalogo-series", icon: "🎬", nombre: "Series" },
+    { ruta: "/catalogo-animados", icon: "🐭", nombre: "Animados" },
+    { ruta: "/catalogo-animes", icon: "🍥", nombre: "Animes" },
 ];
 
 function coverUrl(folder, fileName) {
