@@ -106,6 +106,7 @@ export default function AnimadoCard({
     <ProductCard
       product={product}
       titulo={animado.Titulo}
+      meta={[animado.Anno, animado.Temporadas != null ? `${animado.Temporadas} temp.` : null].filter(Boolean).join(" · ")}
       imageAlt={animado.Titulo}
       portadaUrl={portadaUrl}
       navigateLink={`/animado/${animado.Id}`}

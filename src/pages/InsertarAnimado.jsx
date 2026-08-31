@@ -149,9 +149,10 @@ export default function InsertarAnimado() {
         <>
             <div className="catalogo-container-moderno">
                 <div className="catalogo-header-moderno">
-                    <h1 className="catalogo-titulo-moderno">🐭 Añadir Nuevo Animado</h1>
+                    <p className="store-kicker">Administración</p>
+                    <h1 className="catalogo-titulo-moderno">Añadir animado</h1>
                     <p className="catalogo-subtitulo-moderno">
-                        Completa los campos para añadir un nuevo animado al catálogo
+                        Completa los campos para publicar un nuevo animado en la tienda
                     </p>
                 </div>
 
@@ -193,39 +194,29 @@ export default function InsertarAnimado() {
 
                     <div className="detalle-extra">
                         <div className="detalle-card">
-                            <strong>Sinopsis:</strong>
+                            <span className="detalle-card-title">Sinopsis</span>
                             <textarea
                                 className="input-dark"
                                 rows={8}
                                 value={Sinopsis}
                                 onChange={(e) => setSinopsis(e.target.value)}
-                                style={{
-                                    width: "100%",
-                                    marginTop: 10,
-                                    whiteSpace: "pre-wrap"
-                                }}
                             />
                         </div>
 
                         <div className="detalle-card">
-                            <strong>Episodios:</strong>
+                            <span className="detalle-card-title">Episodios</span>
                             <textarea
                                 className="input-dark"
                                 rows={12}
                                 value={Episodios}
                                 onChange={(e) => setEpisodios(e.target.value)}
-                                style={{
-                                    width: "100%",
-                                    marginTop: 10,
-                                    whiteSpace: "pre-wrap"
-                                }}
                             />
                         </div>
                     </div>
 
                     <div className="insertar-botones">
-                        <button type="submit" className="btn-dark">
-                            Añadir Animado
+                        <button type="submit" className="btn-dark btn-primary-store">
+                            Añadir animado
                         </button>
                         <button
                             type="button"

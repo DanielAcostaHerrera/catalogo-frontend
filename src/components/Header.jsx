@@ -56,9 +56,18 @@ export default function Header() {
 
         {/* 🔹 Bloque derecho: carrito + avatar */}
         <div className="right-contents">
-          <NavLink to="/carrito" style={{ textDecoration: "none", color: "inherit" }}>
-            <Badge badgeContent={cartItems.length} color="secondary">
-              <ShoppingCartIcon style={{ color: "#e6e6e6", cursor: "pointer" }} />
+          <NavLink to="/carrito" className="header-cart">
+            <Badge
+              badgeContent={cartItems.length}
+              sx={{
+                "& .MuiBadge-badge": {
+                  backgroundColor: "#66c0f4",
+                  color: "#1b2838",
+                  fontWeight: 700,
+                },
+              }}
+            >
+              <ShoppingCartIcon style={{ color: "inherit", cursor: "pointer" }} />
             </Badge>
           </NavLink>
 
@@ -66,7 +75,7 @@ export default function Header() {
             <Avatar
               alt="Usuario"
               src={auth.isLogged ? "/user-foto.png" : ""}
-              sx={{ width: 40, height: 40, bgcolor: "#1e1e1e"  }}
+              sx={{ width: 40, height: 40, bgcolor: "#1b2838", color: "#c7d5e0" }}
             >
               {!auth.isLogged && <AccountCircleIcon />}
             </Avatar>
@@ -78,6 +87,16 @@ export default function Header() {
             onClose={handleMenuClose}
             anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
             transformOrigin={{ vertical: "top", horizontal: "right" }}
+            slotProps={{
+              paper: {
+                sx: {
+                  bgcolor: "#1b2838",
+                  color: "#c7d5e0",
+                  border: "1px solid rgba(102, 192, 244, 0.2)",
+                  mt: 1,
+                },
+              },
+            }}
           >
             {auth.isLogged ? (
               <MenuItem
@@ -110,6 +129,14 @@ export default function Header() {
         onOpen={() => setMenuOpen(true)}
         disableDiscovery={true}
         disableSwipeToOpen={true}
+        slotProps={{
+          paper: {
+            sx: {
+              backgroundColor: "#1b2838",
+              color: "#c7d5e0",
+            },
+          },
+        }}
       >
         <div className="drawer-menu-contenido">
           {/* Logo en el menú (también enlaza a Bienvenida) */}

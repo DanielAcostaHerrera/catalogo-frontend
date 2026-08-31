@@ -88,7 +88,8 @@ function CarritoView({ showToast }) {
     return (
         <div className="catalogo-container-moderno">
             <div className="catalogo-header-moderno">
-                <h1 className="catalogo-titulo-moderno">🛒 Mi Pedido</h1>
+                <p className="store-kicker">Pedido</p>
+                <h1 className="catalogo-titulo-moderno">Mi Pedido</h1>
                 <p className="catalogo-subtitulo-moderno">
                     Revisa y confirma tu pedido antes de enviarlo
                 </p>
@@ -137,6 +138,10 @@ function CarritoView({ showToast }) {
                     </button>
                 </div>
             </div>
+
+            {cartVacio && (
+                <p className="catalogo-status">Tu carrito está vacío.</p>
+            )}
 
             {Object.keys(itemsAgrupados).map((tipo) => {
                 const items = itemsAgrupados[tipo];

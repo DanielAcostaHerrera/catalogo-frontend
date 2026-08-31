@@ -4,6 +4,16 @@ import { GET_ANIMADO } from "../graphql";
 import { useCart } from "../context/CartContext";
 import "../App.css";
 
+function StoreStatus({ error, children }) {
+    return (
+        <div className="catalogo-container-moderno">
+            <p className={error ? "catalogo-status catalogo-status--error" : "catalogo-status"}>
+                {children}
+            </p>
+        </div>
+    );
+}
+
 export default function AnimadoDetalles({ showToast }) {
     const { id } = useParams();
     const location = useLocation();
@@ -65,77 +75,78 @@ export default function AnimadoDetalles({ showToast }) {
         fetchPolicy: "network-only",
     });
 
-    if (loading) return <p style={{ color: "#ccc" }}>Cargando…</p>;
-    if (error) return <p style={{ color: "red" }}>Error: {error.message}</p>;
+    if (loading) return <StoreStatus>Cargando…</StoreStatus>;
+    if (error) return <StoreStatus error>Error: {error.message}</StoreStatus>;
 
     const a = data?.animado;
-    if (!a) return <p>No se encontró el animado.</p>;
+    if (!a) return <StoreStatus>No se encontró el animado.</StoreStatus>;
 
     const portadaUrl = `https://catalogo-backend-f4sk.onrender.com/portadas/Portadas Animados/${a.Portada}`;
     const lineas = normalizarTexto(a.Episodios).split("\n").filter((l) => l.trim() !== "");
 
     return (
-        <>
-            <div className="catalogo-container-moderno">
-                <div className="catalogo-header-moderno">
-                    <h1 className="catalogo-titulo-moderno">🐭 {a.Titulo}</h1>
-                    <p className="catalogo-subtitulo-moderno">
-                        Detalles del animado
+        <div className="catalogo-container-moderno">
+            <div className="catalogo-header-moderno">
+                <p className="store-kicker">Animado</p>
+                <h1 className="catalogo-titulo-moderno">{a.Titulo}</h1>
+                <p className="catalogo-subtitulo-moderno">Detalles del título</p>
+            </div>
+
+            <div className="detalle-container">
+                <div className="detalle-portada">
+                    <img src={portadaUrl} alt={a.Titulo} className="detalle-portada-img" />
+                </div>
+
+                <div className="detalle-info">
+                    <dl className="detalle-spec">
+                        <dt>Año de estreno</dt>
+                        <dd>{a.Anno || "No disponible"}</dd>
+                    </dl>
+                    <dl className="detalle-spec">
+                        <dt>Temporadas</dt>
+                        <dd>{a.Temporadas || "No disponible"}</dd>
+                    </dl>
+                </div>
+            </div>
+
+            <div className="detalle-extra">
+                <div className="detalle-card">
+                    <span className="detalle-card-title">Sinopsis</span>
+                    <p className="detalle-card-body">
+                        {normalizarTexto(a.Sinopsis) || "Sin sinopsis disponible."}
                     </p>
                 </div>
 
-                <div className="detalle-container">
-                    <div className="detalle-portada">
-                        <img src={portadaUrl} alt={a.Titulo} className="detalle-portada-img" />
-                    </div>
+                <div className="detalle-card">
+                    <span className="detalle-card-title">Episodios</span>
+                    <div className="episodios-container">
+                        {lineas.map((l, idx) => {
+                            const match = l.match(/(\d+)\s*Episodios?/i);
+                            if (match) {
+                                const cantidad = parseInt(match[1], 10);
+                                const nombreBloque =
+                                    l.replace(/-\s*\d+\s*Episodios?/i, "").trim() + " (entera)";
 
-                    <div className="detalle-info">
-                        <p><strong>Año de estreno:</strong> {a.Anno || "No disponible"}</p>
-                        <p><strong>Temporadas:</strong> {a.Temporadas || "No disponible"}</p>
-                    </div>
-                </div>
-
-                <div className="detalle-extra">
-                    <div className="detalle-card">
-                        <strong>Sinopsis:</strong>
-                        <p style={{ whiteSpace: "pre-line", marginLeft: 10, textAlign: "justify" }}>
-                            {normalizarTexto(a.Sinopsis) || "Sin sinopsis disponible."}
-                        </p>
-                    </div>
-
-                    <div className="detalle-card">
-                        <strong>Episodios:</strong>
-                        <br />
-                        <br />
-                        <div className="episodios-container">
-                            {lineas.map((l, idx) => {
-                                const match = l.match(/(\d+)\s*Episodios?/i);
-                                if (match) {
-                                    const cantidad = parseInt(match[1], 10);
-                                    const nombreBloque =
-                                        l.replace(/-\s*\d+\s*Episodios?/i, "").trim() + " (entera)";
-
-                                    return (
-                                        <div
-                                            key={idx}
-                                            className="episodio-item"
+                                return (
+                                    <div
+                                        key={idx}
+                                        className="episodio-item"
+                                    >
+                                        <span className="episodio-texto">{l}</span>
+                                        <button
+                                            className="btn-add episodio-btn"
+                                            onClick={() => handleAddTemporada(a, nombreBloque, cantidad)}
                                         >
-                                            <span className="episodio-texto">{l}</span>
-                                            <button
-                                                className="btn-add episodio-btn"
-                                                onClick={() => handleAddTemporada(a, nombreBloque, cantidad)}
-                                            >
-                                                🛒 Añadir
-                                            </button>
-                                        </div>
-                                    );
-                                }
-                                return <div key={idx}>{l}</div>;
-                            })}
-                        </div>
+                                            🛒 Añadir
+                                        </button>
+                                    </div>
+                                );
+                            }
+                            return <div key={idx}>{l}</div>;
+                        })}
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     );
 }

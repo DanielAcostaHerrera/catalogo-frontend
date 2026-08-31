@@ -61,8 +61,16 @@ export default function EditarJuego() {
         return null;
     }
 
-    if (loading) return <p style={{ color: "#ccc" }}>Cargando…</p>;
-    if (error) return <p style={{ color: "red" }}>Error: {error.message}</p>;
+    if (loading) return (
+        <div className="catalogo-container-moderno">
+            <p className="catalogo-status">Cargando…</p>
+        </div>
+    );
+    if (error) return (
+        <div className="catalogo-container-moderno">
+            <p className="catalogo-status catalogo-status--error">Error: {error.message}</p>
+        </div>
+    );
 
     const j = data.juego;
     const portadaUrl = `https://catalogo-backend-f4sk.onrender.com/portadas/Portadas Juegos/${j.Portada}`;
@@ -216,9 +224,10 @@ export default function EditarJuego() {
         <>
             <div className="catalogo-container-moderno">
                 <div className="catalogo-header-moderno">
-                    <h1 className="catalogo-titulo-moderno">✏️ Editar {j.Nombre}</h1>
+                    <p className="store-kicker">Editar título</p>
+                    <h1 className="catalogo-titulo-moderno">{j.Nombre}</h1>
                     <p className="catalogo-subtitulo-moderno">
-                        Modifica los campos del juego
+                        Actualiza los datos de este juego
                     </p>
                 </div>
 
@@ -258,33 +267,31 @@ export default function EditarJuego() {
 
                     <div className="detalle-extra">
                         <div className="detalle-card">
-                            <strong>Sinopsis:</strong>
+                            <span className="detalle-card-title">Sinopsis</span>
                             <textarea
                                 className="input-dark"
                                 name="Sinopsis"
                                 rows={8}
                                 value={form.Sinopsis}
                                 onChange={handleChange}
-                                style={{ width: "100%", marginTop: 10 }}
                             />
                         </div>
 
                         <div className="detalle-card">
-                            <strong>Requisitos de Sistema:</strong>
+                            <span className="detalle-card-title">Requisitos de sistema</span>
                             <textarea
                                 className="input-dark"
                                 name="Requisitos"
                                 rows={12}
                                 value={form.Requisitos}
                                 onChange={handleChange}
-                                style={{ width: "100%", marginTop: 10 }}
                             />
                         </div>
                     </div>
 
                     <div className="insertar-botones">
-                        <button type="submit" className="btn-dark">
-                            Guardar Cambios
+                        <button type="submit" className="btn-dark btn-primary-store">
+                            Guardar cambios
                         </button>
                         <button
                             type="button"

@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
+import "./App.css";
 
 /* 🔹 JUEGOS */
 import JuegoDetalles from "./pages/JuegoDetalles";
@@ -99,7 +100,10 @@ function AppContent() {
       </AuthProvider>
 
       <footer className="bienvenida-nuevo-footer">
-        <p>© {currentYear} PixelPlay Habana</p>
+        <div className="site-footer-inner">
+          <p>© {currentYear} PixelPlay Habana</p>
+          <span className="site-footer-tag">Catálogo digital</span>
+        </div>
       </footer>
     </div>
   );

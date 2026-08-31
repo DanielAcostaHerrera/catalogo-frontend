@@ -117,6 +117,7 @@ export default function AnimeCard({
       navigateLink={`/anime/${anime.Id}`}
       navigateState={{ from, precioPorCapitulo }}
       titulo={anime.Titulo}
+      meta={[anime.Anno, anime.Temporadas != null ? `${anime.Temporadas} temp.` : null].filter(Boolean).join(" · ")}
       imageAlt={anime.Titulo}
       adminButtons={renderAdminSection}
     />

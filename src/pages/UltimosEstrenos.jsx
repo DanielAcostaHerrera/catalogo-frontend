@@ -43,8 +43,20 @@ export default function UltimosEstrenos({ showToast }) {
         fetchPolicy: "network-only",
     });
 
-    if (loading) return <p className="text-gray-400">Cargando…</p>;
-    if (error) return <p className="text-red-500">Error: {error.message}</p>;
+    if (loading) {
+        return (
+            <div className="catalogo-container-moderno">
+                <p className="catalogo-status">Cargando…</p>
+            </div>
+        );
+    }
+    if (error) {
+        return (
+            <div className="catalogo-container-moderno">
+                <p className="catalogo-status catalogo-status--error">Error: {error.message}</p>
+            </div>
+        );
+    }
 
     const juegos = data?.ultimosEstrenos?.juegos || [];
     const totalPages = Math.max(1, Math.ceil(limit / PAGE_SIZE));
@@ -55,7 +67,8 @@ export default function UltimosEstrenos({ showToast }) {
     return (
         <div className="catalogo-container-moderno">
             <div className="catalogo-header-moderno">
-                <h1 className="catalogo-titulo-moderno">🎮 Últimos Estrenos (Juegos)</h1>
+                <p className="store-kicker">Juegos</p>
+                <h1 className="catalogo-titulo-moderno">Últimos estrenos</h1>
                 <p className="catalogo-subtitulo-moderno">
                     Los juegos más recientes añadidos al catálogo
                 </p>

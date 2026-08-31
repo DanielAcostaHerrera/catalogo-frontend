@@ -73,8 +73,16 @@ export default function EditarAnime() {
         return null;
     }
 
-    if (loading) return <p style={{ color: "#ccc" }}>Cargando…</p>;
-    if (error) return <p style={{ color: "red" }}>Error: {error.message}</p>;
+    if (loading) return (
+        <div className="catalogo-container-moderno">
+            <p className="catalogo-status">Cargando…</p>
+        </div>
+    );
+    if (error) return (
+        <div className="catalogo-container-moderno">
+            <p className="catalogo-status catalogo-status--error">Error: {error.message}</p>
+        </div>
+    );
 
     const a = data.anime;
     const portadaUrl = `https://catalogo-backend-f4sk.onrender.com/portadas/Portadas Anime/${a.Portada}`;
@@ -171,9 +179,10 @@ export default function EditarAnime() {
         <>
             <div className="catalogo-container-moderno">
                 <div className="catalogo-header-moderno">
-                    <h1 className="catalogo-titulo-moderno">✏️ Editar {a.Titulo}</h1>
+                    <p className="store-kicker">Editar título</p>
+                    <h1 className="catalogo-titulo-moderno">{a.Titulo}</h1>
                     <p className="catalogo-subtitulo-moderno">
-                        Modifica los campos del anime
+                        Actualiza los datos de este anime
                     </p>
                 </div>
 
@@ -216,41 +225,31 @@ export default function EditarAnime() {
 
                     <div className="detalle-extra">
                         <div className="detalle-card">
-                            <strong>Sinopsis:</strong>
+                            <span className="detalle-card-title">Sinopsis</span>
                             <textarea
                                 className="input-dark"
                                 name="Sinopsis"
                                 rows={8}
                                 value={form.Sinopsis}
                                 onChange={handleChange}
-                                style={{
-                                    width: "100%",
-                                    marginTop: 10,
-                                    whiteSpace: "pre-wrap"
-                                }}
                             />
                         </div>
 
                         <div className="detalle-card">
-                            <strong>Episodios:</strong>
+                            <span className="detalle-card-title">Episodios</span>
                             <textarea
                                 className="input-dark"
                                 name="Episodios"
                                 rows={12}
                                 value={form.Episodios}
                                 onChange={handleChange}
-                                style={{
-                                    width: "100%",
-                                    marginTop: 10,
-                                    whiteSpace: "pre-wrap"
-                                }}
                             />
                         </div>
                     </div>
 
                     <div className="insertar-botones">
-                        <button type="submit" className="btn-dark">
-                            Guardar Cambios
+                        <button type="submit" className="btn-dark btn-primary-store">
+                            Guardar cambios
                         </button>
                         <button
                             type="button"

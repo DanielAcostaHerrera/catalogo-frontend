@@ -1,3 +1,13 @@
+export function tamanoAMb(tamanoFormateado) {
+    if (!tamanoFormateado) return 0;
+    const s = String(tamanoFormateado).trim().toLowerCase().replace(",", ".");
+    const n = parseFloat(s);
+    if (Number.isNaN(n)) return 0;
+    if (s.includes("tb")) return n * 1024 * 1024;
+    if (s.includes("gb")) return n * 1024;
+    return n;
+}
+
 export function formatoTamano(tamano, nombre = "") {
     const mb = Number(tamano);
 

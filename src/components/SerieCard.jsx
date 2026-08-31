@@ -117,6 +117,7 @@ export default function SerieCard({
       product={product}
       showToast={showToast}
       titulo={serie.Titulo}
+      meta={[serie.Anno, serie.Temporadas != null ? `${serie.Temporadas} temp.` : null].filter(Boolean).join(" · ")}
       adminButtons={renderAdminSection}
     />
   );

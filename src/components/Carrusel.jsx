@@ -1,158 +1,124 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-
-import Box from "@mui/material/Box";
-import IconButton from "@mui/material/IconButton";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
-export default function Carrusel({ items }) {
+export default function Carrusel({ items = [], variant = "row" }) {
     const trackRef = useRef(null);
-    const autoScrollRef = useRef(null);
     const navigate = useNavigate();
     const location = useLocation();
+    const [canScrollLeft, setCanScrollLeft] = useState(false);
+    const [canScrollRight, setCanScrollRight] = useState(false);
 
-    const startAutoScroll = () => {
-        stopAutoScroll();
-        autoScrollRef.current = setInterval(() => {
-            const track = trackRef.current;
-            if (!track) return;
-
-            track.scrollLeft += 1;
-
-            const lastImage = track.lastElementChild;
-            if (lastImage) {
-                const lastImageRight = lastImage.offsetLeft + lastImage.offsetWidth;
-
-                if (track.scrollLeft + track.clientWidth >= lastImageRight) {
-                    track.scrollLeft = 0;
-                }
-            }
-        }, 88);
-    };
-
-    const stopAutoScroll = () => {
-        if (autoScrollRef.current) clearInterval(autoScrollRef.current);
-    };
-
-    useEffect(() => {
-        startAutoScroll();
-        return () => stopAutoScroll();
+    const updateScrollState = useCallback(() => {
+        const track = trackRef.current;
+        if (!track) return;
+        const max = track.scrollWidth - track.clientWidth;
+        setCanScrollLeft(track.scrollLeft > 8);
+        setCanScrollRight(max > 8 && track.scrollLeft < max - 8);
     }, []);
 
-    const scrollLeft = () => {
+    useEffect(() => {
         const track = trackRef.current;
         if (!track) return;
-        track.scrollBy({ left: -200, behavior: "smooth" });
-        restartAutoScroll();
+
+        updateScrollState();
+        track.addEventListener("scroll", updateScrollState, { passive: true });
+
+        const observer = new ResizeObserver(updateScrollState);
+        observer.observe(track);
+
+        return () => {
+            track.removeEventListener("scroll", updateScrollState);
+            observer.disconnect();
+        };
+    }, [items, updateScrollState]);
+
+    const getPageDelta = () => {
+        const track = trackRef.current;
+        if (!track) return 0;
+        const card = track.querySelector(".carousel-card");
+        if (!card) return track.clientWidth * 0.85;
+        const styles = window.getComputedStyle(track);
+        const gap = parseFloat(styles.columnGap || styles.gap) || 12;
+        const cardSize = card.offsetWidth + gap;
+        const visible = Math.max(1, Math.floor((track.clientWidth + gap) / cardSize));
+        return visible * cardSize;
     };
 
-    const scrollRight = () => {
+    const scrollByPage = (direction) => {
         const track = trackRef.current;
         if (!track) return;
-        track.scrollBy({ left: 200, behavior: "smooth" });
-        restartAutoScroll();
-    };
-
-    const restartAutoScroll = () => {
-        stopAutoScroll();
-        setTimeout(() => startAutoScroll(), 5000);
+        track.scrollBy({ left: direction * getPageDelta(), behavior: "smooth" });
     };
 
     const handleClick = (item) => {
         const from = location.pathname + location.search;
-
-        if (item.tipo === "juego") {
-            navigate(`/juego/${item.id}`, { state: { from } });
-        } else if (item.tipo === "serie") {
-            navigate(`/serie/${item.id}`, { state: { from } });
-        } else if (item.tipo === "animado") {
-            navigate(`/animado/${item.id}`, { state: { from } });
-        } else if (item.tipo === "anime") {
-            navigate(`/anime/${item.id}`, { state: { from } });
-        }
+        const routes = {
+            juego: `/juego/${item.id}`,
+            serie: `/serie/${item.id}`,
+            animado: `/animado/${item.id}`,
+            anime: `/anime/${item.id}`,
+        };
+        const path = routes[item.tipo];
+        if (path) navigate(path, { state: { from } });
     };
 
+    if (!items.length) {
+        return <p className="carousel-empty">No hay títulos para mostrar.</p>;
+    }
+
     return (
-        <Box
-            className="carousel"
-            sx={{ position: "relative" }}
-        >
-            {/* Botón izquierda */}
-            <IconButton
-                className="carousel-button left"
-                onClick={scrollLeft}
-                sx={{
-                    position: "absolute",
-                    left: 0,
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                    backgroundColor: "rgba(0,0,0,0.5)",
-                    color: "#fff",
-                    "&:hover": { backgroundColor: "rgba(0,0,0,0.7)" },
-                    zIndex: 10,
-                }}
-            >
-                <ChevronLeftIcon />
-            </IconButton>
+        <div className={`carousel carousel--${variant}`}>
+            {canScrollLeft && (
+                <button
+                    type="button"
+                    className="carousel-button left"
+                    onClick={() => scrollByPage(-1)}
+                    aria-label="Anterior"
+                >
+                    <ChevronLeftIcon />
+                </button>
+            )}
 
-            {/* Track del carrusel */}
-            <Box
-                className="carousel-track"
-                ref={trackRef}
-                onMouseEnter={stopAutoScroll}
-                onMouseLeave={startAutoScroll}
-                sx={{
-                    display: "flex",
-                    overflowX: "auto",
-                    gap: "10px",
-                    padding: "10px 40px",
-                    scrollbarWidth: "none",
-                    "&::-webkit-scrollbar": { display: "none" },
-                }}
-            >
-                {items.map((item, i) => (
-                    <Box
-                        key={i}
-                        component="img"
-                        src={item.portada}
-                        alt=""
-                        className="carousel-img"
+            <div className="carousel-track" ref={trackRef}>
+                {items.map((item) => (
+                    <button
+                        type="button"
+                        key={`${item.tipo}-${item.id}`}
+                        className="carousel-card"
                         onClick={() => handleClick(item)}
-                        sx={{
-                            cursor: "pointer",
-                            borderRadius: "8px",
-                            flexShrink: 0,
-                            width: "180px",
-                            height: "260px",
-                            objectFit: "cover",
-                            boxShadow: "0 0 10px rgba(0,0,0,0.5)",
-                            transition: "transform 0.2s",
-                            "&:hover": {
-                                transform: "scale(1.05)",
-                            },
-                        }}
-                    />
+                    >
+                        <span className="carousel-card-media">
+                            <img
+                                src={item.portada}
+                                alt={item.titulo || ""}
+                                className="carousel-img"
+                                loading="lazy"
+                            />
+                        </span>
+                        {item.titulo && (
+                            <span className="carousel-card-body">
+                                <span className="carousel-card-title">{item.titulo}</span>
+                                {item.meta && (
+                                    <span className="carousel-card-meta">{item.meta}</span>
+                                )}
+                            </span>
+                        )}
+                    </button>
                 ))}
-            </Box>
+            </div>
 
-            {/* Botón derecha */}
-            <IconButton
-                className="carousel-button right"
-                onClick={scrollRight}
-                sx={{
-                    position: "absolute",
-                    right: 0,
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                    backgroundColor: "rgba(0,0,0,0.5)",
-                    color: "#fff",
-                    "&:hover": { backgroundColor: "rgba(0,0,0,0.7)" },
-                    zIndex: 10,
-                }}
-            >
-                <ChevronRightIcon />
-            </IconButton>
-        </Box>
+            {canScrollRight && (
+                <button
+                    type="button"
+                    className="carousel-button right"
+                    onClick={() => scrollByPage(1)}
+                    aria-label="Siguiente"
+                >
+                    <ChevronRightIcon />
+                </button>
+            )}
+        </div>
     );
 }

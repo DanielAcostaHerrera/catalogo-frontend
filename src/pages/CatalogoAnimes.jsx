@@ -50,9 +50,9 @@ export default function CatalogoAnimes({ showToast }) {
         fetchPolicy: "network-only",
     });
 
-    if (!precios) return <p style={{ color: "#ccc" }}>Cargando precios…</p>;
-    if (loading) return <p style={{ color: "#ccc" }}>Cargando…</p>;
-    if (error) return <p style={{ color: "red" }}>Error: {error.message}</p>;
+    if (!precios) return <p className="catalogo-status">Cargando precios…</p>;
+    if (loading) return <p className="catalogo-status">Cargando…</p>;
+    if (error) return <p className="catalogo-status catalogo-status--error">Error: {error.message}</p>;
 
     const animes =
         data?.catalogoAnimes?.animes ||

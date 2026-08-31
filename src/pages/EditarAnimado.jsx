@@ -73,8 +73,16 @@ export default function EditarAnimado() {
         return null;
     }
 
-    if (loading) return <p style={{ color: "#ccc" }}>Cargando…</p>;
-    if (error) return <p style={{ color: "red" }}>Error: {error.message}</p>;
+    if (loading) return (
+        <div className="catalogo-container-moderno">
+            <p className="catalogo-status">Cargando…</p>
+        </div>
+    );
+    if (error) return (
+        <div className="catalogo-container-moderno">
+            <p className="catalogo-status catalogo-status--error">Error: {error.message}</p>
+        </div>
+    );
 
     const a = data.animado;
     const portadaUrl = `https://catalogo-backend-f4sk.onrender.com/portadas/Portadas Animados/${a.Portada}`;
@@ -170,9 +178,10 @@ export default function EditarAnimado() {
     return (
         <div className="catalogo-container-moderno">
             <div className="catalogo-header-moderno">
-                <h1 className="catalogo-titulo-moderno">✏️ Editar {a.Titulo}</h1>
+                <p className="store-kicker">Editar título</p>
+                <h1 className="catalogo-titulo-moderno">{a.Titulo}</h1>
                 <p className="catalogo-subtitulo-moderno">
-                    Modifica los campos del animado
+                    Actualiza los datos de este animado
                 </p>
             </div>
 
@@ -215,33 +224,31 @@ export default function EditarAnimado() {
 
                 <div className="detalle-extra">
                     <div className="detalle-card">
-                        <strong>Sinopsis:</strong>
+                        <span className="detalle-card-title">Sinopsis</span>
                         <textarea
                             className="input-dark"
                             name="Sinopsis"
                             rows={8}
                             value={form.Sinopsis}
                             onChange={handleChange}
-                            style={{ width: "100%", marginTop: 10 }}
                         />
                     </div>
 
                     <div className="detalle-card">
-                        <strong>Episodios:</strong>
+                        <span className="detalle-card-title">Episodios</span>
                         <textarea
                             className="input-dark"
                             name="Episodios"
                             rows={12}
                             value={form.Episodios}
                             onChange={handleChange}
-                            style={{ width: "100%", marginTop: 10 }}
                         />
                     </div>
                 </div>
 
                 <div className="insertar-botones">
-                    <button type="submit" className="btn-dark">
-                        Guardar Cambios
+                    <button type="submit" className="btn-dark btn-primary-store">
+                        Guardar cambios
                     </button>
                     <button
                         type="button"

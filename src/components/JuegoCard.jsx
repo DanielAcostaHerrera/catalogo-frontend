@@ -86,6 +86,7 @@ export default function JuegoCard({ juego, showToast, from }) {
       portadaUrl={portadaUrl}
       imageAlt={juego.Nombre}
       titulo={juego.Nombre}
+      meta={[juego.AnnoAct, juego.TamanoFormateado].filter(Boolean).join(" · ")}
       navigateLink={`/juego/${juego.Id}`}
       navigateState={{ from }}
       product={product}

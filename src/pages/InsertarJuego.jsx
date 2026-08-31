@@ -179,9 +179,10 @@ export default function InsertarJuego() {
         <>
             <div className="catalogo-container-moderno">
                 <div className="catalogo-header-moderno">
-                    <h1 className="catalogo-titulo-moderno">🎮 Añadir Nuevo Juego</h1>
+                    <p className="store-kicker">Administración</p>
+                    <h1 className="catalogo-titulo-moderno">Añadir juego</h1>
                     <p className="catalogo-subtitulo-moderno">
-                        Completa los campos para añadir un nuevo juego al catálogo
+                        Completa los campos para publicar un nuevo título en la tienda
                     </p>
                 </div>
 
@@ -223,31 +224,29 @@ export default function InsertarJuego() {
 
                     <div className="detalle-extra">
                         <div className="detalle-card">
-                            <strong>Sinopsis:</strong>
+                            <span className="detalle-card-title">Sinopsis</span>
                             <textarea
                                 className="input-dark"
                                 rows={8}
                                 value={Sinopsis}
                                 onChange={(e) => setSinopsis(e.target.value)}
-                                style={{ width: "100%", marginTop: 10 }}
                             />
                         </div>
 
                         <div className="detalle-card">
-                            <strong>Requisitos de Sistema:</strong>
+                            <span className="detalle-card-title">Requisitos de sistema</span>
                             <textarea
                                 className="input-dark"
                                 rows={12}
                                 value={Requisitos}
                                 onChange={(e) => setRequisitos(e.target.value)}
-                                style={{ width: "100%", marginTop: 10 }}
                             />
                         </div>
                     </div>
 
                     <div className="insertar-botones">
-                        <button type="submit" className="btn-dark">
-                            Añadir Juego
+                        <button type="submit" className="btn-dark btn-primary-store">
+                            Añadir juego
                         </button>
                         <button
                             type="button"

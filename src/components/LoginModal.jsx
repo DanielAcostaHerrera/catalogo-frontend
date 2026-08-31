@@ -33,8 +33,8 @@ export default function LoginModal({ onClose }) {
             <div className="auth-modal" onClick={(e) => e.stopPropagation()}>
                 <form onSubmit={handleSubmit} className="auth-form">
                     <div className="auth-modal-header">
-                        <span className="auth-modal-icon">🔐</span>
-                        <h2 className="auth-title">Acceso Administrativo</h2>
+                        <p className="store-kicker">Administración</p>
+                        <h2 className="auth-title">Iniciar sesión</h2>
                         <div className="auth-modal-line"></div>
                     </div>
 
@@ -68,7 +68,7 @@ export default function LoginModal({ onClose }) {
                                 transform: "translateY(-50%)",
                                 padding: "4px",
                                 // 🔥 Estilo Windows: blanco cuando oculto, opaco cuando visible
-                                color: showPass ? "rgba(255,255,255,0.4)" : "#ffffff",
+                                color: showPass ? "#8f98a0" : "#66c0f4",
                                 transition: "color 0.2s ease"
                             }}
                         >
@@ -79,11 +79,11 @@ export default function LoginModal({ onClose }) {
                     {error && <p className="auth-error">❌ Credenciales incorrectas</p>}
 
                     <button type="submit" className="auth-btn-login">
-                        ⚡ Entrar
+                        Entrar
                     </button>
 
                     <button type="button" className="auth-btn-cancel" onClick={onClose}>
-                        ✕ Cancelar
+                        Cancelar
                     </button>
                 </form>
             </div>

@@ -8,6 +8,7 @@ export default function ProductCard({
   navigateState,
   imageAlt,
   titulo,
+  meta,
   product,
   showToast,
   adminButtons,
@@ -33,6 +34,7 @@ export default function ProductCard({
         <h3 className="ProductCardTitulo">
           {titulo}
         </h3>
+        {meta ? <p className="ProductCardMeta">{meta}</p> : null}
       </Link>
 
       <div className="ProductCardFooter">

@@ -1,3 +1,4 @@
+import { useEffect, useRef, useReducer } from "react";
 import { useQuery } from "@apollo/client";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
@@ -7,11 +8,104 @@ import {
     GET_ULTIMOS_ESTRENOS_ANIMES,
 } from "../graphql";
 import Carrusel from "../components/Carrusel";
+import { tamanoAMb } from "../utils/FormatoJuego";
 
+const PORTADAS_BASE = "https://catalogo-backend-f4sk.onrender.com/portadas";
+
+const CATEGORIAS = [
+    { ruta: "/catalogo-juegos", icon: "🎮", nombre: "Juegos", hint: "PC y estrenos" },
+    { ruta: "/catalogo-series", icon: "🎬", nombre: "Series", hint: "Maratones" },
+    { ruta: "/catalogo-animados", icon: "🐭", nombre: "Animados", hint: "Para toda la familia" },
+    { ruta: "/catalogo-animes", icon: "🍥", nombre: "Animes", hint: "Temporada actual" },
+];
+
+function coverUrl(folder, fileName) {
+    return `${PORTADAS_BASE}/${folder}/${fileName}`;
+}
+
+function mapJuegos(juegos) {
+    return juegos.map((j) => ({
+        portada: coverUrl("Portadas Juegos", j.Portada),
+        id: j.Id,
+        tipo: "juego",
+        titulo: j.Nombre,
+        meta: [j.AnnoAct, j.TamanoFormateado].filter(Boolean).join(" · "),
+    }));
+}
+
+function mapSeriesLike(items, folder, tipo) {
+    return items.map((s) => ({
+        portada: coverUrl(folder, s.Portada),
+        id: s.Id,
+        tipo,
+        titulo: s.Titulo,
+        meta: [s.Anno, s.Temporadas != null ? `${s.Temporadas} temp.` : null]
+            .filter(Boolean)
+            .join(" · "),
+    }));
+}
+
+function CarruselSkeleton() {
+    return (
+        <div className="carousel-skeleton" aria-hidden="true">
+            {Array.from({ length: 8 }).map((_, i) => (
+                <div key={i} className="carousel-skeleton-card" />
+            ))}
+        </div>
+    );
+}
+
+function FilaCarrusel({ titulo, verLabel, onVer, loading, error, items }) {
+    return (
+        <div className="bienvenida-nuevo-carrusel-wrapper">
+            <div className="bienvenida-nuevo-carrusel-header">
+                <h3 className="bienvenida-nuevo-carrusel-titulo">{titulo}</h3>
+                <button type="button" className="bienvenida-nuevo-carrusel-ver" onClick={onVer}>
+                    {verLabel}
+                </button>
+            </div>
+            {loading && <CarruselSkeleton />}
+            {error && <p className="bienvenida-nuevo-error">No se pudo cargar esta sección.</p>}
+            {!loading && !error && <Carrusel items={items} />}
+        </div>
+    );
+}
+
+// ============================================================
+// REDUCER para manejar el índice de los destacados
+// ============================================================
+function featuredReducer(state, action) {
+    switch (action.type) {
+        case "SET_INDEX":
+            return { ...state, index: action.payload };
+        case "NEXT":
+            return {
+                ...state,
+                index: state.total > 0 ? (state.index + 1) % state.total : 0,
+            };
+        case "SET_TOTAL":
+            return {
+                ...state,
+                total: action.payload,
+                // Si el índice actual es mayor o igual al nuevo total, lo reiniciamos
+                index: state.index >= action.payload ? 0 : state.index,
+            };
+        default:
+            return state;
+    }
+}
+
+// ============================================================
+// COMPONENTE PRINCIPAL
+// ============================================================
 export default function Bienvenida() {
     const navigate = useNavigate();
     const location = useLocation();
+    const go = (path) => navigate(path, { state: { from: location.pathname } });
 
+    const pauseFeaturedRef = useRef(false);
+
+    // -------- QUERIES --------
     const { data: juegosData, loading: juegosLoading, error: juegosError } = useQuery(
         GET_ULTIMOS_ESTRENOS,
         { variables: { limit: 25 } }
@@ -32,146 +126,189 @@ export default function Bienvenida() {
         { variables: { limit: 25 } }
     );
 
-    if (juegosLoading || seriesLoading || animadosLoading || animesLoading)
-        return <p style={{ color: "#ccc" }}>Cargando…</p>;
-
-    if (juegosError || seriesError || animadosError || animesError)
-        return <p style={{ color: "red" }}>Error al cargar datos.</p>;
-
+    // -------- DATOS --------
     const juegos = juegosData?.ultimosEstrenos?.juegos || [];
     const series = seriesData?.ultimosEstrenosSeries?.series || [];
     const animados = animadosData?.ultimosEstrenosAnimados?.series || [];
     const animes = animesData?.ultimosEstrenosAnimes?.animes || [];
 
+    // -------- DESTACADOS: Los 5 juegos más grandes de los últimos 25 --------
+    const destacados = [...juegos]
+        .sort((a, b) => tamanoAMb(b.TamanoFormateado) - tamanoAMb(a.TamanoFormateado))
+        .slice(0, 5);
+
+    // -------- useReducer para el índice de destacados --------
+    const [featuredState, dispatchFeatured] = useReducer(featuredReducer, {
+        index: 0,
+        total: destacados.length,
+    });
+
+    const featuredIndex = featuredState.index;
+    const featured = destacados[featuredIndex] || destacados[0];
+
+    // -------- Sincronizar el total cuando cambian los destacados --------
+    useEffect(() => {
+        dispatchFeatured({ type: "SET_TOTAL", payload: destacados.length });
+    }, [destacados.length]);
+
+    // -------- Auto-play de destacados (cada 5 segundos) --------
+    useEffect(() => {
+        if (destacados.length < 2) return undefined;
+
+        const id = setInterval(() => {
+            if (pauseFeaturedRef.current) return;
+            dispatchFeatured({ type: "NEXT" });
+        }, 5000);
+
+        return () => clearInterval(id);
+    }, [destacados.length]);
+
+    // ============================================================
+    // RENDER
+    // ============================================================
     return (
-        <>
-            <div className="bienvenida-nuevo">
-                <section className="bienvenida-nuevo-hero">
-                    <div className="bienvenida-nuevo-hero-content">
-                        <h1 className="bienvenida-nuevo-title">
-                            <span className="text-purple-neon">PixelPlay Habana</span>
-                        </h1>
-                        <p className="bienvenida-nuevo-descripcion">
-                            PixelPlay Habana es el punto de encuentro para los amantes de los videojuegos de PC y las mejores series.
-                            Nuestro catálogo reúne estrenos y clásicos cuidadosamente seleccionados pensados para que encuentres justo
-                            lo que buscas. Explora y descubre nuevas aventuras digitales o maratones imperdibles, todo en un solo lugar.
-                        </p>
-                    </div>
+        <div className="bienvenida-nuevo">
+            {/* ====== HERO ====== */}
+            <section className="bienvenida-nuevo-hero">
+                <p className="bienvenida-nuevo-kicker">Catálogo digital</p>
+                <h1 className="bienvenida-nuevo-title">PixelPlay Habana</h1>
+                <p className="bienvenida-nuevo-descripcion">
+                    El punto de encuentro para los amantes de los videojuegos de PC y las mejores series.
+                    Estrenos y clásicos seleccionados para que encuentres justo lo que buscas.
+                </p>
 
-                    <div className="bienvenida-nuevo-categorias">
+                <div className="bienvenida-nuevo-categorias">
+                    {CATEGORIAS.map((cat) => (
                         <button
+                            key={cat.ruta}
+                            type="button"
                             className="bienvenida-nuevo-categoria"
-                            onClick={() => navigate("/catalogo-juegos", { state: { from: location.pathname } })}
+                            onClick={() => go(cat.ruta)}
                         >
-                            <span className="bienvenida-nuevo-categoria-icon">🎮</span>
-                            <span className="bienvenida-nuevo-categoria-nombre">Juegos</span>
+                            <span className="bienvenida-nuevo-categoria-icon">{cat.icon}</span>
+                            <span className="bienvenida-nuevo-categoria-nombre">{cat.nombre}</span>
+                            <span className="bienvenida-nuevo-categoria-hint">{cat.hint}</span>
                         </button>
+                    ))}
+                </div>
+            </section>
+
+            {/* ====== DESTACADOS ====== */}
+            <section className="store-featured" aria-label="Destacados">
+                {juegosLoading && <div className="store-featured-skeleton" />}
+                {juegosError && (
+                    <p className="bienvenida-nuevo-error">No se pudieron cargar los destacados.</p>
+                )}
+                {!juegosLoading && !juegosError && featured && (
+                    <div
+                        className="store-featured-layout"
+                        onMouseEnter={() => {
+                            pauseFeaturedRef.current = true;
+                        }}
+                        onMouseLeave={() => {
+                            pauseFeaturedRef.current = false;
+                        }}
+                    >
                         <button
-                            className="bienvenida-nuevo-categoria"
-                            onClick={() => navigate("/catalogo-series", { state: { from: location.pathname } })}
+                            type="button"
+                            className="store-featured-main"
+                            onClick={() => go(`/juego/${featured.Id}`)}
                         >
-                            <span className="bienvenida-nuevo-categoria-icon">🎬</span>
-                            <span className="bienvenida-nuevo-categoria-nombre">Series</span>
+                            <img
+                                key={featured.Id}
+                                src={coverUrl("Portadas Juegos", featured.Portada)}
+                                alt={featured.Nombre}
+                            />
                         </button>
-                        <button
-                            className="bienvenida-nuevo-categoria"
-                            onClick={() => navigate("/catalogo-animados", { state: { from: location.pathname } })}
-                        >
-                            <span className="bienvenida-nuevo-categoria-icon">🐭</span>
-                            <span className="bienvenida-nuevo-categoria-nombre">Animados</span>
-                        </button>
-                        <button
-                            className="bienvenida-nuevo-categoria"
-                            onClick={() => navigate("/catalogo-animes", { state: { from: location.pathname } })}
-                        >
-                            <span className="bienvenida-nuevo-categoria-icon">🍥</span>
-                            <span className="bienvenida-nuevo-categoria-nombre">Animes</span>
-                        </button>
-                    </div>
-                </section>
 
-                <section className="bienvenida-nuevo-lanzamientos">
-                    <h2 className="bienvenida-nuevo-section-title">⚡ Últimos lanzamientos</h2>
-
-                    <div className="bienvenida-nuevo-carruseles">
-                        <div className="bienvenida-nuevo-carrusel-wrapper">
-                            <div className="bienvenida-nuevo-carrusel-header">
-                                <span className="bienvenida-nuevo-carrusel-titulo">🎮 Juegos</span>
-                                <button
-                                    className="bienvenida-nuevo-carrusel-ver"
-                                    onClick={() => navigate("/catalogo-juegos", { state: { from: location.pathname } })}
-                                >
-                                    Ver todos →
-                                </button>
+                        <div className="store-featured-side">
+                            <div className="store-featured-info">
+                                <span className="store-featured-badge">Destacado en la tienda</span>
+                                <h2>{featured.Nombre}</h2>
+                                <p>
+                                    {[featured.AnnoAct, featured.TamanoFormateado]
+                                        .filter(Boolean)
+                                        .join(" · ")}
+                                </p>
                             </div>
-                            <Carrusel
-                                items={juegos.map((j) => ({
-                                    portada: `https://catalogo-backend-f4sk.onrender.com/portadas/Portadas Juegos/${j.Portada}`,
-                                    id: j.Id,
-                                    tipo: "juego",
-                                }))}
-                            />
-                        </div>
 
-                        <div className="bienvenida-nuevo-carrusel-wrapper">
-                            <div className="bienvenida-nuevo-carrusel-header">
-                                <span className="bienvenida-nuevo-carrusel-titulo">🎬 Series</span>
-                                <button
-                                    className="bienvenida-nuevo-carrusel-ver"
-                                    onClick={() => navigate("/catalogo-series", { state: { from: location.pathname } })}
-                                >
-                                    Ver todas →
-                                </button>
+                            <div className="store-featured-thumbs">
+                                {destacados.map((juego, index) => (
+                                    <button
+                                        type="button"
+                                        key={juego.Id}
+                                        className={`store-featured-thumb${
+                                            index === featuredIndex ? " is-active" : ""
+                                        }`}
+                                        onMouseEnter={() =>
+                                            dispatchFeatured({
+                                                type: "SET_INDEX",
+                                                payload: index,
+                                            })
+                                        }
+                                        onFocus={() =>
+                                            dispatchFeatured({
+                                                type: "SET_INDEX",
+                                                payload: index,
+                                            })
+                                        }
+                                        onClick={() => go(`/juego/${juego.Id}`)}
+                                    >
+                                        <img
+                                            src={coverUrl("Portadas Juegos", juego.Portada)}
+                                            alt=""
+                                        />
+                                        <span>{juego.Nombre}</span>
+                                    </button>
+                                ))}
                             </div>
-                            <Carrusel
-                                items={series.map((s) => ({
-                                    portada: `https://catalogo-backend-f4sk.onrender.com/portadas/Portadas Series/${s.Portada}`,
-                                    id: s.Id,
-                                    tipo: "serie",
-                                }))}
-                            />
-                        </div>
-
-                        <div className="bienvenida-nuevo-carrusel-wrapper">
-                            <div className="bienvenida-nuevo-carrusel-header">
-                                <span className="bienvenida-nuevo-carrusel-titulo">🐭 Animados</span>
-                                <button
-                                    className="bienvenida-nuevo-carrusel-ver"
-                                    onClick={() => navigate("/catalogo-animados", { state: { from: location.pathname } })}
-                                >
-                                    Ver todos →
-                                </button>
-                            </div>
-                            <Carrusel
-                                items={animados.map((a) => ({
-                                    portada: `https://catalogo-backend-f4sk.onrender.com/portadas/Portadas Animados/${a.Portada}`,
-                                    id: a.Id,
-                                    tipo: "animado",
-                                }))}
-                            />
-                        </div>
-
-                        <div className="bienvenida-nuevo-carrusel-wrapper">
-                            <div className="bienvenida-nuevo-carrusel-header">
-                                <span className="bienvenida-nuevo-carrusel-titulo">🍥 Animes</span>
-                                <button
-                                    className="bienvenida-nuevo-carrusel-ver"
-                                    onClick={() => navigate("/catalogo-animes", { state: { from: location.pathname } })}
-                                >
-                                    Ver todos →
-                                </button>
-                            </div>
-                            <Carrusel
-                                items={animes.map((an) => ({
-                                    portada: `https://catalogo-backend-f4sk.onrender.com/portadas/Portadas Anime/${an.Portada}`,
-                                    id: an.Id,
-                                    tipo: "anime",
-                                }))}
-                            />
                         </div>
                     </div>
-                </section>
-            </div>
-        </>
+                )}
+            </section>
+
+            {/* ====== CARRUSELES ====== */}
+            <section className="bienvenida-nuevo-lanzamientos">
+                <div className="bienvenida-nuevo-section-head">
+                    <h2 className="bienvenida-nuevo-section-title">Últimos lanzamientos</h2>
+                    <p className="bienvenida-nuevo-section-sub">Lo más reciente de cada catálogo</p>
+                </div>
+
+                <div className="bienvenida-nuevo-carruseles">
+                    <FilaCarrusel
+                        titulo="Juegos"
+                        verLabel="Ver todos"
+                        onVer={() => go("/catalogo-juegos")}
+                        loading={juegosLoading}
+                        error={juegosError}
+                        items={mapJuegos(juegos)}
+                    />
+                    <FilaCarrusel
+                        titulo="Series"
+                        verLabel="Ver todas"
+                        onVer={() => go("/catalogo-series")}
+                        loading={seriesLoading}
+                        error={seriesError}
+                        items={mapSeriesLike(series, "Portadas Series", "serie")}
+                    />
+                    <FilaCarrusel
+                        titulo="Animados"
+                        verLabel="Ver todos"
+                        onVer={() => go("/catalogo-animados")}
+                        loading={animadosLoading}
+                        error={animadosError}
+                        items={mapSeriesLike(animados, "Portadas Animados", "animado")}
+                    />
+                    <FilaCarrusel
+                        titulo="Animes"
+                        verLabel="Ver todos"
+                        onVer={() => go("/catalogo-animes")}
+                        loading={animesLoading}
+                        error={animesError}
+                        items={mapSeriesLike(animes, "Portadas Anime", "anime")}
+                    />
+                </div>
+            </section>
+        </div>
     );
 }

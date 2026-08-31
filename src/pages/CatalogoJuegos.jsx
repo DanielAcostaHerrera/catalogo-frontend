@@ -208,8 +208,8 @@ export default function CatalogoJuegos({ showToast }) {
         fetchPolicy: "network-only",
     });
 
-    if (loading) return <p className="text-gray-400">Cargando…</p>;
-    if (error) return <p className="text-red-500">Error: {error.message}</p>;
+    if (loading) return <p className="catalogo-status">Cargando…</p>;
+    if (error) return <p className="catalogo-status catalogo-status--error">Error: {error.message}</p>;
 
     const juegos =
         data?.catalogo?.juegos ||
