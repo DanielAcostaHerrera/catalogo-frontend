@@ -1,7 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 import { ELIMINAR_SERIE } from "../mutations";
-import AddToCartButton from "../components/AddToCartButton";
 import ProductCard from "./ProductCard";
 import { authContext } from "../context/AuthContext";
 
@@ -46,8 +45,8 @@ export default function SerieCard({
   const [eliminarSerie] = useMutation(ELIMINAR_SERIE);
 
   const renderAdminSection = () => (
-    <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-      <button onClick={handleEdit} className="admin-edit-btn">
+    <>
+      <button onClick={handleEdit} className="btn-add" data-variant="edit">
         ✏️
       </button>
 
@@ -71,9 +70,6 @@ export default function SerieCard({
           } catch (err) {
             console.error(err);
 
-            // ============================
-            //  MANEJO ROBUSTO DE PERMISOS
-            // ============================
             const msg =
               err?.message ||
               err?.graphQLErrors?.[0]?.message ||
@@ -91,11 +87,12 @@ export default function SerieCard({
             }
           }
         }}
-        className="admin-delete-btn"
+        className="btn-add"
+        data-variant="delete"
       >
         🗑️
       </button>
-    </div>
+    </>
   );
 
   const product = {

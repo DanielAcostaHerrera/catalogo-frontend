@@ -3,7 +3,7 @@ import { useQuery } from "@apollo/client";
 import { GET_JUEGO } from "../graphql";
 import "../App.css";
 import { limpiarNombreParaBusqueda } from "../utils/FormatoJuego";
-import AddToCartButton from "../components/AddToCartButton";
+import { useCart } from "../context/CartContext";
 
 function StoreStatus({ error, children }) {
     return (
@@ -17,6 +17,7 @@ function StoreStatus({ error, children }) {
 
 export default function JuegoDetalles({ showToast }) {
     const { id } = useParams();
+    const { addToCart } = useCart();
 
     const normalizarTexto = (txt) => (txt ? txt.replace(/\\n/g, "\n") : "");
 
@@ -39,6 +40,27 @@ export default function JuegoDetalles({ showToast }) {
         });
 
         return resultado.join("\n");
+    };
+
+    const handleAddToCart = () => {
+        const item = {
+            id: j.Id,
+            tipo: "juego",
+            nombre: j.Nombre,
+            portada: `Portadas Juegos/${j.Portada}`,
+            precio: j.Precio ?? 0,
+            tamanoFormateado: j.TamanoFormateado ?? "Tamaño desconocido"
+        };
+
+        const result = addToCart(item);
+
+        if (showToast) {
+            if (result.status === "added") {
+                showToast("Juego añadido correctamente");
+            } else {
+                showToast("Este juego ya está en el carrito");
+            }
+        }
     };
 
     const { loading, error, data } = useQuery(GET_JUEGO, {
@@ -72,6 +94,14 @@ export default function JuegoDetalles({ showToast }) {
                         alt={j.Nombre}
                         className="detalle-portada-img"
                     />
+                    <div className="detalle-buy-wrapper">
+                        <button
+                            className="btn-add"
+                            onClick={handleAddToCart}
+                        >
+                            🛒 Añadir
+                        </button>
+                    </div>
                 </div>
 
                 <div className="detalle-info">
@@ -87,20 +117,6 @@ export default function JuegoDetalles({ showToast }) {
                         <dt>Año de actualización</dt>
                         <dd>{anno}</dd>
                     </dl>
-
-                    <div className="detalle-buy">
-                        <AddToCartButton
-                            item={{
-                                id: j.Id,
-                                tipo: "juego",
-                                nombre: j.Nombre,
-                                portada: `Portadas Juegos/${j.Portada}`,
-                                precio: j.Precio ?? 0,
-                                tamanoFormateado: j.TamanoFormateado ?? "Tamaño desconocido"
-                            }}
-                            showToast={showToast}
-                        />
-                    </div>
                 </div>
             </div>
 

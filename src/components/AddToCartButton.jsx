@@ -32,8 +32,8 @@ function AddToCartButton({ item, showToast }) {
   };
 
   return (
-    <button onClick={handleClick} className="btn-add">
-      🛒 Añadir
+    <button onClick={handleClick} className="btn-add" data-variant="add">
+      <span className="btn-add-icon">🛒</span>
     </button>
   );
 }

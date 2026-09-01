@@ -40,12 +40,7 @@ export default function ProductCard({
       <div className="ProductCardFooter">
         <div className="botones-wrapper">
           <AddToCartButton item={product} showToast={showToast} />
-
-          {auth.isLogged && (
-            <div className="ProductCardAdmin">
-              {adminButtons()}
-            </div>
-          )}
+          {auth.isLogged && adminButtons()}
         </div>
       </div>
     </div>

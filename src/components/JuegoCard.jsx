@@ -1,5 +1,4 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import AddToCartButton from "../components/AddToCartButton";
 import { useMutation } from "@apollo/client";
 import { ELIMINAR_JUEGO } from "../mutations";
 import ProductCard from "./ProductCard";
@@ -20,8 +19,8 @@ export default function JuegoCard({ juego, showToast, from }) {
   const [eliminarJuego] = useMutation(ELIMINAR_JUEGO);
 
   const renderAdminSection = () => (
-    <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-      <button onClick={handleEdit} className="admin-edit-btn">
+    <>
+      <button onClick={handleEdit} className="btn-add" data-variant="edit">
         ✏️
       </button>
 
@@ -45,9 +44,6 @@ export default function JuegoCard({ juego, showToast, from }) {
           } catch (err) {
             console.error(err);
 
-            // ============================
-            //  MANEJO ROBUSTO DE PERMISOS
-            // ============================
             const msg =
               err?.message ||
               err?.graphQLErrors?.[0]?.message ||
@@ -65,11 +61,12 @@ export default function JuegoCard({ juego, showToast, from }) {
             }
           }
         }}
-        className="admin-delete-btn"
+        className="btn-add"
+        data-variant="delete"
       >
         🗑️
       </button>
-    </div>
+    </>
   );
 
   const product = {
@@ -95,5 +92,4 @@ export default function JuegoCard({ juego, showToast, from }) {
     />
   );
 }
-
 
