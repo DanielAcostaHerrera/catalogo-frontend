@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
 import Paginacion from "../components/Paginacion";
 
 const IconoWhatsApp = () => (
@@ -10,6 +11,7 @@ const IconoWhatsApp = () => (
 
 function CarritoView({ showToast }) {
     const { cartItems, removeFromCart, clearCart, totals } = useCart();
+    const auth = useAuth();
 
     const [page, setPage] = useState(1);
     const limit = 20;
@@ -20,6 +22,10 @@ function CarritoView({ showToast }) {
 
     const ordenTipo = { juego: 1, serie: 2, anime: 3, animado: 4 };
     const tipoNombres = { juego: "🎮 Juegos", serie: "🎬 Series", anime: "🍥 Animes", animado: "🐭 Animados" };
+
+    const subtotal = totals.price ?? 0;
+    const descuento = auth.isLogged ? subtotal * 0.10 : 0;
+    const totalConDescuento = subtotal - descuento;
 
     const itemsAgrupados = {
         juego: [],
@@ -56,7 +62,14 @@ function CarritoView({ showToast }) {
         if (grupos.anime.length) content += "Animes:\n" + grupos.anime.join("\n") + "\n\n";
         if (grupos.animado.length) content += "Animados:\n" + grupos.animado.join("\n") + "\n\n";
 
-        content += `Precio total: ${(totals.price ?? 0).toFixed(2)} CUP\nTamaño total: ${(totals.size ?? 0).toFixed(1)} GB`;
+        if (auth.isLogged) {
+            content += `Subtotal: ${subtotal.toFixed(2)} CUP\n`;
+            content += `Descuento (10%): -${descuento.toFixed(2)} CUP\n`;
+            content += `Precio total: ${totalConDescuento.toFixed(2)} CUP\n`;
+        } else {
+            content += `Precio total: ${subtotal.toFixed(2)} CUP\n`;
+        }
+        content += `Tamaño total: ${(totals.size ?? 0).toFixed(1)} GB`;
 
         return content;
     };
@@ -97,10 +110,34 @@ function CarritoView({ showToast }) {
 
             <div className="carrito-resumen">
                 <div className="carrito-totales">
-                    <div className="carrito-total-item">
-                        <span className="carrito-total-label">Precio total:</span>
-                        <span className="carrito-total-valor">{(totals.price ?? 0).toFixed(2)} CUP</span>
-                    </div>
+                    {auth.isLogged ? (
+                        <>
+                            <div className="carrito-total-item">
+                                <span className="carrito-total-label">Subtotal:</span>
+                                <span className="carrito-total-valor">{subtotal.toFixed(2)} CUP</span>
+                            </div>
+
+                            <div className="carrito-total-item">
+                                <span className="carrito-total-label">Descuento (10%):</span>
+                                <span className="carrito-total-valor carrito-descuento">
+                                    -{descuento.toFixed(2)} CUP
+                                </span>
+                            </div>
+
+                            <div className="carrito-total-item">
+                                <span className="carrito-total-label">Precio total:</span>
+                                <span className="carrito-total-valor carrito-total-final">
+                                    {totalConDescuento.toFixed(2)} CUP
+                                </span>
+                            </div>
+                        </>
+                    ) : (
+                        <div className="carrito-total-item">
+                            <span className="carrito-total-label">Precio total:</span>
+                            <span className="carrito-total-valor">{subtotal.toFixed(2)} CUP</span>
+                        </div>
+                    )}
+
                     <div className="carrito-total-item">
                         <span className="carrito-total-label">Tamaño total:</span>
                         <span className="carrito-total-valor">{(totals.size ?? 0).toFixed(1)} GB</span>

@@ -3,6 +3,7 @@ import { useCart } from "../context/CartContext";
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import LoginModal from "../components/LoginModal";
+import RegistroModal from "../components/RegistroModal";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import Badge from "@mui/material/Badge";
 import Avatar from "@mui/material/Avatar";
@@ -11,11 +12,13 @@ import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
+import Divider from "@mui/material/Divider";
 
 export default function Header() {
   const { cartItems } = useCart();
   const [menuOpen, setMenuOpen] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
+  const [showRegistro, setShowRegistro] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const auth = useAuth();
 
@@ -73,13 +76,17 @@ export default function Header() {
 
           <IconButton onClick={handleAvatarClick} sx={{ p: 0 }}>
             <Avatar
-              alt="Usuario"
-              src={auth.isLogged ? "/user-foto.png" : ""}
-              sx={{ width: 40, height: 40, bgcolor: "#1b2838", color: "#c7d5e0" }}
+                alt="Usuario"
+                src={
+                    auth.isLogged
+                        ? (auth.user?.rol === "admin" ? "/user-foto.png" : "/user-cliente.png")
+                        : ""
+                }
+                sx={{ width: 40, height: 40, bgcolor: "#1b2838", color: "#c7d5e0" }}
             >
-              {!auth.isLogged && <AccountCircleIcon />}
+                {!auth.isLogged && <AccountCircleIcon />}
             </Avatar>
-          </IconButton>
+        </IconButton>
 
           <Menu
             anchorEl={anchorEl}
@@ -108,14 +115,25 @@ export default function Header() {
                 Cerrar sesión
               </MenuItem>
             ) : (
-              <MenuItem
-                onClick={() => {
-                  setShowLogin(true);
-                  handleMenuClose();
-                }}
-              >
-                Iniciar sesión
-              </MenuItem>
+              <>
+                <MenuItem
+                  onClick={() => {
+                    setShowLogin(true);
+                    handleMenuClose();
+                  }}
+                >
+                  Iniciar sesión
+                </MenuItem>
+                <Divider sx={{ borderColor: "rgba(102, 192, 244, 0.1)" }} />
+                <MenuItem
+                  onClick={() => {
+                    setShowRegistro(true);
+                    handleMenuClose();
+                  }}
+                >
+                  Registrarse
+                </MenuItem>
+              </>
             )}
           </Menu>
         </div>
@@ -179,6 +197,7 @@ export default function Header() {
       </SwipeableDrawer>
 
       {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
+      {showRegistro && <RegistroModal onClose={() => setShowRegistro(false)} />}
     </header>
   );
 }

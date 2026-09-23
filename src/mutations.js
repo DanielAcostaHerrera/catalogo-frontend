@@ -13,8 +13,8 @@ export const LOGIN = gql`
 //  CREAR USUARIO
 // ============================================================
 export const CREAR_USUARIO = gql`
-  mutation CrearUsuario($id: Int!, $usuario: String!, $password: String!, $rol: String!) {
-    crearUsuario(id: $id, usuario: $usuario, password: $password, rol: $rol)
+  mutation CrearUsuario($data: CreateUsuarioInput!) {
+    crearUsuario(data: $data)
   }
 `;
 
@@ -22,18 +22,8 @@ export const CREAR_USUARIO = gql`
 //  ACTUALIZAR USUARIO
 // ============================================================
 export const ACTUALIZAR_USUARIO = gql`
-  mutation ActualizarUsuario(
-    $id: Int!,
-    $usuario: String,
-    $password: String,
-    $rol: String
-  ) {
-    actualizarUsuario(
-      id: $id,
-      usuario: $usuario,
-      password: $password,
-      rol: $rol
-    )
+  mutation ActualizarUsuario($data: UpdateUsuarioInput!) {
+    actualizarUsuario(data: $data)
   }
 `;
 

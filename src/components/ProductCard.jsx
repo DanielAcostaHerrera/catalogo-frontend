@@ -14,6 +14,7 @@ export default function ProductCard({
   adminButtons,
 }) {
   const auth = useAuth();
+  const esAdmin = auth.isLogged && auth.user?.rol === "admin";
 
   return (
     <div className="ProductCardContainer">
@@ -40,7 +41,7 @@ export default function ProductCard({
       <div className="ProductCardFooter">
         <div className="botones-wrapper">
           <AddToCartButton item={product} showToast={showToast} />
-          {auth.isLogged && adminButtons()}
+          {esAdmin && adminButtons && adminButtons()}
         </div>
       </div>
     </div>

@@ -79,6 +79,154 @@ body {
 }
 
 /* ======================================================
+   REGISTRO
+   ====================================================== */
+
+.registro-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 120px);
+  padding: 40px 20px;
+  background: #1e1e1e;
+}
+
+.registro-card {
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 16px;
+  padding: 40px 36px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  animation: authFadeIn 0.3s ease-out;
+}
+
+.registro-titulo {
+  text-align: center;
+  color: #f0f0f0;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  letter-spacing: -0.5px;
+}
+
+.registro-subtitulo {
+  text-align: center;
+  color: #8899aa;
+  font-size: 0.9rem;
+  margin: 0 0 28px 0;
+}
+
+.registro-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.registro-input {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 10px;
+  border: 1px solid #2a2a3a;
+  background: #0d0d14;
+  color: #f0f0f0;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.registro-input::placeholder {
+  color: #556;
+  font-weight: 400;
+}
+
+.registro-input:focus {
+  border-color: #646cff;
+  box-shadow: 0 0 0 3px rgba(100, 108, 255, 0.12), 0 0 20px rgba(100, 108, 255, 0.05);
+}
+
+.registro-error {
+  color: #ff6b6b;
+  font-size: 13px;
+  text-align: center;
+  background: rgba(255, 107, 107, 0.06);
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 107, 107, 0.1);
+  margin: 0;
+}
+
+.registro-btn {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #646cff, #7c3aed);
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: transform 0.2s, box-shadow 0.2s;
+  letter-spacing: 0.5px;
+  margin-top: 4px;
+  font-family: inherit;
+}
+
+.registro-btn:hover:not(:disabled) {
+  transform: scale(1.02);
+  box-shadow: 0 0 30px rgba(100, 108, 255, 0.25);
+}
+
+.registro-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.registro-footer {
+  text-align: center;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #2a2a2a;
+  color: #8899aa;
+  font-size: 0.85rem;
+}
+
+.registro-footer a {
+  color: #646cff;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.registro-footer a:hover {
+  color: #a0b8ff;
+  text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+  .registro-card {
+    padding: 28px 20px;
+    border-radius: 14px;
+  }
+  .registro-titulo {
+    font-size: 1.5rem;
+  }
+  .registro-input {
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+  .registro-btn {
+    padding: 12px;
+    font-size: 15px;
+  }
+}
+
+/* ======================================================
    CARRUSEL (estilo Airbnb, sobre fondo oscuro)
    ====================================================== */
 
@@ -1738,6 +1886,17 @@ body {
     margin-bottom: 14px;
     padding-bottom: 8px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.carrito-descuento {
+    color: #25D366 !important;
+    font-weight: 700;
+}
+
+.carrito-total-final {
+    color: #66c0f4 !important;
+    font-weight: 700;
+    font-size: 1.1rem;
 }
 
 /* --------------------------------------------------

@@ -5,7 +5,11 @@ import gql from "graphql-tag";
 // ============================================================
 export const OBTENER_USUARIO_POR_ID = gql`
   query ObtenerUsuarioPorId($id: Int!) {
-    obtenerUsuarioPorId(id: $id)
+    obtenerUsuarioPorId(id: $id) {
+      Id
+      Usuario
+      Rol
+    }
   }
 `;
 

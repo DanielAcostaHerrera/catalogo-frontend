@@ -68,7 +68,7 @@ export default function EditarAnime() {
         }
     }, [data]);
 
-    if (!auth.isLogged) {
+    if (!auth.isLogged || auth.user?.rol !== "admin") {
         navigate("/acceso-denegado");
         return null;
     }
