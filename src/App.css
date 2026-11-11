@@ -254,9 +254,15 @@ body {
   display: none;
 }
 
-.carousel-card {
+.carousel-card-wrap {
+  position: relative;
   flex: 0 0 auto;
   width: 168px;
+}
+
+.carousel-card {
+  flex: 0 0 auto;
+  width: 100%;
   padding: 0;
   border: none;
   background: #16202d;  
@@ -319,6 +325,32 @@ body {
 .carousel-card-meta {
   font-size: 0.78rem;
   color: #8f98a0;
+}
+
+.carousel-edit-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 3;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  background: rgba(15, 21, 28, 0.82);
+  color: #e8eef4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+}
+
+.carousel-edit-btn:hover,
+.carousel-edit-btn:focus-visible {
+  background: #66c0f4;
+  color: #1b2838;
 }
 
 /* ===== BOTONES DE NAVEGACIÓN ===== */
@@ -410,7 +442,7 @@ body {
     color: #c7d5e0;
   }
 
-  .carousel-card,
+  .carousel-card-wrap,
   .carousel-img,
   .carousel-skeleton-card {
     width: 148px;

@@ -2,11 +2,29 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import EditIcon from "@mui/icons-material/Edit";
+import { useAuth } from "../context/AuthContext";
+
+const DETAIL_ROUTES = {
+    juego: (id) => `/juego/${id}`,
+    serie: (id) => `/serie/${id}`,
+    animado: (id) => `/animado/${id}`,
+    anime: (id) => `/anime/${id}`,
+};
+
+const EDIT_ROUTES = {
+    juego: (id) => `/editar-juego/${id}`,
+    serie: (id) => `/editar-serie/${id}`,
+    animado: (id) => `/editar-animado/${id}`,
+    anime: (id) => `/editar-anime/${id}`,
+};
 
 export default function Carrusel({ items = [], variant = "row" }) {
     const trackRef = useRef(null);
     const navigate = useNavigate();
     const location = useLocation();
+    const auth = useAuth();
+    const puedeEditar = auth.isLogged && auth.user?.rol === "admin";
     const [canScrollLeft, setCanScrollLeft] = useState(false);
     const [canScrollRight, setCanScrollRight] = useState(false);
 
@@ -52,15 +70,15 @@ export default function Carrusel({ items = [], variant = "row" }) {
         track.scrollBy({ left: direction * getPageDelta(), behavior: "smooth" });
     };
 
+    const from = location.pathname + location.search;
+
     const handleClick = (item) => {
-        const from = location.pathname + location.search;
-        const routes = {
-            juego: `/juego/${item.id}`,
-            serie: `/serie/${item.id}`,
-            animado: `/animado/${item.id}`,
-            anime: `/anime/${item.id}`,
-        };
-        const path = routes[item.tipo];
+        const path = DETAIL_ROUTES[item.tipo]?.(item.id);
+        if (path) navigate(path, { state: { from } });
+    };
+
+    const handleEdit = (item) => {
+        const path = EDIT_ROUTES[item.tipo]?.(item.id);
         if (path) navigate(path, { state: { from } });
     };
 
@@ -83,29 +101,40 @@ export default function Carrusel({ items = [], variant = "row" }) {
 
             <div className="carousel-track" ref={trackRef}>
                 {items.map((item) => (
-                    <button
-                        type="button"
-                        key={`${item.tipo}-${item.id}`}
-                        className="carousel-card"
-                        onClick={() => handleClick(item)}
-                    >
-                        <span className="carousel-card-media">
-                            <img
-                                src={item.portada}
-                                alt={item.titulo || ""}
-                                className="carousel-img"
-                                loading="lazy"
-                            />
-                        </span>
-                        {item.titulo && (
-                            <span className="carousel-card-body">
-                                <span className="carousel-card-title">{item.titulo}</span>
-                                {item.meta && (
-                                    <span className="carousel-card-meta">{item.meta}</span>
-                                )}
+                    <div key={`${item.tipo}-${item.id}`} className="carousel-card-wrap">
+                        <button
+                            type="button"
+                            className="carousel-card"
+                            onClick={() => handleClick(item)}
+                        >
+                            <span className="carousel-card-media">
+                                <img
+                                    src={item.portada}
+                                    alt={item.titulo || ""}
+                                    className="carousel-img"
+                                    loading="lazy"
+                                />
                             </span>
+                            {item.titulo && (
+                                <span className="carousel-card-body">
+                                    <span className="carousel-card-title">{item.titulo}</span>
+                                    {item.meta && (
+                                        <span className="carousel-card-meta">{item.meta}</span>
+                                    )}
+                                </span>
+                            )}
+                        </button>
+                        {puedeEditar && (
+                            <button
+                                type="button"
+                                className="carousel-edit-btn"
+                                aria-label={`Editar ${item.titulo || "título"}`}
+                                onClick={() => handleEdit(item)}
+                            >
+                                <EditIcon fontSize="inherit" />
+                            </button>
                         )}
-                    </button>
+                    </div>
                 ))}
             </div>
 
